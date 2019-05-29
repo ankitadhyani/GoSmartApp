@@ -1,0 +1,47 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const logger = require('morgan');
+
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Setup middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(logger('dev'));
+
+// This is for production use only
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+}
+
+// Turn on routes
+const routes = require('./routes');
+app.use(routes);
+
+
+// Setup mongoose connection
+mongoose.connect(
+  process.env.MONGODB_URI || 'mongodb://localhost:27017/go-smart-db', {
+    useNewUrlParser: true 
+});
+
+// Tell mongoose to use the built in JavaScript Promise object to handle their Promises
+mongoose.Promise = Promise;
+
+
+//Testing--------------------------
+// const db = require('./models/question');
+
+// db.questions.create({
+//   question: "new question",
+//   quesDescription: "new question description"
+// }).then(info => console.log(info))
+// .catch(err => console.log(err));
+//Testing--------------------------
+
+
+// Turn on our Server
+app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
