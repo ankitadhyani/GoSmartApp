@@ -22,25 +22,13 @@ const routes = require('./routes');
 app.use(routes);
 
 
+// Tell mongoose to use the built in JavaScript Promise object to handle their Promises
+mongoose.Promise = Promise;
 // Setup mongoose connection
 mongoose.connect(
   process.env.MONGODB_URI || 'mongodb://localhost:27017/go-smart-db', {
     useNewUrlParser: true 
 });
-
-// Tell mongoose to use the built in JavaScript Promise object to handle their Promises
-mongoose.Promise = Promise;
-
-
-//Testing--------------------------
-// const db = require('./models/question');
-
-// db.questions.create({
-//   question: "new question",
-//   quesDescription: "new question description"
-// }).then(info => console.log(info))
-// .catch(err => console.log(err));
-//Testing--------------------------
 
 
 // Turn on our Server

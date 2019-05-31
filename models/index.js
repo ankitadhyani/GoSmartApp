@@ -6,8 +6,8 @@
 
 
 module.exports = {
-  job: require("./job"),
-  user: require("./user"),
-  question: require("./question"),
-  replies: require("./replies")
+  Job: require("./job"),
+  User: require("./user"),
+  Question: require("./question"),
+  Replies: require("./replies")
 };

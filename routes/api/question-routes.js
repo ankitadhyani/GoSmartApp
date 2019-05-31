@@ -1,5 +1,12 @@
+/** *************************************************************************************
+ * File name: question-routes.js
+ * This file collects all the question routes and provides the endpoint names
+ ************************************************************************************** */
+
+
 // import express router and our controller
 const router = require('express').Router();
+
 
 const { 
     getAllQuestions, 

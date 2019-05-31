@@ -1,5 +1,5 @@
 // import Questions model
-const { Question } = require('../models').question;
+const { Question } = require('../models');
 
 
 // GET all questions
