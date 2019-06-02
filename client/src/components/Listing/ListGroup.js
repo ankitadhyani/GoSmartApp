@@ -16,7 +16,12 @@ function ListGroup(props) {
                 question={ques.question}
                 viewCount={ques.viewCount}
                 dateAdded={ques.dateAdded}
+
+                questionObject={ques}
+                
                 handleDeleteQuestion={props.handleDeleteQuestion}
+                handleUpdateViewCount={props.handleUpdateViewCount}
+                
                 nickName={props.nickName}
               />
             )

@@ -63,7 +63,8 @@ function updateQuestion(req, res) {
       $set: {
         question: req.body.question,
         quesDescription: req.body.quesDescription,
-        userTags: req.body.userTags
+        userTags: req.body.userTags,
+        viewCount: req.body.viewCount
       }
     },
     {

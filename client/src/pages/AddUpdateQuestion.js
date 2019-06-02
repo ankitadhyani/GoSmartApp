@@ -342,8 +342,13 @@ class AddUpdateQuestion extends Component {
                             {/* Handle submit button text ---------------------------------------- */}
                             {
                                 (this.state.id) ?
-                                    (<button type="submit" className="btn btn-outline-info btn-dark">Update Question</button>) :
-                                    (<button type="submit" className="btn btn-outline-info btn-dark">Save</button>)
+                                (<button type="submit" className="btn btn-outline-info btn-dark">
+                                    Update Question
+                                </button>
+                                ) : (
+                                <button type="submit" className="btn btn-outline-info btn-dark">
+                                    Post Question
+                                </button>)
                             }
 
                         </form>
