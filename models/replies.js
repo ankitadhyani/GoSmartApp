@@ -9,35 +9,37 @@
 const mongoose = require('mongoose');
 
 const {
- Schema
+  Schema
 } = mongoose;
 
 
 // Create fields for the 'RepliesSchema' collection
 const RepliesSchema = new Schema({
 
- reply: {
-   type: String
- },
- thumbsUpCount: {
-     type: Number,
-     default: 0
+  reply: {
+    type: String
+  },
+  thumbsUpCount: {
+    type: Number,
+    default: 0
 
- },
- thumbsDownCount: {
-     type: Number,
-     default: 0
- },
- userId: {
+  },
+  thumbsDownCount: {
+    type: Number,
+    default: 0
+  },
+  userId: {
     ref: "user",
     type: mongoose.Schema.Types.ObjectId
- },
- dateAdded: {
-   type: Date,
-   default: Date.now
- }
+  },
+  dateAdded: {
+    type: String
+  }
+  
 });
 
 
 // Export "replies" table
-module.exports = mongoose.model("replies", RepliesSchema);
+const Replies = mongoose.model("replies", RepliesSchema);
+
+module.exports = Replies;

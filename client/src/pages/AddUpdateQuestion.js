@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom';
 import AppHeader from '../components/AppHeader/AppHeader';
 import Registration from '../components/Registration/Registration';
 import Navbar from '../components/Navbar/Navbar';
-import Footer from "../components/Footer/Footer";
+import Footer from '../components/Footer/Footer';
+import UserReply from '../components/UserReply/UserReply';
 
 
 // Importing APIs
@@ -29,7 +30,9 @@ class AddUpdateQuestion extends Component {
         dateAdded: "",
 
         questionSaved: false,
-        currentTag: ""
+        currentTag: "",
+        setDisabled: true,
+        currentReply: ""
     };
 
 
@@ -156,7 +159,7 @@ class AddUpdateQuestion extends Component {
             (this.state.userTags.length > 0) ?
 
                 (this.state.userTags.map((tag, key) =>
-                    <label className="m-1 p-2 btn btn-outline-info text-dark" 
+                    <label className="m-1 p-2 btn btn-outline-info text-dark"
                         onClick={this.handleDeleteTag(tag)}
                         style={{ borderRadius: "3px" }}
                     >
@@ -233,6 +236,28 @@ class AddUpdateQuestion extends Component {
     }
 
 
+    // Function that resets disabled functionality when user clicks on Edit button
+    handleReSetDisabled = () => {
+        this.setState({
+            setDisabled: false
+        });
+    }
+
+
+    // This function handles Reply form submission
+    handleReplyFormSubmit = event => {
+        event.preventDefault();
+
+        console.log("Inside handleReplyFormSubmit()");
+
+
+    }
+
+
+
+    /* *************************************************************************************
+     *  render function starts here
+     * *************************************************************************************/
 
     render() {
 
@@ -249,7 +274,7 @@ class AddUpdateQuestion extends Component {
 
                 <AppHeader handleFormSwitch={this.handleFormSwitch} />
 
-                {/* Start Form Window */}
+
                 <div className="row container-fluid">
 
                     {/* Left navigation Bar */}
@@ -261,103 +286,158 @@ class AddUpdateQuestion extends Component {
                     </div>
 
 
-                    {/* Questions Window */}
+                    {/* Questions & Reply Window */}
                     <div className="col-10">
 
-                        <Link
-                            to={`/add`}
-                            className="btn btn-sm btn-warning mb-2 float-right"
-                            onClick={this.handleAskQuestion}
-                        >
-                            <strong>Ask New Question</strong>
-                        </Link>
-
+                        {/* Start Form Window */}
                         <form onSubmit={this.handleFormSubmit}>
 
-                            {/* Take user question field ---------------------------------------- */}
-                            <div className="form-group">
-                                <label htmlFor="question"><strong>Question Title</strong></label>
-                                <input
-                                    type="text"
-                                    onChange={this.handleInputChange}
-                                    value={this.state.question}
-                                    name="question"
-                                    placeholder="What is..."
-                                    className="form-control"
-                                />
-                            </div>
+                            <div className="row">
+                                <div className="col-8" style={{ borderRight: "1px solid grey" }}>
 
-                            {/* Take user question description field ---------------------------- */}
-                            <div className="form-group">
-                                <label htmlFor="quesDescription"><strong>Description</strong></label>
-                                <textarea
-                                    onChange={this.handleInputChange}
-                                    value={this.state.quesDescription}
-                                    name="quesDescription"
-                                    placeholder="Describe your question with code (if required) here ..."
-                                    className="form-control"
-                                    style={{ height: '200px' }}
-                                >
-                                </textarea>
-                            </div>
-
-                            {/* Handle tags section -------------------------------------------- */}
-                            <div className="form-group mt-3">
-                                <label htmlFor="tags">
-                                    <strong>Tags in which the question lies...</strong>
-                                </label>
-
-                                <input
-                                    className="ml-3"
-                                    list="categories"
-                                    name="currentTag"
-                                    onChange={this.handleTagSelection}
-                                />
-
-                                <datalist id="categories">
+                                    {/* Handle submit button text ---------------------------------------- */}
                                     {
-                                        // Call function to generate the dataList
-                                        this.generateDataList()
+                                        (this.state.id) ?
+                                            ((this.state.setDisabled) ?
+                                                (<button
+                                                    type="button"
+                                                    className="btn btn-outline-info btn-dark float-right mb-2"
+                                                    onClick={this.handleReSetDisabled}
+                                                >
+                                                    <i className="fa fa-user-edit"></i>
+                                                </button>) : ("")
+                                            ) : ("")
                                     }
-                                </datalist>
 
-                                <button
-                                    type="button"
-                                    className="btn btn-sm btn-info ml-3"
-                                    onClick={this.handleTagAddition}
-                                >
-                                    Save Tag
-                                </button>
+                                    {/* Take user question field ---------------------------------------- */}
+                                    <div className="form-group">
+                                        <label htmlFor="question"><strong>Question Title</strong></label>
+                                        <input
+                                            type="text"
+                                            onChange={this.handleInputChange}
+                                            value={this.state.question}
+                                            name="question"
+                                            placeholder="What is..."
+                                            className="form-control"
+                                            disabled={this.state.setDisabled}
+                                        />
+                                    </div>
 
+                                    {/* Take user question description field ---------------------------- */}
+                                    <div className="form-group">
+                                        <label htmlFor="quesDescription"><strong>Description</strong></label>
+                                        <textarea
+                                            onChange={this.handleInputChange}
+                                            value={this.state.quesDescription}
+                                            name="quesDescription"
+                                            placeholder="Describe your question with code (if required) here ..."
+                                            className="form-control"
+                                            style={{ height: '200px' }}
+                                            disabled={this.state.setDisabled}
+                                        >
+                                        </textarea>
+                                    </div>
+
+                                    {/* Replies Window */}
+                                    <UserReply
+                                        handleInputChange={this.handleInputChange}
+                                        value={this.state.currentReply}
+                                        name="currentReply"
+                                        handleReplyFormSubmit={this.handleReplyFormSubmit}
+                                    />
+
+                                </div>
+
+
+                                <div className="col-4 container-fluid">
+
+                                    <div className="row">
+
+                                        <div className="col-12">
+                                            <Link
+                                                to={`/add`}
+                                                className="btn btn-sm btn-block btn-warning mb-2 float-right"
+                                                onClick={this.handleAskQuestion}
+                                            >
+                                                <strong>Ask New Question</strong>
+                                            </Link>
+                                        </div>
+
+                                        <div className="col-12">
+                                            {/* Handle tags section -------------------------------------------- */}
+                                            <div className="form-group mt-3">
+                                                <label htmlFor="tags">
+                                                    <strong>Tags in which the question lies...</strong>
+                                                </label>
+
+                                                <input
+                                                    className="ml-3"
+                                                    list="categories"
+                                                    name="currentTag"
+                                                    onChange={this.handleTagSelection}
+                                                    disabled={this.state.setDisabled}
+                                                />
+
+                                                <datalist id="categories">
+                                                    {
+                                                        // Call function to generate the dataList
+                                                        this.generateDataList()
+                                                    }
+                                                </datalist>
+
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-sm btn-info ml-3"
+                                                    onClick={this.handleTagAddition}
+                                                    disabled={this.state.setDisabled}
+                                                >
+                                                    Save Tag
+                                                </button>
+
+                                            </div>
+
+                                            {/* Div that shows the already selected userTags */}
+                                            <div className="my-3 p-3" style={{ border: "2px dotted lightblue" }}>
+                                                {this.showUserTags()}
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
                             </div>
 
-                            {/* Div that shows the already selected userTags */}
-                            <div className="my-3 p-3" style={{ border: "2px dotted lightblue" }}>
-                                {
-                                    this.showUserTags()
-                                }
-                            </div>
 
 
                             {/* Handle submit button text ---------------------------------------- */}
                             {
                                 (this.state.id) ?
-                                (<button type="submit" className="btn btn-outline-info btn-dark">
-                                    Update Question
-                                </button>
-                                ) : (
-                                <button type="submit" className="btn btn-outline-info btn-dark">
-                                    Post Question
-                                </button>)
+                                    ((!this.state.setDisabled) ?
+                                        (<button
+                                            type="submit"
+                                            className="btn btn-outline-info btn-dark">
+                                            Update Question
+                                        </button>) :
+                                        ("")
+                                    ) : (
+                                        <button
+                                            type="submit"
+                                            className="btn btn-outline-info btn-dark">
+                                            Post Question
+                                        </button>
+                                    )
                             }
-
                         </form>
+                        {/* End Form Window */}
+
+
 
                     </div>
-                    {/* End Questions Window */}
+                    {/* End Questions & Reply Window */}
 
                 </div>
-                {/* End Form Window */}
+
 
                 <Footer />
             </React.Fragment>
@@ -367,4 +447,3 @@ class AddUpdateQuestion extends Component {
 
 
 export default AddUpdateQuestion;
-

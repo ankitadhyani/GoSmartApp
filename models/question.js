@@ -15,33 +15,29 @@ const { Schema } = mongoose;
 // Create fields for the 'QuestionSchema' collection
 const QuestionSchema = new Schema({
 
- question: {
-   type: String,
-   required: true
- },
- quesDescription: {
-    type: String
- },
- userTags: [],
- repliesObject: [{
-    ref: "replies",
-    type: mongoose.Schema.Types.ObjectId
- }],
- viewCount: {
-     type: Number,
-     default: 0
- },
- userId: {
-    ref: "user",
-    type: mongoose.Schema.Types.ObjectId
- },
- dateAdded: {
-   type: String
- }
-//  dateAdded: {
-//    type: Date,
-//    default: Date.now
-//  }
+   question: {
+      type: String,
+      required: true
+   },
+   quesDescription: {
+      type: String
+   },
+   userTags: [],
+   repliesObject: [{
+      ref: "replies",
+      type: mongoose.Schema.Types.ObjectId
+   }],
+   viewCount: {
+      type: Number,
+      default: 0
+   },
+   userId: {
+      ref: "user",
+      type: mongoose.Schema.Types.ObjectId
+   },
+   dateAdded: {
+      type: String
+   }
 });
 
 

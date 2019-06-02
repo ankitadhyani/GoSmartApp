@@ -12,11 +12,16 @@ function App() {
     <Router>
       <React.Fragment>
         <Switch>
-          {/* <Route exact path="/" component={Questions} /> */}
+          {/* Go To Hame Page */}
           <Route exact path="/" component={HomePage} />
 
+          {/* View All Questions */}
           <Route exact path="/questions" component={AllQuestions} />
+
+          {/* Post a question */}
           <Route exact path="/add" component={AddUpdateQuestion} />
+
+          {/* Update a question */}
           <Route exact path="/view-update/:id" component={AddUpdateQuestion} />
 
           
