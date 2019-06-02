@@ -22,6 +22,7 @@ const QuestionSchema = new Schema({
  quesDescription: {
     type: String
  },
+ userTags: [],
  repliesObject: [{
     ref: "replies",
     type: mongoose.Schema.Types.ObjectId
@@ -35,9 +36,12 @@ const QuestionSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId
  },
  dateAdded: {
-   type: Date,
-   default: Date.now
+   type: String
  }
+//  dateAdded: {
+//    type: Date,
+//    default: Date.now
+//  }
 });
 
 

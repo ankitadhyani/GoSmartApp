@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
 import ListGroup from '../components/Listing/ListGroup';
 
 import { getAllQuestions, removeQuestion } from '../utils/questionAPIs';
@@ -17,38 +19,43 @@ class Questions extends Component {
         this.getQuestions();
     }
 
-    // create method to get all questions
+    // Method to get all questions
     getQuestions = () => {
         getAllQuestions()
             .then(({ data: dbQuestionData }) => this.setState({ questionlist: dbQuestionData }))
             .catch(err => console.log(err));
     }
 
-    // create method to remove a question when user clicks on button to remove it
+
+    // Method to remove a question when user clicks on button to remove it
     handleDeleteQuestion = (questionId) => {
         removeQuestion(questionId)
             .then(this.getQuestions)
             .catch(err => console.log(err));
     }
 
-    render() {
+
+    render(props) {
+        console.log("Question.js ----> " + props);
+
         return (
             <React.Fragment>
+
                 {/* Header */}
                 <header className="row p-3" style={{ borderBottom: "2px solid black" }}>
                     <div className="col-6">
                         <h3>Top Questions</h3>
                     </div>
                     <div className="col-6">
-                        <button
-                            type="button"
+                        <Link
+                            to={`/add`}
                             className="btn btn-outline-info btn-dark float-right"
-                        // onClick={() => props.handleFormSubmit(props.regStatus)}
                         >
                             <strong>Ask Question</strong>
-                        </button>
+                        </Link>
                     </div>
                 </header>
+
 
                 {/* List all questions here */}
                 <div className=""
@@ -59,8 +66,29 @@ class Questions extends Component {
                     <ListGroup
                         questionlist={this.state.questionlist}
                         handleDeleteQuestion={this.handleDeleteQuestion}
+                        // nickName={props.nickName}
+                        nickName={"Ankita"}
                     />
                 </div>
+                
+                {/* Show View all questions button iff we have atleast 1 question */}
+                {
+                    // (this.state.questionlist.length > 0 && props.originPage==="HomePage") ?
+                    (this.state.questionlist.length > 0) ?
+                    (           
+                        <Link
+                            to={`/questions`}
+                            className="btn btn-block btn-outline-info btn-dark align-items-end text-center"
+                            questionlist={this.state.questionlist}
+                            handleDeleteQuestion={this.handleDeleteQuestion}
+                        >
+                            <strong>View All Questions</strong>
+                        </Link>   
+
+                    ) :
+                    ( "" )
+                }
+
 
             </React.Fragment>
         )

@@ -6,7 +6,7 @@ const { Question } = require('../models');
 // /api/questions
 function getAllQuestions(req, res) {
 
-  console.log("Inside getAllQuestions()");
+  console.log("Inside controllers -> getAllQuestions()");
 
   Question.find({})
     .then(dbQuestionData => res.status(200).json(dbQuestionData))
@@ -21,7 +21,7 @@ function getAllQuestions(req, res) {
 // /api/questions/:id
 function getQuestionById(req, res) {
 
-  console.log("Inside getQuestionById()");
+  console.log("Inside controllers -> getQuestionById()");
 
   Question.findById(req.params.id)
     .then(dbQuestionData => res.status(200).json(dbQuestionData))
@@ -29,6 +29,7 @@ function getQuestionById(req, res) {
       console.log(err);
       res.status(500).json(err);
     });
+
 }
 
 
@@ -37,7 +38,7 @@ function getQuestionById(req, res) {
 // /api/Questions with req.body 
 function createQuestion(req, res) {
 
-  console.log("Inside createQuestion()");
+  console.log("Inside controllers -> createQuestion()");
   // console.log(req.body);
 
 
@@ -53,7 +54,7 @@ function createQuestion(req, res) {
 // /api/Questions/:id with req.body
 function updateQuestion(req, res) {
 
-  console.log("Inside updateQuestion()");
+  console.log("Inside controllers -> updateQuestion()");
 
 
   Question.findByIdAndUpdate(
@@ -61,7 +62,8 @@ function updateQuestion(req, res) {
     {
       $set: {
         question: req.body.question,
-        quesDescription: req.body.quesDescription
+        quesDescription: req.body.quesDescription,
+        userTags: req.body.userTags
       }
     },
     {
@@ -78,6 +80,9 @@ function updateQuestion(req, res) {
 // DELETE/remove a Question by its _id
 // /api/Questions/:id
 function removeQuestion(req, res) {
+
+  console.log("Inside controllers -> removeQuestion()");
+
   Question.remove({
     _id: req.params.id
   })

@@ -17,6 +17,7 @@ function ListGroup(props) {
                 viewCount={ques.viewCount}
                 dateAdded={ques.dateAdded}
                 handleDeleteQuestion={props.handleDeleteQuestion}
+                nickName={props.nickName}
               />
             )
           })
@@ -24,7 +25,9 @@ function ListGroup(props) {
             <h2>No questions to display 😒</h2>
         )
       }
+
     </div>
+    
   )
 }
 

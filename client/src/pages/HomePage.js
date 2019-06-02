@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { Redirect } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 
+// Importing custom Components
 import AppHeader from '../components/AppHeader/AppHeader';
 import Registration from '../components/Registration/Registration';
+import Navbar from '../components/Navbar/Navbar';
 import Questions from './Questions';
+import Footer from "../components/Footer/Footer";
 
+// Importing APIs
 import { registerUser } from '../utils/userAPIs';
 
 
@@ -14,6 +20,7 @@ class HomePage extends Component {
     state = {
         showLogin: false,
         userRegistered: false,
+        searchQuestion: "",
         firstName: "",
         lastName: "",
         nickName: "",
@@ -25,7 +32,7 @@ class HomePage extends Component {
     // handleInputChange
     handleInputChange = event => {
 
-        console.log("Inside HomePage -> handleInputChange()");
+        // console.log("Inside HomePage -> handleInputChange()");
 
         const { name, value } = event.target;
         this.setState({
@@ -87,12 +94,35 @@ class HomePage extends Component {
     } // End of handleFormSubmit()
 
 
+    // This function triggers when user searches for a question
+    handleQuestionSearch = event => {
+        event.preventDefault();
+
+        console.log("Inside HomePage -> handleQuestionSearch()");
+        console.log("this.state.searchQuestion = " + this.state.searchQuestion);
+
+        const searchStr = this.state.searchQuestion.trim();
+        if (searchStr) {
+            console.log("Moving to different page");
+            return (<Redirect to="/questions" />);
+        }
+        else {
+            alert("Search string is empty!");
+            return;
+        }
+
+
+    } //End of handleQuestionSearch()
+
+
     render() {
         return (
             <React.Fragment>
                 <div>
-                    <AppHeader fluid bg={"dark"}
+                    <AppHeader
                         handleFormSwitch={this.handleFormSwitch}
+                        handleInputChange={this.handleInputChange}
+                        handleQuestionSearch={this.handleQuestionSearch}
                     />
 
                     <Registration
@@ -108,34 +138,34 @@ class HomePage extends Component {
                     <div className="row container-fluid">
 
                         {/* Left navigation Bar */}
-                        <div className="col-2" 
+                        <div className="col-2"
                             style={{
-                            borderRight: "5px solid red"
-                        }}>
-                            <nav class="nav flex-column">
-                                <NavLink to="/" className="nav-link navbar-brand active text-dark">HOME</NavLink>
-                                <NavLink to="/tags" className="nav-link text-dark">Tags</NavLink>
-                                <NavLink to="/users" className="nav-link text-dark">Users</NavLink>
-                                <NavLink to="/jobs" className="nav-link text-dark">Jobs</NavLink>
-                            </nav>
+                                borderRight: "5px solid red"
+                            }}>
+                            <Navbar />
                         </div>
+
 
                         {/* Questions Window */}
-                        <div className="col-7" 
+                        <div className="col-7"
                             style={{
-                            borderRight: "5px solid red"
-                        }}>
+                                borderRight: "5px solid red"
+                            }}>
                             {/* Call Question list here */}
-                            <Questions />
+                            {/* <Questions nickName={this.state.nickName}/> */}
+                            <Questions originPage={"HomePage"} />
 
                         </div>
+
 
                         {/* Job Opportunities Window */}
                         <div className="col-3">
-
+                            {/* Call Jobs list here */}
                         </div>
 
                     </div>
+
+                    <Footer />
                 </div>
             </React.Fragment>
         )

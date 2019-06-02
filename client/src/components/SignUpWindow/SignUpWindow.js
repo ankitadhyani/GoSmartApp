@@ -80,7 +80,7 @@ function handleNewUserSignUp(props) {
                         <div className="input-group-prepend">
                             <label className="bg-dark text-light p-2 cSignUpLabel" htmlFor="first-name-input">
                                 First Name
-                        </label>
+                            </label>
                         </div>
                         <input
                             type="text"
@@ -98,7 +98,7 @@ function handleNewUserSignUp(props) {
                         <div className="input-group-prepend">
                             <label className="bg-dark text-light p-2 cSignUpLabel" htmlFor="last-name-input">
                                 Last Name
-                        </label>
+                            </label>
                         </div>
                         <input 
                             type="text"
@@ -116,7 +116,7 @@ function handleNewUserSignUp(props) {
                         <div className="input-group-prepend">
                             <label className="bg-dark text-light p-2 cSignUpLabel" htmlFor="nick-name-input">
                                 Nick Name
-                        </label>
+                            </label>
                         </div>
                         <input 
                             type="text" 
@@ -134,7 +134,7 @@ function handleNewUserSignUp(props) {
                         <div className="input-group-prepend">
                             <label className="bg-dark text-light p-2 cSignUpLabel" htmlFor="email-input">
                                 Email
-                        </label>
+                            </label>
                         </div>
                         <input 
                             type="text"
@@ -152,7 +152,7 @@ function handleNewUserSignUp(props) {
                         <div className="input-group-prepend">
                             <label className="bg-dark text-light p-2 cSignUpLabel" htmlFor="password-input">
                                 Password
-                        </label>
+                             </label>
                         </div>
                         <input 
                             type="password"
