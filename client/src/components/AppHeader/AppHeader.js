@@ -123,9 +123,12 @@ class AppHeader extends Component {
 
 
             {/* -------- LogIn Button ---------- */}
-            <div className="col-2 mt-4">
+            <div
+              className="col-2 mt-4"
+              style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
+            >
               <button
-                type="submit"
+                type="button"
                 className="btn btn-outline-info"
                 onClick={() => this.props.handleFormSwitch("login")}
               >
@@ -135,14 +138,44 @@ class AppHeader extends Component {
 
 
             {/* -------- Sign Up Button ---------- */}
-            <div className="col-2 mt-4">
+            <div
+              className={this.props.userLoggedIn ? "col-2 mt-4 dropdown open" : "col-2 mt-4"}
+            >
+
               <button
-                type="submit"
+                type="button"
                 className="btn btn-info"
                 onClick={() => this.props.handleFormSwitch("registration")}
+                style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
               >
                 <strong>Sign Up</strong>
               </button>
+
+
+              {/* After user login show a button with label of user name and dropdown menu */}
+              {/* <div
+                class="dropdown open"
+                style={{ visibility: this.props.userLoggedIn ? 'visible' : 'hidden' }}
+              > */}
+              <button
+                class="btn btn-outline-info dropdown-toggle mt-0"
+                type="button"
+                // id="dropdownMenu3"
+                data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false"
+                style={{ visibility: this.props.userLoggedIn ? 'visible' : 'hidden' }}
+              >
+                {this.props.fullName}
+              </button>
+
+              <div class="dropdown-menu">
+                <h6 class="dropdown-header">{this.props.email}</h6>
+                <a class="dropdown-item" href="#!">User Profile</a>
+                <a class="dropdown-item" href="#!">Logout</a> 
+              </div>
+              {/* </div> */}
+
+
             </div>
 
           </div>

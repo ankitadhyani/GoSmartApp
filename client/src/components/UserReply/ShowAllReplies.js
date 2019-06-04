@@ -17,7 +17,6 @@ function incrementThumbsUpCount(replyObject) {
 
 function incrementThumbsDownCount(replyObject) {
 
-    console.log("replyObject.replyThumbsDownCount = " + replyObject.replyThumbsDownCount);
     let thumbsDownCount = parseInt(replyObject.replyThumbsDownCount);
     thumbsDownCount++;
 

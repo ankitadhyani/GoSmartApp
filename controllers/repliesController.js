@@ -56,15 +56,14 @@ function updateReply(req, res) {
 
   console.log("Inside controllers -> updateReply()");
   console.log(req.body);
-
-
+  console.log(typeof req.body.replyThumbsUpCount, typeof req.body.replyThumbsDownCount);
   Replies.findByIdAndUpdate(
     req.params.id,
     {
       $set: {
         reply: req.body.reply,
-        replyThumbsUpCount: req.body.thumbsUpCount,
-        replyThumbsDownCount: req.body.thumbsDownCount,
+        replyThumbsUpCount: req.body.replyThumbsUpCount,
+        replyThumbsDownCount: req.body.replyThumbsDownCount,
         // replyUserId: req.body.replyUserId,
         // replyAddedOn: req.body.replyAddedOn
       }
@@ -73,7 +72,11 @@ function updateReply(req, res) {
       new: true
     }
   )
-    .then(dbReplyData => res.status(200).json(dbReplyData))
+    .then(dbReplyData => {
+      console.log("inside of reply update .then()")
+      console.log(dbReplyData);
+      res.status(200).json(dbReplyData)
+    })
     .catch(err => {
       console.log(err);
       res.status(500).json(err);

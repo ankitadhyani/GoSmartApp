@@ -11,8 +11,8 @@ import Questions from './Questions';
 
 function ViewAllQuestions(props) {
 
-    console.log(props);
-    console.log("props.originPage: "+ props.location.state.originPage);
+    // console.log(props);
+    // console.log("props.originPage: "+ props.location.state.originPage);
 
     return (
         <React.Fragment>
@@ -34,11 +34,10 @@ function ViewAllQuestions(props) {
 
                 {/* List all questions here */}
                 <div className="col-10">
-                    <Questions 
-                        originPage={"ViewAllQuestions"} 
-                        // searchQuestion={props.location.state.searchQuestion ? props.location.state.searchQuestion : ""}
+                    <Questions
                         searchQuestion={props.location.state ? props.location.state.searchQuestion : ""}
-                        originPage={props.location.state.originPage}
+                        // originPage={props.location.state.originPage}
+                        originPage={props.location.state ? props.location.state.originPage : "HomePage"}
                     />
                 </div>
             </div>

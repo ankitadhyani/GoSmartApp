@@ -6,6 +6,8 @@ import './Registration.css';
 // create a function to export a AppHeader component
 function Registration(props) {
 
+    // console.log("props.userLoggedIn= " + props.userLoggedIn);
+
     return (
         <React.Fragment>
 
@@ -20,7 +22,10 @@ function Registration(props) {
                         {/* <h1 className="text-light float-right">Full Stack Web-Development</h1> */}
                     </div>
 
-                    <div className="col-4 mt-4 float-right">
+                    <div 
+                        className="col-4 mt-4 float-right" 
+                        style={{ visibility: !props.userLoggedIn ? 'visible' : 'hidden' }}
+                    >
                         {/* Log In/Sign Up Window within bg image*/}
                         <SignUpWindow 
                             regStatus={props.regStatus}

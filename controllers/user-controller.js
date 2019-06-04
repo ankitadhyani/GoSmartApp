@@ -9,13 +9,12 @@
  ************************************************************************************** */
 
 
-/* eslint-disable no-underscore-dangle */
-
 // Import dependencies
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const User = require('../models').user;
+
+const { User } = require('../models');
 const handle = require('../utils/promise-handler');
 
 
@@ -35,48 +34,65 @@ console.log("secret: " + secret);
 
 const register = (req, res) => {
 
-  console.log("Inside POST '/api/user/register' -> register");
+  console.log("Inside user-controller -> POST '/api/user/register' -> register");
+  console.log(req.body);
 
-  // get information about user out of req.body
-  const {
-    email,
-    password,
-    firstName,
-    lastName
-  } = req.body;
-
-  // console.log(email + " : " + password + " : " + firstName + " : " +  lastName);
-
-
-  // create a new user
-  const user = new User({
-    email,
-    password,
-    firstName,
-    lastName
-  });
-
-  // run setFullName()
-  user.setFullName();
-
-  // create/save/register new user 
-  // (this will trigger the password creation method we set up in the User model)
-  user.save(err => {
-    if (err) {
+  // User.save(req.body)
+  User.create(req.body)
+    .then(dbUserData => res.status(200).json(dbUserData))
+    .catch(err => {
       console.log(err);
-      res.status(500).json({
-        success: false,
-        message: "Error registering new user, please try again."
-      });
-    } else {
-      res.status(200).json({
-        success: true,
-        message: "Continue to Go Smart !!"
-      });
-    }
-  });
+      res.status(500).json(err);
+    });
+}
 
-} // End of register()
+// const register = (req, res) => {
+
+//   console.log("Inside user-controller -> POST '/api/user/register' -> register");
+
+//   // get information about user out of req.body
+//   const {
+//     firstName,
+//     lastName,
+//     nickName,
+//     email,
+//     password
+//   } = req.body;
+
+//   console.log(email + " : " + password + " : " + firstName + " : " +  lastName + " : " + nickName);
+
+
+//   // create a new user
+//   const User = new User({
+//     firstName,
+//     lastName,
+//     nickName,
+//     email,
+//     password
+//   });
+
+//   // run setFullName()
+//   // user.setFullName();
+
+//   // create/save/register new user 
+//   // (this will trigger the password creation method we set up in the User model)
+//   User.save(err => {
+//     if (err) {
+//       console.log(err);
+//       res.status(500).json({
+//         success: false,
+//         message: "Error registering new user, please try again."
+//       });
+//     } else {
+//       res.status(200).json({
+//         success: true,
+//         message: "Continue to Go Smart!!"
+//       });
+//     }
+//   });
+
+
+// } // End of register()
 
 
 
@@ -94,15 +110,10 @@ const login = async (req, res) => {
   console.log("Inside POST '/api/user/login' -> login");
 
   // get email and password out of req.body
-  const {
-    email,
-    password
-  } = req.body;
+  const { email, password } = req.body;
 
   // find user based on email
-  const [findUserErr, userInfo] = await handle(User.findOne({
-    email
-  }));
+  const [findUserErr, userInfo] = await handle(User.findOne({ email }));
 
   if (findUserErr) {
     console.log(findUserErr);

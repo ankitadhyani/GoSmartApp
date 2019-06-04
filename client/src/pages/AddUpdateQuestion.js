@@ -36,7 +36,7 @@ class AddUpdateQuestion extends Component {
         currentTag: "",
         setDisabled: true,
         setUpdateBtnVisibleTrue: false,
-        // showViewUpdatePage: false,
+        refreshViewUpdatePage: false,
         showUserReplyCommentBox: true,
 
         // States that handle reply
@@ -89,6 +89,19 @@ class AddUpdateQuestion extends Component {
     } //End of componentDidMount()
 
 
+    componentDidUpdate() {
+        console.log("Inside componentDidUpdate()");
+
+        // if (this.state.refreshViewUpdatePage) {
+
+        //     this.setState({
+        //         refreshViewUpdatePage: false
+        //     });
+        //     window.location.reload();
+        // }
+    }
+
+
     // This function will trigger when user clicks on "Ask question" from updateQuestion Page
     // At this tage all the state values will be reset to default except for one state 'setDisabled' = false
     handleAskQuestion = () => {
@@ -109,6 +122,7 @@ class AddUpdateQuestion extends Component {
             setDisabled: false, // this will change to false
             setUpdateBtnVisibleTrue: true,
             showUserReplyCommentBox: false, // this will change to false
+            refreshViewUpdatePage: false,
 
             // States that handle reply
             replyId: "",
@@ -132,7 +146,7 @@ class AddUpdateQuestion extends Component {
 
         console.log("Inside generateDataList()");
 
-        const preDefinedTagList = ["Node.js", "Express", "MongoDB", "MySQL", "React", "Javascript", "REST", "HTML/CSS"];
+        const preDefinedTagList = ["Node.js", "Express", "MongoDB", "MySQL", "React", "Javascript", "REST", "HTML/CSS", "Java", "OOPs Concepts"];
 
         return (preDefinedTagList.map((tag, key) => <option value={tag} />))
 
@@ -241,7 +255,8 @@ class AddUpdateQuestion extends Component {
                     alertMessage: "Question updated successfully"
                 })
 
-                return <Redirect to="/view-update/{this.state.id}" />
+                // Refresh the page
+                window.location.reload(); //Works fine
             })
             .catch(err => console.log(err));
     }
@@ -336,6 +351,13 @@ class AddUpdateQuestion extends Component {
         // If repliesObject[] has atleast 1 reply id
         if (this.state.repliesObject.length > 0) {
 
+            // First empty the replylist[] and then add contents to it
+            let emptyReplylist = [];
+            this.setState({
+                replylist: emptyReplylist,
+            });
+
+            // Now for every reply Id linked to Questions get all data and store in replylist[]
             this.state.repliesObject.forEach(replyId => {
 
                 getReplyById(replyId)
@@ -344,15 +366,21 @@ class AddUpdateQuestion extends Component {
                         let cpyReplylist = [...this.state.replylist, replyData];
 
                         this.setState({
-                            replylist: cpyReplylist
+                            replylist: cpyReplylist,
                         });
                     })
                     .catch(err => console.log(err));
             });
 
-        } else {
+            this.setState({
+                refreshViewUpdatePage: true
+            });
+            // window.location.reload();
+        }
+        else {
             return;
         }
+
 
     } // End of handleGetAllReplies()
 
@@ -375,14 +403,9 @@ class AddUpdateQuestion extends Component {
         // Call function to get all replies and post on the question page
         this.handleGetAllReplies();
 
-
-        // Set 'showViewUpdatePage' state to true so that on render View Update Page can be shown
-        // this.setState({
-        //     showViewUpdatePage: true
-        // });
-
-
     } // End of handleReplyFormSubmit()
+
+
 
     // Method that deletes a particular reply from reply table 
     // And also deletes the replyId from Question table's repliesObject[]
@@ -420,7 +443,6 @@ class AddUpdateQuestion extends Component {
                         dateAdded: this.state.dateAdded
                     });
 
-
             })
             .catch(err => console.log(err));
     }
@@ -433,14 +455,8 @@ class AddUpdateQuestion extends Component {
 
         console.log("Inside handleThumbsUpCount()");
 
-        console.log("replyId: " + replyId);
-        // console.log(updatedThumbsUpCountObj);
-
-
         updateReply(replyId, updatedThumbsUpCountObj)
-            .then(() => {
-                console.log("Reply-> ThumbsUpCount updated to: ");
-                console.log(updatedThumbsUpCountObj);
+            .then(({ data: replyData }) => {
                 // Call function to get all replies and post on the question page
                 this.handleGetAllReplies();
             })
@@ -453,13 +469,10 @@ class AddUpdateQuestion extends Component {
     // a user clicks on the thumbsdown button on reply
     handleThumbsDownCount = (replyId, updatedThumbsDownCountObj) => {
 
-        console.log("Inside handleThumbsDownCount() for replyId= " + replyId);
-        console.log(updatedThumbsDownCountObj);
+        console.log("Inside handleThumbsDownCount()");
 
         updateReply(replyId, updatedThumbsDownCountObj)
             .then(({ data: replyData }) => {
-                console.log("replyData: ");
-                console.log(replyData);
 
                 // Call function to get all replies and post on the question page
                 this.handleGetAllReplies();
@@ -479,11 +492,15 @@ class AddUpdateQuestion extends Component {
         console.log("this.state-------------");
         console.log(this.state);
 
-        // const path= "/view-update/" + this.state.id;
-        // if(this.state.showViewUpdatePage) {
-        //     return (<Redirect to={path} />)
-        // }
-
+        if(this.state.refreshViewUpdatePage) {
+            this.setState({
+                refreshViewUpdatePage: false
+            });
+            // window.location.reload();
+            // return <Redirect to=`/view-update/${this.state.id}` />
+            const path="/view-update/" + this.state.id;
+            return <Redirect to={path} />
+        }
 
         return (
             <React.Fragment>

@@ -13,7 +13,7 @@ import Footer from "../components/Footer/Footer";
 
 
 // Importing APIs
-import { registerUser } from '../utils/userAPIs';
+import { registerUser, loginUser } from '../utils/userAPIs';
 
 
 
@@ -21,8 +21,8 @@ class HomePage extends Component {
 
     state = {
         showLogin: false,
-        userRegistered: false,
-        
+        userLoggedIn: false,
+
         searchQuestion: "", // Will store the question to be searched by the user
 
         // Inputs for form registration
@@ -61,21 +61,55 @@ class HomePage extends Component {
     } //End of handleFormSwitch()
 
 
+    // This will trigger when user logs in to the app
+    handleUserLogin = userInfo => {
+
+        console.log("Inside HomePage -> handleUserLogin()");
+        console.log("userInfo: "); console.log(userInfo);
+
+        loginUser(userInfo)
+            .then(() => {
+
+                this.setState({
+                    userLoggedIn: true,
+                    alertMessage: "User logged in successfully"
+                });
+
+                alert("User logged in successfully");
+
+            })
+            .catch(err => console.log(err));
+
+    } // End of handleUserLogin()
+
     // method for creating(POST) a new user
     handleCreateNewUser = newUserInfo => {
+
+        console.log("Inside HomePage -> handleCreateNewUser()");
+        console.log("newUserInfo: ");
+        console.log(newUserInfo);
+
         registerUser(newUserInfo)
             .then(() => {
 
                 this.setState({
-                    userRegistered: true,
+                    // userRegistered: true,
                     alertMessage: "New User registered successfully"
                 });
 
                 alert("New User registered successfully");
 
+                //LogIn user with the saved credentials
+                this.handleUserLogin({
+                    email: this.state.email,
+                    password: this.state.password
+                });
+
             })
             .catch(err => console.log(err));
-    }
+
+    } // End of handleCreateNewUser()
+
 
 
     // Function that will trigger when user submits a form (LogIn / SignUp)
@@ -88,6 +122,10 @@ class HomePage extends Component {
         if (formType) {
             console.log("Log-In form submitted");
 
+            this.handleUserLogin({
+                email: this.state.email,
+                password: this.state.password
+            });
 
         }
         else {
@@ -120,12 +158,16 @@ class HomePage extends Component {
                     <AppHeader
                         handleFormSwitch={this.handleFormSwitch}
                         message={this.state.alertMessage}
-                        // handleInputChange={this.handleInputChange}
-                        // handleQuestionSearch={this.handleQuestionSearch}
+                        userLoggedIn={this.state.userLoggedIn}
+                        fullName={`${this.state.firstName} ${this.state.lastName}`}
+                        email={this.state.email}
+                    // handleInputChange={this.handleInputChange}
+                    // handleQuestionSearch={this.handleQuestionSearch}
                     />
 
                     <Registration
                         regStatus={this.state.showLogin}
+                        userLoggedIn={this.state.userLoggedIn}
                         onChange={this.handleInputChange}
                         handleFormSubmit={this.handleFormSubmit}
                     />

@@ -53,7 +53,7 @@ function handleUserLogIn(props) {
                 <button 
                     type="submit" 
                     className="btn btn-block btn-dark"
-                    onClick={() => props.handleFormSubmit(props.regStatus)}
+                    onClick={(e) => props.handleFormSubmit(props.regStatus, e)}
                 >
                     <strong>Log In</strong>
                 </button>

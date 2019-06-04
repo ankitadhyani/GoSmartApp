@@ -19,7 +19,7 @@ class Questions extends Component {
 
     // use component did mount to get all questions on load
     componentDidMount() {
-        console.log("Inside componentDidMount -> Question.js");
+        // console.log("Inside componentDidMount -> Question.js");
 
         //Reset few states
         this.setState({
@@ -60,7 +60,7 @@ class Questions extends Component {
 
         updateQuestion(questionId, updatedViewCountObj)
             .then(() => {
-                console.log("Question-> ViewCount updated to " + updatedViewCountObj);
+                // console.log("Question-> ViewCount updated to " + updatedViewCountObj);
                 this.getQuestions();
             })
             .catch(err => console.log(err));
@@ -84,17 +84,17 @@ class Questions extends Component {
         for (let i = 0; i < specialCharacterList.length; i++) {
             cpySearchQuestion = cpySearchQuestion.replace(specialCharacterList[i], '');
         }
-        console.log("cpySearchQuestion after removing special chars: " + cpySearchQuestion);
+        // console.log("cpySearchQuestion after removing special chars: " + cpySearchQuestion);
 
 
         for (let i = 0; i < dictionary.length; i++) {
             cpySearchQuestion = cpySearchQuestion.split(dictionary[i] + " ").join('');
         }
-        console.log("cpySearchQuestion after removing dictionary words: " + cpySearchQuestion);
+        // console.log("cpySearchQuestion after removing dictionary words: " + cpySearchQuestion);
 
         // Convert the rest of the string into array
         cpySearchQuestion = cpySearchQuestion.split(" ");
-        console.log("cpySearchQuestion[]: " + cpySearchQuestion);
+        // console.log("cpySearchQuestion[]: " + cpySearchQuestion);
 
 
         // Declare array that will store only those questions that will match the question asked by user
@@ -108,12 +108,12 @@ class Questions extends Component {
                 (
                     this.state.questionlist.map(ques => {
 
-                        console.log(ques.question);
+                        // console.log(ques.question);
 
                         cpySearchQuestion.forEach(keyword => {
 
                             if (ques.question.toLowerCase().includes(keyword)) {
-                                console.log("Match found: " + ques.question);
+                                // console.log("Match found: " + ques.question);
                                 responseToSeachQuestion.push(ques);
                             }
                         })
@@ -149,7 +149,7 @@ class Questions extends Component {
 
     render() {
 
-        console.log("Inside Question.js :: " + this.props.originPage);
+        console.log("Inside Question.js");
 
         // If user clicks on "Questions" link from Navbar then reset states
         if (this.props.originPage === "Navbar" && this.state.showSearchResult === true) {
@@ -167,7 +167,7 @@ class Questions extends Component {
 
         if (this.state.searchQuestion) {
 
-            console.log("this.state.searchQuestion: " + this.state.searchQuestion);
+            // console.log("this.state.searchQuestion: " + this.state.searchQuestion);
 
             let cpySearchQuestion = this.state.searchQuestion; // "What is REST?";
             cpySearchQuestion = cpySearchQuestion.trim();
@@ -176,12 +176,12 @@ class Questions extends Component {
             // then update 'questionlist[]' with related questions only
             // if (this.state.searchQuestion) {
             if (cpySearchQuestion) {
-                console.log("Calling handleSearchQuestionString() now...");
+                // console.log("Calling handleSearchQuestionString() now...");
                 this.handleSearchQuestionString(cpySearchQuestion.toLowerCase());
             }
         }
 
-        console.log("this.state.showSearchResult: " + this.state.showSearchResult);
+        // console.log("this.state.showSearchResult: " + this.state.showSearchResult);
 
 
         return (
@@ -225,11 +225,14 @@ class Questions extends Component {
 
                 {/* Show View all questions button iff we have atleast 1 question */}
                 {
-                    // (this.state.questionlist.length > 0 && props.originPage==="HomePage") ?
-                    (this.state.questionlist.length > 0) ?
+                    // (this.state.questionlist.length > 0) ?
+                    (this.state.questionlist.length > 0 && this.props.originPage === "HomePage") ?
                         (
                             <Link
-                                to={`/questions`}
+                                to={{
+                                    pathname: "/questions", 
+                                    state: { originPage: "Navbar" }
+                                }} 
                                 className="btn btn-block btn-outline-info btn-dark align-items-end text-center"
                                 questionlist={this.state.questionlist}
                                 handleDeleteQuestion={this.handleDeleteQuestion}

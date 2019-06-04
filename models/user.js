@@ -17,6 +17,18 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema({
 
+  firstName: {
+    type: String,
+    trim: true,
+    required: 'Please enter your first name'
+  },
+
+  lastName: {
+    type: String,
+    trim: true,
+    required: 'Please enter your last name'
+  },
+
   nickName: {
     type: String,
     trim: true,
@@ -33,95 +45,83 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: 'Please enter valid password'
-  },
+  }
 
-  firstName: {
-    type: String,
-    trim: true,
-    required: 'Please enter your first name'
-  },
+  // fullName: String
 
-  lastName: {
-    type: String,
-    trim: true,
-    required: 'Please enter your last name'
-  },
-
-  fullName: String,
-
-  contact:  {
-    type: String,
-    default: ""
-  },
-  userLocation: {
-    type: String,
-    default: ""
-  },
-  preferredLocation: {
-    type: String,
-    default: ""
-  },
-  node: {
-    type: Boolean,
-    default: false
-  },
-  express: {
-    type: Boolean,
-    default: false
-  },
-  react: {
-    type: Boolean,
-    default: false
-  },
-  HTMLCSS: {
-    type: Boolean,
-    default: false
-  },
-  javascript: {
-    type: Boolean,
-    default: false
-  },
-  jQuery: {
-    type: Boolean,
-    default: false
-  },
-  AJAX: {
-    type: Boolean,
-    default: false
-  },
-  mySQL: {
-    type: Boolean,
-    default: false
-  },
-  sequelize: {
-    type: Boolean,
-    default: false
-  },
-  mongoDB: {
-    type: Boolean,
-    default: false
-  },
-  mongoose: {
-    type: Boolean,
-    default: false
-  },
-  java: {
-    type: Boolean,
-    default: false
-  },
-  OOPs: {
-    type: Boolean,
-    default: false
-  },
+  // contact:  {
+  //   type: String,
+  //   default: ""
+  // },
+  // userLocation: {
+  //   type: String,
+  //   default: ""
+  // },
+  // preferredLocation: {
+  //   type: String,
+  //   default: ""
+  // },
+  // node: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // express: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // react: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // HTMLCSS: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // javascript: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // jQuery: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // AJAX: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // mySQL: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // sequelize: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // mongoDB: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // mongoose: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // java: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // OOPs: {
+  //   type: Boolean,
+  //   default: false
+  // },
   
-  resumeLink: String,
-  coverLetterLink: String,
+  // resumeLink: String,
+  // coverLetterLink: String,
 
 
-  savedJobsArray: [{
-    ref: "job",
-    type: mongoose.Schema.Types.ObjectId,
-  }]
+  // savedJobsArray: [{
+  //   ref: "job",
+  //   type: mongoose.Schema.Types.ObjectId,
+  // }]
 
 
 });
@@ -190,4 +190,7 @@ UserSchema.methods.setFullName = function setFullName() {
 }
 
 
-module.exports = mongoose.model('User', UserSchema);
+// Export "user" table
+const Users = mongoose.model("users", UserSchema);
+
+module.exports = Users;
