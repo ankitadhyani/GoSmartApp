@@ -55,6 +55,7 @@ function createReply(req, res) {
 function updateReply(req, res) {
 
   console.log("Inside controllers -> updateReply()");
+  console.log(req.body);
 
 
   Replies.findByIdAndUpdate(
@@ -62,8 +63,10 @@ function updateReply(req, res) {
     {
       $set: {
         reply: req.body.reply,
-        thumbsUpCount: req.body.thumbsUpCount,
-        thumbsDownCount: req.body.thumbsDownCount
+        replyThumbsUpCount: req.body.thumbsUpCount,
+        replyThumbsDownCount: req.body.thumbsDownCount,
+        // replyUserId: req.body.replyUserId,
+        // replyAddedOn: req.body.replyAddedOn
       }
     },
     {

@@ -47,7 +47,6 @@ function ListGroupItem(props) {
               onClick={
                 () => props.handleUpdateViewCount(props.id, incrementViewCount(props.questionObject))
               }
-              // onClick={() => props.handleUpdateViewCount(props.id)
             >
               {props.questionObject.question}
             </Link>

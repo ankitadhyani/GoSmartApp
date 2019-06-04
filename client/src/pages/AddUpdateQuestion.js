@@ -36,6 +36,7 @@ class AddUpdateQuestion extends Component {
         currentTag: "",
         setDisabled: true,
         setUpdateBtnVisibleTrue: false,
+        // showViewUpdatePage: false,
         showUserReplyCommentBox: true,
 
         // States that handle reply
@@ -45,7 +46,7 @@ class AddUpdateQuestion extends Component {
         replyThumbsDownCount: 0,
         replyAddedOn: "",
         replyUserId: "",
-        replylist: []
+        replylist: [] // This contains all the replies from reply DB
     };
 
 
@@ -116,6 +117,7 @@ class AddUpdateQuestion extends Component {
             replyThumbsDownCount: 0,
             replyAddedOn: "",
             replyUserId: "",
+            replylist: [],
 
             alertMessage: "" // Stores the alert message
 
@@ -310,6 +312,7 @@ class AddUpdateQuestion extends Component {
                     repliesObject: updatedRepliesObject
                 });
 
+                // Call PUT method for updating the question with new reply object
                 this.handleUpdateQuestion(this.state.id,
                     {
                         question: this.state.question,
@@ -330,7 +333,7 @@ class AddUpdateQuestion extends Component {
     handleGetAllReplies = () => {
         console.log("Inside handleGetAllReplies()");
 
-        // If repliesObject[] has an id
+        // If repliesObject[] has atleast 1 reply id
         if (this.state.repliesObject.length > 0) {
 
             this.state.repliesObject.forEach(replyId => {
@@ -369,15 +372,101 @@ class AddUpdateQuestion extends Component {
             // replyUserId: this.state.replyUserId
         });
 
-        console.log("-------------------------------------------");
         // Call function to get all replies and post on the question page
         this.handleGetAllReplies();
 
+
+        // Set 'showViewUpdatePage' state to true so that on render View Update Page can be shown
+        // this.setState({
+        //     showViewUpdatePage: true
+        // });
+
+
     } // End of handleReplyFormSubmit()
 
+    // Method that deletes a particular reply from reply table 
+    // And also deletes the replyId from Question table's repliesObject[]
+    handleDeleteReply = (replyIdToBeDeleted) => {
+
+        console.log("Inside handleDeleteReply()");
+
+        removeReply(replyIdToBeDeleted)
+            .then(() => {
+
+                // Now update Question table by deleting the replyId from repliesObject[]
+                // console.log("repliesObject: " + this.state.repliesObject);
+
+                let updatedRepliesObject = [];
+                this.state.repliesObject.forEach(replyId => {
+                    if (replyId !== replyIdToBeDeleted) {
+                        updatedRepliesObject.push(replyId);
+                    }
+                });
+                // console.log("updatedRepliesObject: " + updatedRepliesObject);
+
+                this.setState({
+                    repliesObject: updatedRepliesObject
+                });
+
+                // Call PUT method for updating the question with new reply object
+                this.handleUpdateQuestion(this.state.id,
+                    {
+                        question: this.state.question,
+                        quesDescription: this.state.quesDescription,
+                        userTags: this.state.userTags,
+                        repliesObject: this.state.repliesObject,
+                        viewCount: this.state.viewCount,
+                        userId: this.state.userId,
+                        dateAdded: this.state.dateAdded
+                    });
+
+
+            })
+            .catch(err => console.log(err));
+    }
 
 
 
+    // Method that updates the reply thumbsup count field of the reply schema whenever 
+    // a user clicks on the thumbsup button on reply
+    handleThumbsUpCount = (replyId, updatedThumbsUpCountObj) => {
+
+        console.log("Inside handleThumbsUpCount()");
+
+        console.log("replyId: " + replyId);
+        // console.log(updatedThumbsUpCountObj);
+
+
+        updateReply(replyId, updatedThumbsUpCountObj)
+            .then(() => {
+                console.log("Reply-> ThumbsUpCount updated to: ");
+                console.log(updatedThumbsUpCountObj);
+                // Call function to get all replies and post on the question page
+                this.handleGetAllReplies();
+            })
+            .catch(err => console.log(err));
+
+    } // End of handleThumbsUpCount()
+
+
+    // Method that updates the reply thumbsdown count field of the reply schema whenever 
+    // a user clicks on the thumbsdown button on reply
+    handleThumbsDownCount = (replyId, updatedThumbsDownCountObj) => {
+
+        console.log("Inside handleThumbsDownCount() for replyId= " + replyId);
+        console.log(updatedThumbsDownCountObj);
+
+        updateReply(replyId, updatedThumbsDownCountObj)
+            .then(({ data: replyData }) => {
+                console.log("replyData: ");
+                console.log(replyData);
+
+                // Call function to get all replies and post on the question page
+                this.handleGetAllReplies();
+            })
+            .catch(err => console.log(err));
+
+    } // End of handleThumbsDownCount()
 
 
 
@@ -389,6 +478,11 @@ class AddUpdateQuestion extends Component {
 
         console.log("this.state-------------");
         console.log(this.state);
+
+        // const path= "/view-update/" + this.state.id;
+        // if(this.state.showViewUpdatePage) {
+        //     return (<Redirect to={path} />)
+        // }
 
 
         return (
@@ -468,13 +562,18 @@ class AddUpdateQuestion extends Component {
                                     </div>
 
                                     {/* All user replies will be populated here */}
+                                    {/* replylist => contains all replies from DB for this ques */}
                                     {
                                         (this.state.replylist.length > 0) ? (
-                                            this.state.replylist.map(reply => {
+                                            this.state.replylist.map(replyData => {
                                                 return (
                                                     <ShowAllReplies
-                                                        replyObject={reply}
+                                                        id={replyData._id}
+                                                        replyObject={replyData}
                                                         handleGetAllReplies={this.handleGetAllReplies}
+                                                        handleThumbsUpCount={this.handleThumbsUpCount}
+                                                        handleThumbsDownCount={this.handleThumbsDownCount}
+                                                        handleDeleteReply={this.handleDeleteReply}
                                                     />
                                                 )
                                             })
