@@ -1,10 +1,10 @@
 
 .cJumbotron {
-    height: 120px;
+    height: 80px;
 }
 
 .cGoSmartIcon {
-    height: 120px;
-    padding-bottom: 20px;
+    height: 80px;
+    /* padding-bottom: 10px; */
     float: left;
 }

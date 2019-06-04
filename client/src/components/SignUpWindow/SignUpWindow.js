@@ -168,7 +168,7 @@ function handleNewUserSignUp(props) {
                 <button
                     type="submit"
                     className="btn btn-block btn-dark cInputBox"
-                    onClick={() => props.handleFormSubmit(props.regStatus)}
+                    onClick={(e) => props.handleFormSubmit(props.regStatus, e)}
                 >
                     <strong>Sign Up</strong>
                 </button>

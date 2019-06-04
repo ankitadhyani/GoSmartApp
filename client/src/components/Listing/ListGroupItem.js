@@ -11,7 +11,10 @@ function incrementViewCount(questionObject) {
     question: questionObject.question,
     quesDescription: questionObject.quesDescription,
     userTags: questionObject.userTags,
-    viewCount: vc
+    repliesObject: questionObject.repliesObject,
+    viewCount: vc, //Updating only the view count
+    userId: questionObject.userId,
+    dateAdded: questionObject.dateAdded
   };
 }
 

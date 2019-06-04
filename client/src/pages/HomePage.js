@@ -8,7 +8,9 @@ import AppHeader from '../components/AppHeader/AppHeader';
 import Registration from '../components/Registration/Registration';
 import Navbar from '../components/Navbar/Navbar';
 import Questions from './Questions';
+import Alert from '../components/Alert/Alert';
 import Footer from "../components/Footer/Footer";
+
 
 // Importing APIs
 import { registerUser } from '../utils/userAPIs';
@@ -20,12 +22,18 @@ class HomePage extends Component {
     state = {
         showLogin: false,
         userRegistered: false,
-        searchQuestion: "",
+        
+        searchQuestion: "", // Will store the question to be searched by the user
+
+        // Inputs for form registration
         firstName: "",
         lastName: "",
         nickName: "",
         email: "",
-        password: ""
+        password: "",
+        questionAsked: false,
+
+        alertMessage: "" // Stores the alert message
     };
 
 
@@ -57,10 +65,14 @@ class HomePage extends Component {
     handleCreateNewUser = newUserInfo => {
         registerUser(newUserInfo)
             .then(() => {
-                alert("New User registered successfully");
+
                 this.setState({
-                    userRegistered: true
+                    userRegistered: true,
+                    alertMessage: "New User registered successfully"
                 });
+
+                alert("New User registered successfully");
+
             })
             .catch(err => console.log(err));
     }
@@ -94,35 +106,22 @@ class HomePage extends Component {
     } // End of handleFormSubmit()
 
 
-    // This function triggers when user searches for a question
-    handleQuestionSearch = event => {
-        event.preventDefault();
 
-        console.log("Inside HomePage -> handleQuestionSearch()");
-        console.log("this.state.searchQuestion = " + this.state.searchQuestion);
-
-        const searchStr = this.state.searchQuestion.trim();
-        if (searchStr) {
-            console.log("Moving to different page");
-            return (<Redirect to="/questions" />);
-        }
-        else {
-            alert("Search string is empty!");
-            return;
-        }
-
-
-    } //End of handleQuestionSearch()
+    /* *************************************************************************************
+     *  render function starts here
+     * *************************************************************************************/
 
 
     render() {
+
         return (
             <React.Fragment>
                 <div>
                     <AppHeader
                         handleFormSwitch={this.handleFormSwitch}
-                        handleInputChange={this.handleInputChange}
-                        handleQuestionSearch={this.handleQuestionSearch}
+                        message={this.state.alertMessage}
+                        // handleInputChange={this.handleInputChange}
+                        // handleQuestionSearch={this.handleQuestionSearch}
                     />
 
                     <Registration

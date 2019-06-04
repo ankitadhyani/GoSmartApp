@@ -19,20 +19,20 @@ const RepliesSchema = new Schema({
   reply: {
     type: String
   },
-  thumbsUpCount: {
+  replyThumbsUpCount: {
     type: Number,
     default: 0
 
   },
-  thumbsDownCount: {
+  replyThumbsDownCount: {
     type: Number,
     default: 0
   },
-  userId: {
+  replyUserId: {
     ref: "user",
     type: mongoose.Schema.Types.ObjectId
   },
-  dateAdded: {
+  replyAddedOn: {
     type: String
   }
   

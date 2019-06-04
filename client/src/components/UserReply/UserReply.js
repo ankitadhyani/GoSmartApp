@@ -4,7 +4,7 @@ import React from 'react';
 
 function UserReply(props) {
     return (
-        <div>
+        <div className="mt-5">
 
             <form>
 

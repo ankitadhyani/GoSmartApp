@@ -4,14 +4,16 @@ import { Link } from 'react-router-dom';
 
 // Importing custon Components
 import AppHeader from '../components/AppHeader/AppHeader';
-import Registration from '../components/Registration/Registration';
+// import Registration from '../components/Registration/Registration';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import UserReply from '../components/UserReply/UserReply';
+import ShowAllReplies from '../components/UserReply/ShowAllReplies';
 
 
 // Importing APIs
 import { getAllQuestions, getQuestionById, createQuestion, updateQuestion, removeQuestion } from '../utils/questionAPIs';
+import { getAllReplies, getReplyById, createReply, updateReply, removeReply } from '../utils/replyAPIs';
 
 
 var moment = require('moment');
@@ -20,6 +22,7 @@ var moment = require('moment');
 class AddUpdateQuestion extends Component {
 
     state = {
+        // States that handle question
         id: "",
         question: "",
         quesDescription: "",
@@ -32,14 +35,25 @@ class AddUpdateQuestion extends Component {
         questionSaved: false,
         currentTag: "",
         setDisabled: true,
-        currentReply: ""
+        setUpdateBtnVisibleTrue: false,
+        showUserReplyCommentBox: true,
+
+        // States that handle reply
+        replyId: "",
+        reply: "",
+        replyThumbsUpCount: 0,
+        replyThumbsDownCount: 0,
+        replyAddedOn: "",
+        replyUserId: "",
+        replylist: []
     };
 
 
     // use component did mount to get all questions on load
     componentDidMount() {
         // for class components use THIS.PROPS to get props 
-        console.log(this.props);
+        // console.log(this.props);
+        console.log("Inside AddUpdateQuestion -> componentDidMount()");
 
         if (this.props.match.params.id) {
             // extract id of question out of this.props.match.params.id
@@ -62,6 +76,11 @@ class AddUpdateQuestion extends Component {
                         questionSaved: false,
                         currentTag: ""
                     });
+
+                    // Call function to get all replies and post on the question page
+                    this.handleGetAllReplies();
+
+
                 })
                 .catch(err => console.log(err));
         }
@@ -70,6 +89,7 @@ class AddUpdateQuestion extends Component {
 
 
     // This function will trigger when user clicks on "Ask question" from updateQuestion Page
+    // At this tage all the state values will be reset to default except for one state 'setDisabled' = false
     handleAskQuestion = () => {
 
         console.log("Inside handleAskQuestion()");
@@ -82,8 +102,23 @@ class AddUpdateQuestion extends Component {
             viewCount: 0,
             userId: "",
             dateAdded: "",
+
             questionSaved: false,
-            currentTag: ""
+            currentTag: "",
+            setDisabled: false, // this will change to false
+            setUpdateBtnVisibleTrue: true,
+            showUserReplyCommentBox: false, // this will change to false
+
+            // States that handle reply
+            replyId: "",
+            reply: "",
+            replyThumbsUpCount: 0,
+            replyThumbsDownCount: 0,
+            replyAddedOn: "",
+            replyUserId: "",
+
+            alertMessage: "" // Stores the alert message
+
         });
     }
 
@@ -185,9 +220,9 @@ class AddUpdateQuestion extends Component {
             .then(() => {
                 alert("Question created successfully");
                 this.setState({
-                    questionSaved: true
+                    questionSaved: true,
+                    alertMessage: "Question created successfully"
                 });
-                // return <Redirect to="/view-update/"{this.state.id} />
             })
             .catch(err => console.log(err));
     }
@@ -198,10 +233,12 @@ class AddUpdateQuestion extends Component {
     handleUpdateQuestion = (questionId, questionInfo) => {
         updateQuestion(questionId, questionInfo)
             .then(() => {
+
                 alert("Question updated successfully");
-                // this.setState({
-                //     questionSaved: true
-                // });
+                this.setState({
+                    alertMessage: "Question updated successfully"
+                })
+
                 return <Redirect to="/view-update/{this.state.id}" />
             })
             .catch(err => console.log(err));
@@ -219,7 +256,11 @@ class AddUpdateQuestion extends Component {
                 {
                     question: this.state.question,
                     quesDescription: this.state.quesDescription,
-                    userTags: this.state.userTags
+                    userTags: this.state.userTags,
+                    repliesObject: this.state.repliesObject,
+                    viewCount: this.state.viewCount,
+                    // userId: this.state.userId,
+                    dateAdded: this.state.dateAdded
                 });
         }
         // else just create a new question
@@ -229,8 +270,10 @@ class AddUpdateQuestion extends Component {
                 question: this.state.question,
                 quesDescription: this.state.quesDescription,
                 userTags: this.state.userTags,
+                repliesObject: this.state.repliesObject,
+                viewCount: this.state.viewCount,
+                // userId: this.state.userId,
                 dateAdded: moment().format('MMMM Do YYYY, h:mm a')
-                // userId: this.state.userId
             });
         }
     }
@@ -244,14 +287,97 @@ class AddUpdateQuestion extends Component {
     }
 
 
+    // method for creating/POSTing a reply to the database
+    handleCreateReply = replyInfo => {
+        console.log("Inside handleCreateReply()");
+
+        createReply(replyInfo)
+            .then((dbReplyData) => {
+
+                alert("Reply created successfully");
+                this.setState({
+                    alertMessage: "Reply created successfully"
+                })
+
+                // Now add the reply Id to Questions table
+                console.log("dbReplyData------ ");
+                console.log(dbReplyData.data + " :: " + dbReplyData.data._id);
+
+                let updatedRepliesObject = [...this.state.repliesObject, dbReplyData.data._id];
+                // console.log("updatedRepliesObject: " + updatedRepliesObject);
+
+                this.setState({
+                    repliesObject: updatedRepliesObject
+                });
+
+                this.handleUpdateQuestion(this.state.id,
+                    {
+                        question: this.state.question,
+                        quesDescription: this.state.quesDescription,
+                        userTags: this.state.userTags,
+                        repliesObject: this.state.repliesObject,
+                        viewCount: this.state.viewCount,
+                        userId: this.state.userId,
+                        dateAdded: this.state.dateAdded
+                    });
+
+            })
+            .catch(err => console.log(err));
+    }
+
+
+    // Function to get all replies for this question
+    handleGetAllReplies = () => {
+        console.log("Inside handleGetAllReplies()");
+
+        // If repliesObject[] has an id
+        if (this.state.repliesObject.length > 0) {
+
+            this.state.repliesObject.forEach(replyId => {
+
+                getReplyById(replyId)
+                    .then(({ data: replyData }) => {
+
+                        let cpyReplylist = [...this.state.replylist, replyData];
+
+                        this.setState({
+                            replylist: cpyReplylist
+                        });
+                    })
+                    .catch(err => console.log(err));
+            });
+
+        } else {
+            return;
+        }
+
+    } // End of handleGetAllReplies()
+
+
+
     // This function handles Reply form submission
     handleReplyFormSubmit = event => {
         event.preventDefault();
 
         console.log("Inside handleReplyFormSubmit()");
 
+        this.handleCreateReply({
+            reply: this.state.reply,
+            replyThumbsUpCount: this.state.replyThumbsUpCount,
+            replyThumbsDownCount: this.state.replyThumbsDownCount,
+            replyAddedOn: moment().format('MMMM Do YYYY, h:mm a'),
+            // replyUserId: this.state.replyUserId
+        });
 
-    }
+        console.log("-------------------------------------------");
+        // Call function to get all replies and post on the question page
+        this.handleGetAllReplies();
+
+    } // End of handleReplyFormSubmit()
+
+
+
+
 
 
 
@@ -264,15 +390,16 @@ class AddUpdateQuestion extends Component {
         console.log("this.state-------------");
         console.log(this.state);
 
-        // if question has been saved, let's redirect to the home page
-        // if (this.state.questionSaved) {
-        //     return <Redirect to="/view-update/"{this.state.id} />
-        // }
 
         return (
             <React.Fragment>
 
-                <AppHeader handleFormSwitch={this.handleFormSwitch} />
+                <AppHeader
+                    message={this.state.alertMessage}
+                // handleFormSwitch={props.handleFormSwitch}
+                // onChange={props.handleInputChange}
+                // handleQuestionSearch={props.handleQuestionSearch}
+                />
 
 
                 <div className="row container-fluid">
@@ -296,18 +423,18 @@ class AddUpdateQuestion extends Component {
                                 <div className="col-8" style={{ borderRight: "1px solid grey" }}>
 
                                     {/* Handle submit button text ---------------------------------------- */}
-                                    {
-                                        (this.state.id) ?
-                                            ((this.state.setDisabled) ?
-                                                (<button
-                                                    type="button"
-                                                    className="btn btn-outline-info btn-dark float-right mb-2"
-                                                    onClick={this.handleReSetDisabled}
-                                                >
-                                                    <i className="fa fa-user-edit"></i>
-                                                </button>) : ("")
-                                            ) : ("")
-                                    }
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-info btn-dark float-right mb-2"
+                                        onClick={this.handleReSetDisabled}
+                                        style={{
+                                            visibility: (this.state.id && this.state.setDisabled) ?
+                                                'visible' : 'hidden'
+                                        }}
+                                    >
+                                        <i className="fa fa-user-edit"></i>
+                                    </button>
+
 
                                     {/* Take user question field ---------------------------------------- */}
                                     <div className="form-group">
@@ -319,7 +446,8 @@ class AddUpdateQuestion extends Component {
                                             name="question"
                                             placeholder="What is..."
                                             className="form-control"
-                                            disabled={this.state.setDisabled}
+                                            // disabled={this.state.setDisabled}
+                                            disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
                                         />
                                     </div>
 
@@ -333,18 +461,42 @@ class AddUpdateQuestion extends Component {
                                             placeholder="Describe your question with code (if required) here ..."
                                             className="form-control"
                                             style={{ height: '200px' }}
-                                            disabled={this.state.setDisabled}
+                                            // disabled={this.state.setDisabled}
+                                            disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
                                         >
                                         </textarea>
                                     </div>
 
-                                    {/* Replies Window */}
-                                    <UserReply
-                                        handleInputChange={this.handleInputChange}
-                                        value={this.state.currentReply}
-                                        name="currentReply"
-                                        handleReplyFormSubmit={this.handleReplyFormSubmit}
-                                    />
+                                    {/* All user replies will be populated here */}
+                                    {
+                                        (this.state.replylist.length > 0) ? (
+                                            this.state.replylist.map(reply => {
+                                                return (
+                                                    <ShowAllReplies
+                                                        replyObject={reply}
+                                                        handleGetAllReplies={this.handleGetAllReplies}
+                                                    />
+                                                )
+                                            })
+                                        ) : ("")
+                                    }
+
+
+                                    {/* Reply Comment box */}
+                                    {
+
+                                        (this.state.id && this.state.setDisabled) ? (
+                                            <UserReply
+                                                handleInputChange={this.handleInputChange}
+                                                value={this.state.reply}
+                                                name="reply"
+                                                handleReplyFormSubmit={this.handleReplyFormSubmit}
+                                            />
+                                        ) : (
+                                                ""
+                                            )
+                                    }
+
 
                                 </div>
 
@@ -364,6 +516,7 @@ class AddUpdateQuestion extends Component {
                                         </div>
 
                                         <div className="col-12">
+
                                             {/* Handle tags section -------------------------------------------- */}
                                             <div className="form-group mt-3">
                                                 <label htmlFor="tags">
@@ -375,7 +528,7 @@ class AddUpdateQuestion extends Component {
                                                     list="categories"
                                                     name="currentTag"
                                                     onChange={this.handleTagSelection}
-                                                    disabled={this.state.setDisabled}
+                                                    disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
                                                 />
 
                                                 <datalist id="categories">
@@ -389,7 +542,7 @@ class AddUpdateQuestion extends Component {
                                                     type="button"
                                                     className="btn btn-sm btn-info ml-3"
                                                     onClick={this.handleTagAddition}
-                                                    disabled={this.state.setDisabled}
+                                                    disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
                                                 >
                                                     Save Tag
                                                 </button>
@@ -409,25 +562,35 @@ class AddUpdateQuestion extends Component {
                             </div>
 
 
-
                             {/* Handle submit button text ---------------------------------------- */}
-                            {
-                                (this.state.id) ?
-                                    ((!this.state.setDisabled) ?
-                                        (<button
-                                            type="submit"
-                                            className="btn btn-outline-info btn-dark">
-                                            Update Question
-                                        </button>) :
-                                        ("")
-                                    ) : (
-                                        <button
-                                            type="submit"
-                                            className="btn btn-outline-info btn-dark">
-                                            Post Question
-                                        </button>
-                                    )
-                            }
+                            <div className="row">
+                                <div className="col-12">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-outline-info btn-dark"
+                                        style={{
+                                            visibility: !(this.state.id && this.state.setDisabled) && !this.state.setUpdateBtnVisibleTrue ?
+                                                'visible' : 'hidden'
+                                        }}
+                                    >
+                                        Update Question
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-12">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-outline-info btn-dark float-left"
+                                        style={{ visibility: !this.state.id ? 'visible' : 'hidden' }}
+                                    >
+                                        Post Question
+                                    </button>
+                                </div>
+                            </div>
+
+
+
                         </form>
                         {/* End Form Window */}
 

@@ -13,7 +13,17 @@ function Navbar(props) {
 
             <nav className="nav flex-column">
                 <NavLink to="/" className="nav-link navbar-brand text-dark">HOME</NavLink>
-                <NavLink to="/questions" className="nav-link text-dark">Questions</NavLink>
+                <NavLink 
+                    to={{
+                        pathname: "/questions", 
+                        state: { originPage: "Navbar" }
+                    }} 
+                    className="nav-link text-dark"
+                >
+                    Questions
+                </NavLink>
+
+
                 <NavLink to="/tags" className="nav-link text-dark">Tags</NavLink>
                 <NavLink to="/users" className="nav-link text-dark">Users</NavLink>
                 <NavLink to="/jobs" className="nav-link text-dark">Jobs</NavLink>

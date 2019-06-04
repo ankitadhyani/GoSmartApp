@@ -64,7 +64,10 @@ function updateQuestion(req, res) {
         question: req.body.question,
         quesDescription: req.body.quesDescription,
         userTags: req.body.userTags,
-        viewCount: req.body.viewCount
+        repliesObject: req.body.repliesObject,
+        viewCount: req.body.viewCount,
+        // userId: req.body.userId,
+        dateAdded: req.body.dateAdded
       }
     },
     {

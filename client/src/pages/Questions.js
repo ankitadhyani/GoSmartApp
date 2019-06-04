@@ -11,17 +11,30 @@ class Questions extends Component {
 
     state = {
         questionlist: [],
-        searchQuestion: "",
-        // searchQuestion: "What is REACT?",
+        searchQuestion: "", // searchQuestion: "What is REST?",
         searchResultList: [],
-        showSearchResult: false
+        showSearchResult: false //=true iff user searches for a question else =false
     };
 
 
     // use component did mount to get all questions on load
     componentDidMount() {
+        console.log("Inside componentDidMount -> Question.js");
+
+        //Reset few states
+        this.setState({
+            questionlist: [],
+            searchQuestion: "",
+            searchResultList: [],
+            showSearchResult: false
+        })
+        // Get all questions
         this.getQuestions();
     }
+
+    // componentDidUpdate() {
+
+    // }
 
     // Method to get all questions
     getQuestions = () => {
@@ -129,21 +142,46 @@ class Questions extends Component {
 
 
 
+    /* *************************************************************************************
+     *  render function starts here
+     * *************************************************************************************/
 
-    render(props) {
 
-        // console.log("Question.js ----> " + props);
+    render() {
 
-        let cpySearchQuestion = this.state.searchQuestion; // "What is REACT?";
-        cpySearchQuestion = cpySearchQuestion.trim();
+        console.log("Inside Question.js :: " + this.props.originPage);
 
-        // If user has entered a question to be searched, 
-        // then update 'questionlist[]' with related questions only
-        // if (this.state.searchQuestion) {
-        if (cpySearchQuestion) {
-            this.handleSearchQuestionString(cpySearchQuestion.toLowerCase());
+        // If user clicks on "Questions" link from Navbar then reset states
+        if (this.props.originPage === "Navbar" && this.state.showSearchResult === true) {
+            this.setState({
+                showSearchResult: false
+            })
+        }
+        // Set the 'searchQuestion' state to the value fed from ViewAllQuestions.js
+        if (this.props.searchQuestion && this.state.showSearchResult === false) {
+            this.setState({
+                searchQuestion: this.props.searchQuestion,
+                showSearchResult: true
+            })
         }
 
+        if (this.state.searchQuestion) {
+
+            console.log("this.state.searchQuestion: " + this.state.searchQuestion);
+
+            let cpySearchQuestion = this.state.searchQuestion; // "What is REST?";
+            cpySearchQuestion = cpySearchQuestion.trim();
+
+            // If user has entered a question to be searched, 
+            // then update 'questionlist[]' with related questions only
+            // if (this.state.searchQuestion) {
+            if (cpySearchQuestion) {
+                console.log("Calling handleSearchQuestionString() now...");
+                this.handleSearchQuestionString(cpySearchQuestion.toLowerCase());
+            }
+        }
+
+        console.log("this.state.showSearchResult: " + this.state.showSearchResult);
 
 
         return (
@@ -158,6 +196,7 @@ class Questions extends Component {
                         <Link
                             to={`/add`}
                             className="btn btn-outline-info btn-dark float-right"
+                            // callHandleAskQuestion={true}
                         >
                             <strong>Ask Question</strong>
                         </Link>
@@ -165,10 +204,11 @@ class Questions extends Component {
                 </header>
 
 
+
                 {/* List all questions here */}
                 <div className=""
                     style={{
-                        height: "400px",
+                        height: "350px",
                         overflowY: "scroll"
                     }}>
                     <ListGroup
