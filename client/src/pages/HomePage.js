@@ -3,17 +3,18 @@ import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 
+
 // Importing custom Components
 import AppHeader from '../components/AppHeader/AppHeader';
 import Registration from '../components/Registration/Registration';
 import Navbar from '../components/Navbar/Navbar';
 import Questions from './Questions';
-import Alert from '../components/Alert/Alert';
 import Footer from "../components/Footer/Footer";
 
 
-// Importing APIs
+// Importing APIs from utils
 import { registerUser, loginUser, getUserProfile } from '../utils/userAPIs';
+import { showToastifyAlert } from '../utils/alertAPI';
 
 
 
@@ -31,9 +32,7 @@ class HomePage extends Component {
         nickName: "",
         email: "",
         password: "",
-        questionAsked: false,
-
-        alertMessage: "" // Stores the alert message
+        questionAsked: false
     };
 
 
@@ -88,26 +87,28 @@ class HomePage extends Component {
                             email: userData.email,
                             password: userData.password,
                             userLoggedIn: true,
-                            // alertMessage: "User logged in successfully"
                         });
+                        showToastifyAlert("User logged in successfully", "success");
 
                     })
                     .catch(err => {
                         console.log(err);
+                        showToastifyAlert("Incorrect user credentials !!", "error");
+
+                        this.setState({
+                            userLoggedIn: false
+                        });
                     });
 
-
-
-                // alert("User logged in successfully");
 
             })
             .catch(err => {
                 console.log(err);
+                showToastifyAlert("Incorrect user credentials !!", "error");
+
                 this.setState({
-                    userLoggedIn: false,
-                    alertMessage: "Incorrect user credentials !!"
+                    userLoggedIn: false
                 });
-                // alert("Incorrect user credentials !!");
             });
 
     } // End of handleUserLogin()
@@ -122,14 +123,7 @@ class HomePage extends Component {
         registerUser(newUserInfo)
             .then(() => {
 
-                // this.setState({
-                //     // userRegistered: true,
-                //     alertMessage: "New User registered successfully"
-                // });
-
-                // alert("New User registered successfully");
-
-                //LogIn user with the saved credentials
+                //Auto LogIn user with the saved credentials
                 this.handleUserLogin({
                     email: this.state.email,
                     password: this.state.password
@@ -158,9 +152,11 @@ class HomePage extends Component {
             let password = this.state.password; password.trim();
 
             if (!email || !password) {
+                
+                showToastifyAlert("All fields are mandatory!", "error");
+
                 return this.setState({
-                    userRegistered: false,
-                    alertMessage: "All fields are mandatory!"
+                    userRegistered: false
                 });
             }
 
@@ -181,9 +177,10 @@ class HomePage extends Component {
             let password = this.state.password; password.trim();
 
             if (!firstName || !lastName || !nickName || !email || !password) {
+
+                showToastifyAlert("All fields are mandatory!", "error");
                 return this.setState({
-                    userRegistered: false,
-                    alertMessage: "All fields are mandatory!"
+                    userRegistered: false
                 });
             }
 
@@ -208,9 +205,8 @@ class HomePage extends Component {
 
     render() {
         console.log("Inside HomePage -> render()");
-        // console.log("this.state.alertMessage = " + this.state.alertMessage);
-        console.log("this.state-----");
-        console.log(this.state);
+        // console.log("this.state-----");
+        // console.log(this.state);
 
 
         return (
@@ -218,7 +214,6 @@ class HomePage extends Component {
                 <div>
                     <AppHeader
                         handleFormSwitch={this.handleFormSwitch}
-                        alertMessage={this.state.alertMessage}
                         userLoggedIn={this.state.userLoggedIn}
                         fullName={`${this.state.firstName} ${this.state.lastName}`}
                         nickName={this.state.nickName}

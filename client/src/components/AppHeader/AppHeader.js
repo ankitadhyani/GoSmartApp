@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import './AppHeader.css';
-
-import Alert from '../Alert/Alert';
-
+import { showToastifyAlert } from '../../utils/alertAPI';
 
 
 
@@ -12,8 +10,7 @@ class AppHeader extends Component {
 
   state = {
     searchQuestion: "", // Will store the question to be searched by the user
-    questionAsked: false,
-    alertMessage: "" // Stores the alert message
+    questionAsked: false
   };
 
 
@@ -125,12 +122,15 @@ class AppHeader extends Component {
 
 
             
-            <div className="col-4 mt-2 d-flex justify-content-end">
+            <div 
+              className={this.props.userLoggedIn ? "dropdown open btn btn-info" : ""}
+              className="col-4 mt-2 d-flex justify-content-end"
+            >
 
                 {/* -------- LogIn Button ---------- */}
                 <button
                   type="button"
-                  className="btn btn-outline-info m-1"
+                  className="btn btn-outline-info m-3"
                   onClick={() => this.props.handleFormSwitch("login")}
                   style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
                 >
@@ -141,7 +141,8 @@ class AppHeader extends Component {
                 {/* -------- Sign Up Button ---------- */}
                 <button
                   type="button"
-                  className={this.props.userLoggedIn ? "dropdown open btn btn-info m-1" : "btn btn-info m-1"}
+                  // className={this.props.userLoggedIn ? "dropdown open btn btn-info" : "btn btn-info"}
+                  className="btn btn-info m-3"
                   onClick={() => this.props.handleFormSwitch("registration")}
                   style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
                 >
@@ -151,11 +152,11 @@ class AppHeader extends Component {
 
                 {/* After user login show a button with label of user name and dropdown menu */}
                 <button
-                  className="btn btn-outline-info dropdown-toggle"
+                  className="btn btn-outline-info dropdown-toggle m-3"
                   type="button"
-                  // id="dropdownMenu3"
                   data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false"
+                  
                   style={{ visibility: this.props.userLoggedIn ? 'visible' : 'hidden' }}
                 >
                   <span className="text-light">{this.props.fullName}</span>
@@ -174,11 +175,6 @@ class AppHeader extends Component {
           </div>
           {/* End of Row + Jumbotron */}
 
-          <div className="row mt-0">
-            <div className="col-12 mt-0">
-              <Alert alertMessage={this.state.alertMessage || this.props.alertMessage} />
-            </div>
-          </div>
 
 
         </div>
