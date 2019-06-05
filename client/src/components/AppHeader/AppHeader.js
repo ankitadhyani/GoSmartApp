@@ -61,8 +61,10 @@ class AppHeader extends Component {
 
   render() {
 
-    if (this.state.questionAsked === true && this.state.searchQuestion) {
+    console.log("Inside AppHeader -> render()");
 
+
+    if (this.state.questionAsked === true && this.state.searchQuestion) {
 
       this.setState({
         questionAsked: false
@@ -76,10 +78,10 @@ class AppHeader extends Component {
 
 
     return (
+
       <React.Fragment>
 
         <div className="container-fluid sticky-top">
-
 
           <div className="row p-0 jumbotron jumbotron-fluid bg-dark text-dark cJumbotron">
 
@@ -122,71 +124,61 @@ class AppHeader extends Component {
             </div>
 
 
-            {/* -------- LogIn Button ---------- */}
-            <div
-              className="col-2 mt-4"
-              style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
-            >
-              <button
-                type="button"
-                className="btn btn-outline-info"
-                onClick={() => this.props.handleFormSwitch("login")}
-              >
-                <strong>Log In</strong>
-              </button>
-            </div>
+            
+            <div className="col-4 mt-2 d-flex justify-content-end">
+
+                {/* -------- LogIn Button ---------- */}
+                <button
+                  type="button"
+                  className="btn btn-outline-info m-1"
+                  onClick={() => this.props.handleFormSwitch("login")}
+                  style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
+                >
+                  <strong>Log In</strong>
+                </button>
 
 
-            {/* -------- Sign Up Button ---------- */}
-            <div
-              className={this.props.userLoggedIn ? "col-2 mt-4 dropdown open" : "col-2 mt-4"}
-            >
-
-              <button
-                type="button"
-                className="btn btn-info"
-                onClick={() => this.props.handleFormSwitch("registration")}
-                style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
-              >
-                <strong>Sign Up</strong>
-              </button>
+                {/* -------- Sign Up Button ---------- */}
+                <button
+                  type="button"
+                  className={this.props.userLoggedIn ? "dropdown open btn btn-info m-1" : "btn btn-info m-1"}
+                  onClick={() => this.props.handleFormSwitch("registration")}
+                  style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
+                >
+                  <strong>Sign Up</strong>
+                </button>
 
 
-              {/* After user login show a button with label of user name and dropdown menu */}
-              {/* <div
-                class="dropdown open"
-                style={{ visibility: this.props.userLoggedIn ? 'visible' : 'hidden' }}
-              > */}
-              <button
-                class="btn btn-outline-info dropdown-toggle mt-0"
-                type="button"
-                // id="dropdownMenu3"
-                data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false"
-                style={{ visibility: this.props.userLoggedIn ? 'visible' : 'hidden' }}
-              >
-                {this.props.fullName}
-              </button>
+                {/* After user login show a button with label of user name and dropdown menu */}
+                <button
+                  className="btn btn-outline-info dropdown-toggle"
+                  type="button"
+                  // id="dropdownMenu3"
+                  data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false"
+                  style={{ visibility: this.props.userLoggedIn ? 'visible' : 'hidden' }}
+                >
+                  <span className="text-light">{this.props.fullName}</span>
+                </button>
 
-              <div class="dropdown-menu">
-                <h6 class="dropdown-header">{this.props.email}</h6>
-                <a class="dropdown-item" href="#!">User Profile</a>
-                <a class="dropdown-item" href="#!">Logout</a> 
-              </div>
-              {/* </div> */}
-
+                <div className="dropdown-menu">
+                  <h6 className="dropdown-header">{this.props.email}</h6>
+                  <h6 className="dropdown-header">({this.props.nickName})</h6>
+                  <a className="dropdown-item" href="#!">User Profile</a>
+                  <a className="dropdown-item" href="#!">Logout</a>
+                </div>
 
             </div>
+            {/* -------- End of Sign Up Button ---------- */}
 
           </div>
           {/* End of Row + Jumbotron */}
 
-          <div className="row">
-            <div className="col-12">
-              <Alert message={this.state.alertMessage} />
+          <div className="row mt-0">
+            <div className="col-12 mt-0">
+              <Alert alertMessage={this.state.alertMessage || this.props.alertMessage} />
             </div>
           </div>
-
 
 
         </div>

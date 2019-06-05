@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const logger = require('morgan');
+const cookieParser = require('cookie-parser');
 
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(logger('dev'));
+app.use(cookieParser());
 
 // This is for production use only
 if (process.env.NODE_ENV === 'production') {

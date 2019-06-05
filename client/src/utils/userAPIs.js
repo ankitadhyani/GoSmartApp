@@ -17,8 +17,8 @@ export const loginUser = (userInfo) => {
 }
 
 
-// getAllUsers
-export const getAllUsers = () => {
+// getUserProfile
+export const getUserProfile = () => {
     return axios.get('/api/users')
 }
 
@@ -45,7 +45,7 @@ export const removeUser = (userId) => {
 export default {
     registerUser,
     loginUser,
-    getAllUsers,
+    getUserProfile,
     getUserById,
     updateUser,
     removeUser

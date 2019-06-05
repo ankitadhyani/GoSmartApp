@@ -103,6 +103,7 @@ const register = (req, res) => {
  * This function is triggerend when already registered user tries to login to the app
  * It verifies user info from the DB and fetches user data
  * It will run when user POSTs to '/api/user/login'
+ * If successful it returns bearer token
  **************************************************************************************** */
 
 const login = async (req, res) => {
@@ -120,12 +121,13 @@ const login = async (req, res) => {
     res.status(500).json({
       error: "Internal error, try again"
     });
-  } else if (userInfo === null) {
+  }
+  else if (userInfo === null) {
     res.status(401).json({
       error: "Incorrect email!"
     })
-  } else {
-
+  }
+  else {
     // check to see if password matches user's password
     const [pwErr, same] = await handle(userInfo.isCorrectPassword(password));
 
@@ -150,8 +152,13 @@ const login = async (req, res) => {
       });
 
       // respond with web token to the front end
-      res.status(200).json(token);
+      res.cookie('token', token, { httpOnly: true }).status(200).json(token);
 
+      // // respond with web token to the front end
+      // res.cookie('token', token, {httpOnly: true}).status(200).json({
+      //   token: token,
+      //   userInfo: userInfo
+      // });
     }
 
   }

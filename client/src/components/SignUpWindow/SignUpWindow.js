@@ -7,7 +7,7 @@ import './SignUpWindow.css';
 // Function that triggers when user clicks on 'LogIn' button
 function handleUserLogIn(props) {
 
-    // console.log("Inside SignUpWindow -> handleUserLogIn()");
+    console.log("Inside SignUpWindow -> handleUserLogIn()");
 
     {/* Log-In form */ }
     return (
@@ -182,6 +182,9 @@ function handleNewUserSignUp(props) {
 
 // create a function to export a AppHeader component
 function SignUpWindow(props) {
+    
+    console.log("props.regStatus = " + props.regStatus);
+
     return (
         <React.Fragment>
             {/* Log In/Sign Up Window within bg image*/}

@@ -13,7 +13,7 @@ import Footer from "../components/Footer/Footer";
 
 
 // Importing APIs
-import { registerUser, loginUser } from '../utils/userAPIs';
+import { registerUser, loginUser, getUserProfile } from '../utils/userAPIs';
 
 
 
@@ -68,17 +68,47 @@ class HomePage extends Component {
         console.log("userInfo: "); console.log(userInfo);
 
         loginUser(userInfo)
-            .then(() => {
+            .then(({ data: accessToken }) => {
 
-                this.setState({
-                    userLoggedIn: true,
-                    alertMessage: "User logged in successfully"
-                });
+                console.log("User profile -> accessToken: " + accessToken);
+                localStorage.setItem('accessToken', accessToken);
 
-                alert("User logged in successfully");
+
+                // Get user information from user table----  ??????
+                getUserProfile()
+                    .then(({ data: userData }) => {
+                        console.log("getUserProfile -> userData -> ");
+                        console.log(userData);
+
+                        // Update state with user data
+                        this.setState({
+                            firstName: userData.firstName,
+                            lastName: userData.lastName,
+                            nickName: userData.nickName,
+                            email: userData.email,
+                            password: userData.password,
+                            userLoggedIn: true,
+                            // alertMessage: "User logged in successfully"
+                        });
+
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+
+
+
+                // alert("User logged in successfully");
 
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                this.setState({
+                    userLoggedIn: false,
+                    alertMessage: "Incorrect user credentials !!"
+                });
+                // alert("Incorrect user credentials !!");
+            });
 
     } // End of handleUserLogin()
 
@@ -86,18 +116,18 @@ class HomePage extends Component {
     handleCreateNewUser = newUserInfo => {
 
         console.log("Inside HomePage -> handleCreateNewUser()");
-        console.log("newUserInfo: ");
-        console.log(newUserInfo);
+        // console.log("newUserInfo: ");
+        // console.log(newUserInfo);
 
         registerUser(newUserInfo)
             .then(() => {
 
-                this.setState({
-                    // userRegistered: true,
-                    alertMessage: "New User registered successfully"
-                });
+                // this.setState({
+                //     // userRegistered: true,
+                //     alertMessage: "New User registered successfully"
+                // });
 
-                alert("New User registered successfully");
+                // alert("New User registered successfully");
 
                 //LogIn user with the saved credentials
                 this.handleUserLogin({
@@ -119,24 +149,50 @@ class HomePage extends Component {
         event.preventDefault();
 
         console.log("Inside HomePage -> handleFormSubmit()");
+
         if (formType) {
             console.log("Log-In form submitted");
 
+            // Check to see if even a single field is absent, show alert and return
+            let email = this.state.email; email.trim();
+            let password = this.state.password; password.trim();
+
+            if (!email || !password) {
+                return this.setState({
+                    userRegistered: false,
+                    alertMessage: "All fields are mandatory!"
+                });
+            }
+
             this.handleUserLogin({
-                email: this.state.email,
-                password: this.state.password
+                email: email,
+                password: password
             });
 
         }
         else {
             console.log("Sign-Up form submitted");
 
+            // Check to see if even a single field is absent, show alert and return
+            let firstName = this.state.firstName; firstName.trim();
+            let lastName = this.state.lastName; lastName.trim();
+            let nickName = this.state.nickName; nickName.trim();
+            let email = this.state.email; email.trim();
+            let password = this.state.password; password.trim();
+
+            if (!firstName || !lastName || !nickName || !email || !password) {
+                return this.setState({
+                    userRegistered: false,
+                    alertMessage: "All fields are mandatory!"
+                });
+            }
+
             this.handleCreateNewUser({
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                nickName: this.state.nickName,
-                email: this.state.email,
-                password: this.state.password
+                firstName: firstName,
+                lastName: lastName,
+                nickName: nickName,
+                email: email,
+                password: password
             });
         }
 
@@ -151,15 +207,21 @@ class HomePage extends Component {
 
 
     render() {
+        console.log("Inside HomePage -> render()");
+        // console.log("this.state.alertMessage = " + this.state.alertMessage);
+        console.log("this.state-----");
+        console.log(this.state);
+
 
         return (
             <React.Fragment>
                 <div>
                     <AppHeader
                         handleFormSwitch={this.handleFormSwitch}
-                        message={this.state.alertMessage}
+                        alertMessage={this.state.alertMessage}
                         userLoggedIn={this.state.userLoggedIn}
                         fullName={`${this.state.firstName} ${this.state.lastName}`}
+                        nickName={this.state.nickName}
                         email={this.state.email}
                     // handleInputChange={this.handleInputChange}
                     // handleQuestionSearch={this.handleQuestionSearch}
