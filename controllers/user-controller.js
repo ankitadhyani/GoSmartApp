@@ -46,56 +46,6 @@ const register = (req, res) => {
     });
 }
 
-// const register = (req, res) => {
-
-//   console.log("Inside user-controller -> POST '/api/user/register' -> register");
-
-//   // get information about user out of req.body
-//   const {
-//     firstName,
-//     lastName,
-//     nickName,
-//     email,
-//     password
-//   } = req.body;
-
-//   console.log(email + " : " + password + " : " + firstName + " : " +  lastName + " : " + nickName);
-
-
-//   // create a new user
-//   const User = new User({
-//     firstName,
-//     lastName,
-//     nickName,
-//     email,
-//     password
-//   });
-
-//   // run setFullName()
-//   // user.setFullName();
-
-//   // create/save/register new user 
-//   // (this will trigger the password creation method we set up in the User model)
-//   User.save(err => {
-//     if (err) {
-//       console.log(err);
-//       res.status(500).json({
-//         success: false,
-//         message: "Error registering new user, please try again."
-//       });
-//     } else {
-//       res.status(200).json({
-//         success: true,
-//         message: "Continue to Go Smart!!"
-//       });
-//     }
-//   });
-
-
-// } // End of register()
-
-
-
 
 
 /** ***************************************************************************************
@@ -152,13 +102,14 @@ const login = async (req, res) => {
       });
 
       // respond with web token to the front end
-      res.cookie('token', token, { httpOnly: true }).status(200).json(token);
+      res.status(200).json(token);
 
-      // // respond with web token to the front end
-      // res.cookie('token', token, {httpOnly: true}).status(200).json({
-      //   token: token,
-      //   userInfo: userInfo
+      // res.cookie('token', token, { httpOnly: true }).status(200).json(token);
+      // res.cookie('token', token, { httpOnly: true }).status(200).json({
+      //   accessToken: token, 
+      //   userData: userInfo
       // });
+
     }
 
   }
@@ -184,6 +135,31 @@ const getUserProfile = async (req, res) => {
   }
 
 } // End of getUserProfile()
+
+
+/** ***************************************************************************************
+ * Function: logOutUser()
+ * It will run DELETE '/api/user' (this will be run through auth middleware)
+ **************************************************************************************** */
+
+const logOutUser = async (req, res) => {
+
+  console.log("Inside DELETE '/api/user' -> logOutUser");
+
+  let token =
+    req.body.token ||
+    req.query.token ||
+    req.headers['x-access-token'] ||
+    req.headers.authorization || 
+    req.cookies.token;
+
+    // console.log("token = " + token);
+
+    // Clear token value from 'Cookie' so that when the user logs in next there is no token value
+    res.clearCookie('token');
+    res.redirect('/');
+  
+} // End of logOutUser()
 
 
 
@@ -265,5 +241,6 @@ module.exports = {
   getUserProfile,
   login,
   register,
-  updateUserProfile
+  updateUserProfile,
+  logOutUser
 }

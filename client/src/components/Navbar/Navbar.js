@@ -7,8 +7,11 @@ import './Navbar.css';
 
 // create a function to export a AppHeader component
 function Navbar(props) {
+    
+    console.log("Navbar component - > ");
 
     return (
+        
         <React.Fragment>
 
             <nav className="nav flex-column">

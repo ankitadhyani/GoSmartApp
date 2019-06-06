@@ -4,17 +4,17 @@ import { Link } from 'react-router-dom';
 
 // Importing custon Components
 import AppHeader from '../components/AppHeader/AppHeader';
-// import Registration from '../components/Registration/Registration';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import UserReply from '../components/UserReply/UserReply';
 import ShowAllReplies from '../components/UserReply/ShowAllReplies';
 
 
-// Importing APIs
+// Importing APIs from utils
+import { getUserProfile } from '../utils/userAPIs';
 import { getAllQuestions, getQuestionById, createQuestion, updateQuestion, removeQuestion } from '../utils/questionAPIs';
 import { getAllReplies, getReplyById, createReply, updateReply, removeReply } from '../utils/replyAPIs';
-
+import { showToastifyAlert } from '../utils/alertAPI';
 
 var moment = require('moment');
 
@@ -32,13 +32,6 @@ class AddUpdateQuestion extends Component {
         userId: "",
         dateAdded: "",
 
-        questionSaved: false,
-        currentTag: "",
-        setDisabled: true,
-        setUpdateBtnVisibleTrue: false,
-        refreshViewUpdatePage: false,
-        showUserReplyCommentBox: true,
-
         // States that handle reply
         replyId: "",
         reply: "",
@@ -46,7 +39,19 @@ class AddUpdateQuestion extends Component {
         replyThumbsDownCount: 0,
         replyAddedOn: "",
         replyUserId: "",
-        replylist: [] // This contains all the replies from reply DB
+        replylist: [], // This contains all the replies from reply DB
+
+        questionSaved: false,
+        currentTag: "",
+        setDisabled: true,
+        setUpdateBtnVisibleTrue: false,
+        refreshViewUpdatePage: false,
+        showUserReplyCommentBox: true,
+
+        // Get below states from getUserProfile()
+        currentUserNickName: "",
+        currentUserId: "",
+        userLoggedIn: false
     };
 
 
@@ -54,8 +59,34 @@ class AddUpdateQuestion extends Component {
     componentDidMount() {
         // for class components use THIS.PROPS to get props 
         // console.log(this.props);
-        console.log("Inside AddUpdateQuestion -> componentDidMount()");
+        // console.log("Inside AddUpdateQuestion -> componentDidMount()");
 
+        // Get user info and extract user nickName from user table to feed it in Question & Reply table
+        // In case of error (meaning no user is logged in) the set 'userLoggedIn' state to false
+        getUserProfile()
+        .then(({ data: userData }) => {
+            // console.log("AddUpdateQuestion -> getUserProfile -> userData -> ");
+            // console.log(userData);
+
+            // Update state with user data
+            this.setState({
+                currentUserId: userData._id,
+                currentUserNickName: userData.nickName,
+                userLoggedIn: true
+            });
+
+        })
+        .catch(err => {
+            console.log(err);
+            //showToastifyAlert("Could not get user information !", "error");
+
+            // Update state with user data
+            this.setState({
+                userLoggedIn: false
+            });
+        });
+
+        // If we have a question Id in the URL bar then based on that Id get question data from DB
         if (this.props.match.params.id) {
             // extract id of question out of this.props.match.params.id
             const questionId = this.props.match.params.id;
@@ -74,6 +105,7 @@ class AddUpdateQuestion extends Component {
                         viewCount: questionData.viewCount,
                         userId: questionData.userId,
                         dateAdded: questionData.dateAdded,
+                        quesNickName: questionData.quesNickName,
                         questionSaved: false,
                         currentTag: ""
                     });
@@ -83,23 +115,19 @@ class AddUpdateQuestion extends Component {
 
 
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    console.log(err);
+                    showToastifyAlert("Question not found!", "error");
+                });
         }
 
     } //End of componentDidMount()
 
 
-    componentDidUpdate() {
-        console.log("Inside componentDidUpdate()");
+    // componentDidUpdate() {
+    //     console.log("Inside componentDidUpdate()");
 
-        // if (this.state.refreshViewUpdatePage) {
-
-        //     this.setState({
-        //         refreshViewUpdatePage: false
-        //     });
-        //     window.location.reload();
-        // }
-    }
+    // }
 
 
     // This function will trigger when user clicks on "Ask question" from updateQuestion Page
@@ -108,6 +136,7 @@ class AddUpdateQuestion extends Component {
 
         console.log("Inside handleAskQuestion()");
         this.setState({
+            // States that store the question fields
             id: "",
             question: "",
             quesDescription: "",
@@ -116,6 +145,7 @@ class AddUpdateQuestion extends Component {
             viewCount: 0,
             userId: "",
             dateAdded: "",
+            quesNickName: "",
 
             questionSaved: false,
             currentTag: "",
@@ -132,8 +162,7 @@ class AddUpdateQuestion extends Component {
             replyAddedOn: "",
             replyUserId: "",
             replylist: [],
-
-            alertMessage: "" // Stores the alert message
+            replyUserNickName: ""
 
         });
     }
@@ -234,13 +263,17 @@ class AddUpdateQuestion extends Component {
     handleCreateQuestion = questionInfo => {
         createQuestion(questionInfo)
             .then(() => {
-                alert("Question created successfully");
+
+                showToastifyAlert("Question created successfully!", "success");
+
                 this.setState({
-                    questionSaved: true,
-                    alertMessage: "Question created successfully"
+                    questionSaved: true
                 });
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                showToastifyAlert("Failed to create question!", "error");
+            });
     }
 
 
@@ -250,16 +283,20 @@ class AddUpdateQuestion extends Component {
         updateQuestion(questionId, questionInfo)
             .then(() => {
 
-                alert("Question updated successfully");
-                this.setState({
-                    alertMessage: "Question updated successfully"
-                })
+                showToastifyAlert("Question updated successfully!", "success");
 
                 // Refresh the page
                 window.location.reload(); //Works fine
+                // this.setState({
+                //     refreshViewUpdatePage: true
+                // });
             })
-            .catch(err => console.log(err));
-    }
+            .catch(err => {
+                console.log(err);
+                showToastifyAlert("Failed to create question!", "error");
+            });
+
+    } // End of handleUpdateQuestion()
 
 
 
@@ -276,8 +313,9 @@ class AddUpdateQuestion extends Component {
                     userTags: this.state.userTags,
                     repliesObject: this.state.repliesObject,
                     viewCount: this.state.viewCount,
-                    // userId: this.state.userId,
-                    dateAdded: this.state.dateAdded
+                    userId: this.state.userId,
+                    dateAdded: this.state.dateAdded,
+                    quesNickName: this.state.quesNickName,
                 });
         }
         // else just create a new question
@@ -289,8 +327,9 @@ class AddUpdateQuestion extends Component {
                 userTags: this.state.userTags,
                 repliesObject: this.state.repliesObject,
                 viewCount: this.state.viewCount,
-                // userId: this.state.userId,
-                dateAdded: moment().format('MMMM Do YYYY, h:mm a')
+                userId: this.state.currentUserId, // Update with current user Id
+                dateAdded: moment().format('MMMM Do YYYY, h:mm a'),
+                quesNickName: this.state.currentUserNickName
             });
         }
     }
@@ -298,6 +337,7 @@ class AddUpdateQuestion extends Component {
 
     // Function that resets disabled functionality when user clicks on Edit button
     handleReSetDisabled = () => {
+
         this.setState({
             setDisabled: false
         });
@@ -311,10 +351,7 @@ class AddUpdateQuestion extends Component {
         createReply(replyInfo)
             .then((dbReplyData) => {
 
-                alert("Reply created successfully");
-                this.setState({
-                    alertMessage: "Reply created successfully"
-                })
+                showToastifyAlert("Reply created successfully!", "success");
 
                 // Now add the reply Id to Questions table
                 console.log("dbReplyData------ ");
@@ -336,11 +373,15 @@ class AddUpdateQuestion extends Component {
                         repliesObject: this.state.repliesObject,
                         viewCount: this.state.viewCount,
                         userId: this.state.userId,
-                        dateAdded: this.state.dateAdded
+                        dateAdded: this.state.dateAdded,
+                        quesNickName: this.state.quesNickName
                     });
 
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                showToastifyAlert("Reply Creation Failed!", "error");
+            });
     }
 
 
@@ -369,13 +410,15 @@ class AddUpdateQuestion extends Component {
                             replylist: cpyReplylist,
                         });
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => {
+                        console.log(err);
+                        showToastifyAlert("Reply not found in DB!", "error");
+                    });
             });
 
             this.setState({
                 refreshViewUpdatePage: true
             });
-            // window.location.reload();
         }
         else {
             return;
@@ -392,12 +435,19 @@ class AddUpdateQuestion extends Component {
 
         console.log("Inside handleReplyFormSubmit()");
 
+        // If user is not logged in then do not accept the answer
+        if(!this.state.userLoggedIn) {
+            return showToastifyAlert("Please Log-In to Post your Answer!", "error");
+        }
+
+        // Create reply data
         this.handleCreateReply({
             reply: this.state.reply,
             replyThumbsUpCount: this.state.replyThumbsUpCount,
             replyThumbsDownCount: this.state.replyThumbsDownCount,
             replyAddedOn: moment().format('MMMM Do YYYY, h:mm a'),
-            // replyUserId: this.state.replyUserId
+            replyUserId: this.state.currentUserId,  // Update with current user Id
+            replyUserNickName: this.state.currentUserNickName
         });
 
         // Call function to get all replies and post on the question page
@@ -440,11 +490,15 @@ class AddUpdateQuestion extends Component {
                         repliesObject: this.state.repliesObject,
                         viewCount: this.state.viewCount,
                         userId: this.state.userId,
-                        dateAdded: this.state.dateAdded
+                        dateAdded: this.state.dateAdded,
+                        quesNickName: this.state.quesNickName
                     });
 
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                showToastifyAlert("Delete Reply Failed!", "error");
+            });
     }
 
 
@@ -460,7 +514,10 @@ class AddUpdateQuestion extends Component {
                 // Call function to get all replies and post on the question page
                 this.handleGetAllReplies();
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                showToastifyAlert("Thumbs Up Count Failed to Update!", "error");
+            });
 
     } // End of handleThumbsUpCount()
 
@@ -477,7 +534,10 @@ class AddUpdateQuestion extends Component {
                 // Call function to get all replies and post on the question page
                 this.handleGetAllReplies();
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                showToastifyAlert("Thumbs Down Count Failed to Update!", "error");
+            });
 
     } // End of handleThumbsDownCount()
 
@@ -496,8 +556,6 @@ class AddUpdateQuestion extends Component {
             this.setState({
                 refreshViewUpdatePage: false
             });
-            // window.location.reload();
-            // return <Redirect to=`/view-update/${this.state.id}` />
             const path="/view-update/" + this.state.id;
             return <Redirect to={path} />
         }
@@ -506,7 +564,6 @@ class AddUpdateQuestion extends Component {
             <React.Fragment>
 
                 <AppHeader
-                    message={this.state.alertMessage}
                 // handleFormSwitch={props.handleFormSwitch}
                 // onChange={props.handleInputChange}
                 // handleQuestionSearch={props.handleQuestionSearch}
@@ -538,8 +595,16 @@ class AddUpdateQuestion extends Component {
                                         type="button"
                                         className="btn btn-outline-info btn-dark float-right mb-2"
                                         onClick={this.handleReSetDisabled}
+                                        // style={{
+                                        //     visibility: (this.state.id && this.state.setDisabled) ?
+                                        //         'visible' : 'hidden'
+                                        // }}
+                                        // It will be visible iff the current user Id === user who created the question
                                         style={{
-                                            visibility: (this.state.id && this.state.setDisabled) ?
+                                            visibility: 
+                                                (this.state.id && 
+                                                (this.state.currentUserId === this.state.userId) && 
+                                                this.state.setDisabled) ?
                                                 'visible' : 'hidden'
                                         }}
                                     >
@@ -557,7 +622,6 @@ class AddUpdateQuestion extends Component {
                                             name="question"
                                             placeholder="What is..."
                                             className="form-control"
-                                            // disabled={this.state.setDisabled}
                                             disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
                                         />
                                     </div>
@@ -572,7 +636,6 @@ class AddUpdateQuestion extends Component {
                                             placeholder="Describe your question with code (if required) here ..."
                                             className="form-control"
                                             style={{ height: '200px' }}
-                                            // disabled={this.state.setDisabled}
                                             disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
                                         >
                                         </textarea>
@@ -607,6 +670,7 @@ class AddUpdateQuestion extends Component {
                                                 value={this.state.reply}
                                                 name="reply"
                                                 handleReplyFormSubmit={this.handleReplyFormSubmit}
+                                                userLoggedIn={this.state.userLoggedIn}
                                             />
                                         ) : (
                                                 ""

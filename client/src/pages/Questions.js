@@ -13,7 +13,7 @@ class Questions extends Component {
         questionlist: [],
         searchQuestion: "", // searchQuestion: "What is REST?",
         searchResultList: [],
-        showSearchResult: false //=true iff user searches for a question else =false
+        showSearchResult: false //=true iff user searches for a question, else =false
     };
 
 
@@ -21,7 +21,7 @@ class Questions extends Component {
     componentDidMount() {
         // console.log("Inside componentDidMount -> Question.js");
 
-        //Reset few states
+        //Reset states
         this.setState({
             questionlist: [],
             searchQuestion: "",
@@ -32,25 +32,28 @@ class Questions extends Component {
         this.getQuestions();
     }
 
-    // componentDidUpdate() {
-
-    // }
 
     // Method to get all questions
     getQuestions = () => {
+
         getAllQuestions()
             .then(({ data: dbQuestionData }) => this.setState({ questionlist: dbQuestionData }))
             .catch(err => console.log(err));
-    }
+
+    } // End of getQuestions()
 
 
 
     // Method to remove a question when user clicks on button to remove it
     handleDeleteQuestion = (questionId) => {
+
         removeQuestion(questionId)
             .then(this.getQuestions)
             .catch(err => console.log(err));
-    }
+
+    } // End of handleDeleteQuestion()
+
+
 
     // Method that updates the view count field of the question schema whenever 
     // a user clicks on to view a question
@@ -192,7 +195,10 @@ class Questions extends Component {
                     <div className="col-6">
                         <h3>Top Questions</h3>
                     </div>
-                    <div className="col-6">
+                    <div 
+                        className="col-6"
+                        style={{ visibility: this.props.userLoggedIn ? 'visible' : 'hidden' }}
+                    >
                         <Link
                             to={`/add`}
                             className="btn btn-outline-info btn-dark float-right"
@@ -218,14 +224,11 @@ class Questions extends Component {
                         }
                         handleDeleteQuestion={this.handleDeleteQuestion}
                         handleUpdateViewCount={this.handleUpdateViewCount}
-                        // nickName={props.nickName}
-                        nickName={"Ankita"}
                     />
                 </div>
 
                 {/* Show View all questions button iff we have atleast 1 question */}
                 {
-                    // (this.state.questionlist.length > 0) ?
                     (this.state.questionlist.length > 0 && this.props.originPage === "HomePage") ?
                         (
                             <Link

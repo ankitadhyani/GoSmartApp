@@ -5,6 +5,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AllQuestions from './pages/ViewAllQuestions';
 import AddUpdateQuestion from './pages/AddUpdateQuestion';
+import MyProfilePage from './pages/MyProfilePage';
+import MyQuestionsPage from './pages/MyQuestionsPage';
+import LogoutPage from './pages/LogoutPage';
+
 
 
 function App() {
@@ -23,6 +27,15 @@ function App() {
 
           {/* Update a question */}
           <Route exact path="/view-update/:id" component={AddUpdateQuestion} />
+
+          {/* View User Profile */}
+          <Route exact path="/my-profile" component={MyProfilePage} />
+
+          {/* View Questions posted by User */}
+          <Route exact path="/my-questions" component={MyQuestionsPage} />
+
+          {/* Go To Logout Page */}
+          <Route exact path="/logout" component={LogoutPage} />
 
           
           

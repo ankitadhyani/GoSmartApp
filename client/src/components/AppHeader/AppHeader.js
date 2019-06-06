@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 import './AppHeader.css';
+import Dropdown from '../../components/Dropdown/Dropdown';
+
+// Importing APIs from utils
+import { getUserProfile, logOutUser } from '../../utils/userAPIs';
 import { showToastifyAlert } from '../../utils/alertAPI';
 
 
@@ -10,15 +14,63 @@ class AppHeader extends Component {
 
   state = {
     searchQuestion: "", // Will store the question to be searched by the user
-    questionAsked: false
+    questionAsked: false,
+
+    // Get below states from getUserProfile()
+    fullName: "",
+    nickName: "",
+    email: "",
+    userLoggedIn: false
   };
+
+
+
+  // use component did mount to get user Info on load
+  componentDidMount() {
+    // console.log(window.location);
+    // for class components use THIS.PROPS to get props 
+    // console.log(this.props);
+    console.log("Inside AppHeader -> componentDidMount()");
+
+    // Reset state
+    this.setState({
+      fullName: "",
+      nickName: "",
+      email: "",
+      userLoggedIn: false
+    });
+
+
+    // Get user info and extract user nickName from user table to feed it in Question & Reply table
+    // In case of error (meaning no user is logged in) the set 'userLoggedIn' state to false
+    getUserProfile()
+    .then(({ data: userData }) => {
+        console.log("AppHeader -> getUserProfile -> userData -> ");
+        console.log(userData);
+
+        // Update state with user data
+        this.setState({
+            fullName: `${userData.firstName} ${userData.lastName}`,
+            email: userData.email,
+            nickName: userData.nickName,
+            userLoggedIn: true
+        });
+
+    })
+    .catch(err => {
+        console.log(err);
+
+        // Update state with user data
+        this.setState({
+            userLoggedIn: false
+        });
+    });
+
+  } //End of componentDidMount()
 
 
   // handleInputChange
   handleInputChange = event => {
-
-    // console.log("Inside AppHeader -> handleInputChange()");
-
     const { name, value } = event.target;
     this.setState({
       [name]: value
@@ -55,10 +107,47 @@ class AppHeader extends Component {
   } //End of handleQuestionSearch()
 
 
+  setStatesValuesWhenUserLogsIn = () => {
+
+    getUserProfile()
+    .then(({ data: userData }) => {
+        console.log("AppHeader -> setStatesValuesWhenUserLogsIn()");
+        // console.log(userData);
+
+        // Update state with user data
+        this.setState({
+            fullName: `${userData.firstName} ${userData.lastName}`,
+            email: userData.email,
+            nickName: userData.nickName,
+            userLoggedIn: true
+        });
+
+    })
+    .catch(err => {
+        console.log(err);
+
+        // Update state with user data
+        this.setState({
+            userLoggedIn: false
+        });
+    });
+
+  }
+
+
+
+
 
   render() {
 
     console.log("Inside AppHeader -> render()");
+    console.log(this.state);
+    console.log("Appheader -> this.props.userLoggedIn: " + this.props.userLoggedIn);
+
+    // Call function to set states 
+    if(this.props.userLoggedIn === true && this.state.userLoggedIn === false){
+      this.setStatesValuesWhenUserLogsIn();
+    }
 
 
     if (this.state.questionAsked === true && this.state.searchQuestion) {
@@ -80,11 +169,12 @@ class AppHeader extends Component {
 
         <div className="container-fluid sticky-top">
 
-          <div className="row p-0 jumbotron jumbotron-fluid bg-dark text-dark cJumbotron">
+          <div className="row p-0 jumbotron jumbotron-fluid bg-dark text-dark mb-0 cJumbotron">
 
             {/* -------- Go Smart App Icon ---------- */}
             <div className="col-2 mt-0 pt-0">
-              <img className="btn cGoSmartIcon"
+              <img 
+                className="btn cGoSmartIcon"
                 src='/images/GoSmart_Icon.png'
                 alt="GoSmart_Icon"
                 onClick={() => <Redirect to="/" />}
@@ -123,51 +213,73 @@ class AppHeader extends Component {
 
             
             <div 
-              className={this.props.userLoggedIn ? "dropdown open btn btn-info" : ""}
+              // className={this.state.userLoggedIn ? "dropdown open btn btn-info" : ""}
               className="col-4 mt-2 d-flex justify-content-end"
+              // className="col-4 mt-2"
             >
-
+              <div 
+                className="row float-right"
+                style={{ visibility: !this.state.userLoggedIn ? 'visible' : 'hidden' }}
+              >
                 {/* -------- LogIn Button ---------- */}
-                <button
-                  type="button"
-                  className="btn btn-outline-info m-3"
-                  onClick={() => this.props.handleFormSwitch("login")}
-                  style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
-                >
-                  <strong>Log In</strong>
-                </button>
+                {
+                  window.location.pathname === "/" ? (
+                    <button
+                      type="button"
+                      className="btn btn-outline-info m-3"
+                      onClick={() => this.props.handleFormSwitch("login")}
+                    >
+                      <strong>Log In</strong>
+                    </button>
+                  ) : (
+                    <Link className="btn btn-outline-info m-3" to={{
+                      pathname: "/",
+                      state: {
+                        showLogin: true
+                      }
+                    }}>
+                      <strong>Log In</strong>
+                    </Link>
+                  )
+                }
 
 
                 {/* -------- Sign Up Button ---------- */}
-                <button
-                  type="button"
-                  // className={this.props.userLoggedIn ? "dropdown open btn btn-info" : "btn btn-info"}
-                  className="btn btn-info m-3"
-                  onClick={() => this.props.handleFormSwitch("registration")}
-                  style={{ visibility: !this.props.userLoggedIn ? 'visible' : 'hidden' }}
-                >
-                  <strong>Sign Up</strong>
-                </button>
+                {
+                  window.location.pathname === "/" ? (
+                    <button
+                      type="button"
+                      className="btn btn-outline-info m-3 "
+                      onClick={() => this.props.handleFormSwitch("registration")}
+                    >
+                      <strong>Sign Up</strong>
+                    </button>
+                  ) : (
+                    <Link className="btn btn-outline-info m-3" to={{
+                        pathname: "/",
+                        state: {
+                          showLogin: false
+                        }
+                      }}>
+                      <strong>Sign Up</strong>
+                    </Link>
+                  )
+                }
 
+              </div>
 
-                {/* After user login show a button with label of user name and dropdown menu */}
-                <button
-                  className="btn btn-outline-info dropdown-toggle m-3"
-                  type="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false"
-                  
-                  style={{ visibility: this.props.userLoggedIn ? 'visible' : 'hidden' }}
-                >
-                  <span className="text-light">{this.props.fullName}</span>
-                </button>
-
-                <div className="dropdown-menu">
-                  <h6 className="dropdown-header">{this.props.email}</h6>
-                  <h6 className="dropdown-header">({this.props.nickName})</h6>
-                  <a className="dropdown-item" href="#!">User Profile</a>
-                  <a className="dropdown-item" href="#!">Logout</a>
-                </div>
+              <div 
+                className="row mt-2 mr-3 float-right"
+                style={{ visibility: this.state.userLoggedIn ? 'visible' : 'hidden' }}
+              >
+                 {/* After user login show a button with label of user name and dropdown menu */}
+                 <Dropdown 
+                    fullName={this.state.fullName}
+                    email={this.state.email}
+                    nickName={this.state.nickName}
+                />
+              </div>
+                
 
             </div>
             {/* -------- End of Sign Up Button ---------- */}

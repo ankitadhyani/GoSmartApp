@@ -17,13 +17,19 @@ const secret = process.env.SECRET;
 const withAuth = (req, res, next) => {
 
   // In our code we'll be using 'req.headers.authorization'
-  let token =
+  // let token =
+  //   req.body.token ||
+  //   req.query.token ||
+  //   req.headers['x-access-token'] ||
+  //   req.headers.authorization || 
+  //   req.cookies.token;
+
+    let token =
     req.body.token ||
     req.query.token ||
     req.headers['x-access-token'] ||
-    req.headers.authorization || 
-    req.cookies.token;
-
+    req.headers.authorization;
+    
 
   // ["Bearer", "<tokenvalue>"]
   // Trip "Bearer " keyword from the response

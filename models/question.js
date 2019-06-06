@@ -37,6 +37,9 @@ const QuestionSchema = new Schema({
    },
    dateAdded: {
       type: String
+   },
+   quesNickName: {
+      type: String
    }
 });
 

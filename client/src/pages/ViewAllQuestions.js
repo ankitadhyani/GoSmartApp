@@ -9,20 +9,35 @@ import Questions from './Questions';
 
 
 
+// Switch state to show different form (login vs registration)
+function handleFormSwitch(formName) {
+
+    const showLogin = (formName === "login") ? true : false;
+
+    this.setState({
+        showLogin
+    });
+
+} //End of handleFormSwitch()
+
+
+
 function ViewAllQuestions(props) {
 
-    // console.log(props);
-    // console.log("props.originPage: "+ props.location.state.originPage);
+    console.log("Inside ViewAllQuestions(props) page");
+    console.log(props);
+    console.log("props.originPage: "+ props.location.state.originPage);
 
     return (
         <React.Fragment>
+
             <AppHeader
-                handleFormSwitch={props.handleFormSwitch}
-                onChange={props.handleInputChange}
-                handleQuestionSearch={props.handleQuestionSearch}
+                originPage={props.location.state.originPage}
+                handleFormSwitch={handleFormSwitch}
             />
 
-            <div className="row container-fluid">
+
+            <div className="row container-fluid mt-5">
 
                 {/* Left navigation Bar */}
                 <div className="col-2"

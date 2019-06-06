@@ -19,7 +19,19 @@ export const loginUser = (userInfo) => {
 
 // getUserProfile
 export const getUserProfile = () => {
-    return axios.get('/api/users')
+    const jwtToken = localStorage.getItem('accessToken');
+
+    return axios.get('/api/users', {
+            headers: {
+                "Authorization" : `Bearer ${jwtToken}`
+            }}
+            );
+}
+
+
+// logOutUser
+export const logOutUser = () => {
+    return axios.delete('/api/users')
 }
 
 // getUserById
@@ -48,7 +60,8 @@ export default {
     getUserProfile,
     getUserById,
     updateUser,
-    removeUser
+    removeUser,
+    logOutUser
 }
 
 

@@ -34,6 +34,9 @@ const RepliesSchema = new Schema({
   },
   replyAddedOn: {
     type: String
+  },
+  replyUserNickName: {
+    type: String
   }
   
 });

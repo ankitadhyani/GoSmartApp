@@ -30,6 +30,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.5.11",
     "morgan": "^1.9.1",
+    "react-native-popup-menu": "^0.15.6",
     "react-toastify": "^5.2.1"
   },
   "devDependencies": {

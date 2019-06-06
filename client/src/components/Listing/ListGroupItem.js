@@ -12,9 +12,10 @@ function incrementViewCount(questionObject) {
     quesDescription: questionObject.quesDescription,
     userTags: questionObject.userTags,
     repliesObject: questionObject.repliesObject,
-    viewCount: vc, //Updating only the view count
+    viewCount: vc,    //Updating only the view count
     userId: questionObject.userId,
-    dateAdded: questionObject.dateAdded
+    dateAdded: questionObject.dateAdded,
+    quesNickName: questionObject.quesNickName
   };
 }
 
@@ -51,8 +52,9 @@ function ListGroupItem(props) {
               {props.questionObject.question}
             </Link>
           </div>
-          <small className="mb-1 ml-3 text-info">
-            asked by <i>{props.nickName}</i> on <i>{props.questionObject.dateAdded}</i>
+          <small className="mb-1 ml-3">
+            asked by <span className="text-info font-weight-bold">{props.questionObject.quesNickName}</span> on <span className="text-info font-weight-bold">{props.questionObject.dateAdded}</span>
+             
           </small>
 
 

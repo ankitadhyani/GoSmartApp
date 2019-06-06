@@ -13,7 +13,7 @@ import Footer from "../components/Footer/Footer";
 
 
 // Importing APIs from utils
-import { registerUser, loginUser, getUserProfile } from '../utils/userAPIs';
+import { registerUser, loginUser, getUserProfile, logOutUser } from '../utils/userAPIs';
 import { showToastifyAlert } from '../utils/alertAPI';
 
 
@@ -27,6 +27,7 @@ class HomePage extends Component {
         searchQuestion: "", // Will store the question to be searched by the user
 
         // Inputs for form registration
+        userId: "",
         firstName: "",
         lastName: "",
         nickName: "",
@@ -34,6 +35,18 @@ class HomePage extends Component {
         password: "",
         questionAsked: false
     };
+
+    componentDidMount() {
+
+        console.log("Inside HomePage -> componentDidMount()");
+        // console.log("this.props.location.state.showLogin: " + this.props.location.state.showLogin);
+
+        if(this.props.location.state){
+            this.setState({
+                showLogin: this.props.location.state.showLogin || false
+            });
+        }
+    }
 
 
     // handleInputChange
@@ -67,20 +80,21 @@ class HomePage extends Component {
         console.log("userInfo: "); console.log(userInfo);
 
         loginUser(userInfo)
-            .then(({ data: accessToken }) => {
+            .then(({ data: token }) => {
+                
+                console.log("Inside .then of HomePage -> loginUser()");
+                console.log(token);
 
-                console.log("User profile -> accessToken: " + accessToken);
-                localStorage.setItem('accessToken', accessToken);
+                // localStorage.setItem('accessToken', userData.accessToken);
+                localStorage.setItem('accessToken', token);
 
-
-                // Get user information from user table----  ??????
+                // Get user information from user table
                 getUserProfile()
                     .then(({ data: userData }) => {
-                        console.log("getUserProfile -> userData -> ");
-                        console.log(userData);
 
                         // Update state with user data
                         this.setState({
+                            userId: userData._id,
                             firstName: userData.firstName,
                             lastName: userData.lastName,
                             nickName: userData.nickName,
@@ -89,6 +103,7 @@ class HomePage extends Component {
                             userLoggedIn: true,
                         });
                         showToastifyAlert("User logged in successfully", "success");
+                        // window.location.reload();
 
                     })
                     .catch(err => {
@@ -197,6 +212,25 @@ class HomePage extends Component {
     } // End of handleFormSubmit()
 
 
+    // This function will trigger when user wants to logout from the application
+//   handleUserLogOut = () => {
+
+//     console.log("Inside HomePage -> handleUserLogOut()");
+
+//     localStorage.removeItem('accessToken');
+//     // Reset state 
+//     this.setState({
+//         // fullName: "",
+//         // email: "",
+//         // nickName: "",
+//         userLoggedIn: false
+//     });
+
+//   } // End of handleUserLogOut()
+
+
+
+
 
     /* *************************************************************************************
      *  render function starts here
@@ -205,8 +239,8 @@ class HomePage extends Component {
 
     render() {
         console.log("Inside HomePage -> render()");
-        // console.log("this.state-----");
-        // console.log(this.state);
+        console.log("this.state-----");
+        console.log(this.state);
 
 
         return (
@@ -215,11 +249,7 @@ class HomePage extends Component {
                     <AppHeader
                         handleFormSwitch={this.handleFormSwitch}
                         userLoggedIn={this.state.userLoggedIn}
-                        fullName={`${this.state.firstName} ${this.state.lastName}`}
-                        nickName={this.state.nickName}
-                        email={this.state.email}
-                    // handleInputChange={this.handleInputChange}
-                    // handleQuestionSearch={this.handleQuestionSearch}
+                        handleUserLogOut={this.handleUserLogOut}
                     />
 
                     <Registration
@@ -250,8 +280,11 @@ class HomePage extends Component {
                                 borderRight: "5px solid red"
                             }}>
                             {/* Call Question list here */}
-                            {/* <Questions nickName={this.state.nickName}/> */}
-                            <Questions originPage={"HomePage"} />
+                            <Questions 
+                                originPage={"HomePage"}
+                                handleFormSwitch={this.handleFormSwitch}
+                                userLoggedIn={this.state.userLoggedIn}
+                            />
 
                         </div>
 

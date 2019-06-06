@@ -8,7 +8,7 @@
 const router = require('express').Router();
 
 // Import methods we exported from user-controller
-const {register, login, getUserProfile, updateUserProfile } = require('../../controllers/user-controller');
+const {register, login, getUserProfile, updateUserProfile, logOutUser } = require('../../controllers/user-controller');
 
 // Import authentication method 
 const withAuth = require('../../middleware/authentication');
@@ -17,7 +17,8 @@ const withAuth = require('../../middleware/authentication');
 // GET user profile '/api/users'
 router
   .route('/')
-  .get(withAuth, getUserProfile);
+  .get(withAuth, getUserProfile)
+  .delete(withAuth, logOutUser);
 
 
 // POST register user '/api/users/register'

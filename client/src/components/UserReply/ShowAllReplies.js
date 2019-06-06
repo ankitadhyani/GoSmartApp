@@ -11,7 +11,8 @@ function incrementThumbsUpCount(replyObject) {
         replyThumbsUpCount: thumbsUpCount, // Updated 
         replyThumbsDownCount: replyObject.replyThumbsDownCount,
         replyUserId: replyObject.replyUserId,
-        replyAddedOn: replyObject.replyAddedOn
+        replyAddedOn: replyObject.replyAddedOn,
+        replyUserNickName: replyObject.replyUserNickName
     };
 }
 
@@ -25,7 +26,8 @@ function incrementThumbsDownCount(replyObject) {
         replyThumbsUpCount: replyObject.replyThumbsUpCount,
         replyThumbsDownCount: thumbsDownCount, // Updated 
         replyUserId: replyObject.replyUserId,
-        replyAddedOn: replyObject.replyAddedOn
+        replyAddedOn: replyObject.replyAddedOn,
+        replyUserNickName: replyObject.replyUserNickName
     };
 }
 
@@ -55,7 +57,7 @@ function ShowAllReplies(props) {
                             props.handleThumbsDownCount(props.id, incrementThumbsDownCount(props.replyObject))
                         }
                     >
-                        <i class="fa fa-thumbs-down text-danger btn-lg"></i>
+                        <i className="fa fa-thumbs-down text-danger btn-lg"></i>
                         <span>{props.replyObject.replyThumbsDownCount}</span>
                     </button>
                 </div>
@@ -77,7 +79,7 @@ function ShowAllReplies(props) {
                 <div className="col-10">
                     <label htmlFor="userName" className="float-right mt-1">
                         <small>
-                            posted by "{props.replyObject.replyUserId}" on {props.replyObject.replyAddedOn}
+                            posted by <span className="font-weight-bold">{props.replyObject.replyUserNickName}</span> on <span className="font-weight-bold">{props.replyObject.replyAddedOn}</span>
                         </small>
                     </label>
                 </div>
@@ -87,7 +89,7 @@ function ShowAllReplies(props) {
                         className="btn float-right" 
                         onClick={() => { }}
                     >
-                        <i class="fas fa-user-edit text-info"></i>
+                        <i className="fas fa-user-edit text-info"></i>
                     </button>
                 </div>
                 <div className="col-1">
@@ -96,7 +98,7 @@ function ShowAllReplies(props) {
                         className="btn float-right" 
                         onClick={() => props.handleDeleteReply(props.id)}
                     >
-                        <i class="fa fa-trash-alt text-danger"></i>
+                        <i className="fa fa-trash-alt text-danger"></i>
                     </button>
                 </div>
             </div>
