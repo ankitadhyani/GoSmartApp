@@ -1,0 +1,58 @@
+[
+    {
+      "id": 0,
+      "name": "Express",
+      "note": "Express is a minimal and flexible Node.js web application framework, providing a robust set of features for building web applications."
+    },
+    {
+      "id": 1,
+      "name": "HTML CSS",
+      "note": "HTML (HyperText Markup Language) is the standard markup language used for structuring web pages and formatting content. HTML describes the structure of a website semantically along with cues for presentation, making it a markup language, rather than a programming language. HTML works in conjunction primarily with CSS and JavaScript, adding style and behavior to the pages. The most recent revision to the HTML specification is HTML5.2. CSS (Cascading Style Sheets) is a representation style sheet language used for describing the look and formatting of HTML (Hyper Text Markup Language), XML (Extensible Markup Language) documents and SVG elements including (but not limited to) colors, layout, fonts, and animations. It also describes how elements should be rendered on screen, on paper, in speech, or on other media."
+    },
+    {
+      "id": 2,
+      "name": "Java",
+      "note": "Java (not to be confused with JavaScript or JScript or JS) is a general-purpose, statically typed, object-oriented programming language designed to be used in conjunction with the Java Virtual Machine (JVM). 'Java platform' is the name for a computing system that has installed tools for developing and running Java programs. Use this tag for questions referring to the Java programming language or Java platform tools."
+    },
+    {
+      "id": 3,
+      "name": "Javascript",
+      "note": "JavaScript (not to be confused with Java) is a high-level, dynamic, multi-paradigm, object-oriented, prototype-based, weakly-typed language used for both client-side and server-side scripting. Its primary use is in rendering and manipulating of web pages. Use this tag for questions regarding ECMAScript and its various dialects/implementations (excluding ActionScript and Google-Apps-Script)."
+    },
+    {
+      "id": 4,
+      "name": "MongoDB",
+      "note": "MongoDB is a scalable, high-performance, open source, document-oriented NoSQL database. It supports a large number of languages and application development platforms. Questions about server administration can be asked on https://dba.stackexchange.com."
+    },
+    {
+      "id": 5,
+      "name": "MySQL",
+      "note": "MySQL is a free, open source Relational Database Management System (RDBMS) that uses Structured Query Language (SQL). DO NOT USE this tag for other DBs such as SQL Server, SQLite etc. Those are different DBs which all use SQL to manage the data."
+    },
+    {
+      "id": 6,
+      "name": "Node.js",
+      "note": "Node.js is an event-based, non-blocking, asynchronous I/O runtime that uses Google's V8 JavaScript engine and libuv library. It is used for developing applications that make heavy use of the ability to run JavaScript both on the client, as well as on server side and therefore benefit from the re-usability of code and the lack of context switching."
+    },
+    {
+      "id": 7,
+      "name": "OOPs Concepts",
+      "note": "Object-oriented programming is a programming paradigm using 'objects': data structures consisting of data fields and methods together with their interactions."
+    },
+    {
+      "id": 8,
+      "name": "React Native",
+      "note": "React Native lets you build native mobile apps using React. The focus of React Native is on developer efficiency across all the platforms you care about - learn once, write anywhere."
+    },
+    {
+      "id": 9,
+      "name": "Reactjs",
+      "note": "React is a JavaScript library for building user interfaces. It uses a declarative paradigm and aims to be both efficient and flexible."
+    },
+    {
+      "id": 10,
+      "name": "REST",
+      "note": "REST (Representational State Transfer) is a style of software architecture for distributed hypermedia systems such as the World Wide Web. It has increased in popularity relative to RPC architectures such as SOAP due to the intrinsic de-coupling of client from server that comes from having a uniform interface between heterogeneous systems."
+    }
+  ]
+  

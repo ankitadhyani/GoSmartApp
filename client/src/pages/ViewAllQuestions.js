@@ -51,7 +51,6 @@ function ViewAllQuestions(props) {
                 <div className="col-10">
                     <Questions
                         searchQuestion={props.location.state ? props.location.state.searchQuestion : ""}
-                        // originPage={props.location.state.originPage}
                         originPage={props.location.state ? props.location.state.originPage : "HomePage"}
                     />
                 </div>

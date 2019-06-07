@@ -7,6 +7,9 @@ import AllQuestions from './pages/ViewAllQuestions';
 import AddUpdateQuestion from './pages/AddUpdateQuestion';
 import MyProfilePage from './pages/MyProfilePage';
 import MyQuestionsPage from './pages/MyQuestionsPage';
+import TagsPage from './pages/TagsPage';
+import ViewTagBasedQuestions from './pages/ViewTagBasedQuestions'
+import JobsPage from './pages/JobsPage';
 import LogoutPage from './pages/LogoutPage';
 
 
@@ -33,6 +36,15 @@ function App() {
 
           {/* View Questions posted by User */}
           <Route exact path="/my-questions" component={MyQuestionsPage} />
+
+          {/* Go To Tags */}
+          <Route exact path="/tags" component={TagsPage} />
+
+          {/* Go To View Tag based questions */}
+          <Route exact path="/tags/questions" component={ViewTagBasedQuestions} />
+
+          {/* Go To Jobs Page */}
+          <Route exact path="/jobs" component={JobsPage} />
 
           {/* Go To Logout Page */}
           <Route exact path="/logout" component={LogoutPage} />

@@ -212,23 +212,6 @@ class HomePage extends Component {
     } // End of handleFormSubmit()
 
 
-    // This function will trigger when user wants to logout from the application
-//   handleUserLogOut = () => {
-
-//     console.log("Inside HomePage -> handleUserLogOut()");
-
-//     localStorage.removeItem('accessToken');
-//     // Reset state 
-//     this.setState({
-//         // fullName: "",
-//         // email: "",
-//         // nickName: "",
-//         userLoggedIn: false
-//     });
-
-//   } // End of handleUserLogOut()
-
-
 
 
 
@@ -263,7 +246,7 @@ class HomePage extends Component {
                         <h4 className="text-light">Full Stack Web-Development Questions</h4>
                     </div>
 
-                    <div className="row container-fluid">
+                    <div className="row container-fluid mb-5">
 
                         {/* Left navigation Bar */}
                         <div className="col-2"

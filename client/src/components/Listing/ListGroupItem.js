@@ -54,7 +54,6 @@ function ListGroupItem(props) {
           </div>
           <small className="mb-1 ml-3">
             asked by <span className="text-info font-weight-bold">{props.questionObject.quesNickName}</span> on <span className="text-info font-weight-bold">{props.questionObject.dateAdded}</span>
-             
           </small>
 
 
@@ -62,6 +61,7 @@ function ListGroupItem(props) {
             <button
               className="btn text-danger btn-sm m-1"
               onClick={() => props.handleDeleteQuestion(props.id)}
+              disabled={!props.userLoggedIn ? true : false}
             >
               <i className="fa fa-trash-alt"></i>
             </button>

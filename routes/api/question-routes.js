@@ -10,6 +10,7 @@ const router = require('express').Router();
 
 const { 
     getAllQuestions, 
+    getQuestionsByTag,
     getQuestionById, 
     createQuestion, 
     updateQuestion, 
@@ -32,6 +33,12 @@ router
   .get(getQuestionById)
   .put(updateQuestion)
   .delete(removeQuestion);
+
+router
+  .route('/tag/:tag')
+  .get(getQuestionsByTag);
+
+
 
 // export routes
 module.exports = router;

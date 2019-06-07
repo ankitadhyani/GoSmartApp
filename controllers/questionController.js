@@ -12,9 +12,10 @@ const { Question } = require('../models');
 // /api/questions
 function getAllQuestions(req, res) {
 
-  console.log("Inside controllers -> getAllQuestions()");
+  console.log("Inside question controllers -> getAllQuestions()");
 
   Question.find({})
+    .sort({viewCount: -1})
     .then(dbQuestionData => res.status(200).json(dbQuestionData))
     .catch(err => {
       console.log(err);
@@ -23,11 +24,38 @@ function getAllQuestions(req, res) {
 }
 
 
+// GET all questions that have a particular tag
+// /api/questions/tag/:tag
+function getQuestionsByTag(req, res) {
+
+  console.log("Inside question controllers -> getQuestionsByTag()");
+  // console.log("req.params.tag: " + req.params.tag);
+  let tagName = req.params.tag;
+
+  // db.getCollection('questions').find({'userTags':'REST'},{'_id':1})
+
+  Question.find(
+      { userTags: tagName },
+      // { _id: 1 }
+    )
+    .then(dbQuestionData => {
+      console.log(dbQuestionData);
+      res.status(200).json(dbQuestionData)
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+
+}
+
+
+
 // GET a single question by it's _id
 // /api/questions/:id
 function getQuestionById(req, res) {
 
-  console.log("Inside controllers -> getQuestionById()");
+  console.log("Inside question controllers -> getQuestionById()");
 
   Question.findById(req.params.id)
     .then(dbQuestionData => res.status(200).json(dbQuestionData))
@@ -44,7 +72,7 @@ function getQuestionById(req, res) {
 // /api/Questions with req.body 
 function createQuestion(req, res) {
 
-  console.log("Inside controllers -> createQuestion()");
+  console.log("Inside question controllers -> createQuestion()");
   // console.log(req.body);
 
 
@@ -60,7 +88,7 @@ function createQuestion(req, res) {
 // /api/Questions/:id with req.body
 function updateQuestion(req, res) {
 
-  console.log("Inside controllers -> updateQuestion()");
+  console.log("Inside question controllers -> updateQuestion()");
 
 
   Question.findByIdAndUpdate(
@@ -91,7 +119,7 @@ function updateQuestion(req, res) {
 // /api/Questions/:id
 function removeQuestion(req, res) {
 
-  console.log("Inside controllers -> removeQuestion()");
+  console.log("Inside question controllers -> removeQuestion()");
 
   Question.remove({
     _id: req.params.id
@@ -107,6 +135,7 @@ function removeQuestion(req, res) {
 // export all functions as methods we can import into our route definitions
 module.exports = {
   getAllQuestions,
+  getQuestionsByTag,
   getQuestionById,
   createQuestion,
   updateQuestion,

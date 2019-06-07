@@ -7,6 +7,11 @@ export const getAllQuestions = () => {
   return axios.get('/api/questions')
 }
 
+// getQuestionsByTag
+export const getQuestionsByTag = (tag) => {
+  return axios.get(`/api/questions/tag/${tag}`)
+}
+
 // getQuestionById
 export const getQuestionById = (questionId) => {
   return axios.get(`/api/questions/${questionId}`)

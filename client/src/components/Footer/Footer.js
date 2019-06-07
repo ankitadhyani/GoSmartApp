@@ -5,7 +5,7 @@ function Footer() {
   
   return (
 
-    <div className="row bg-info p-2 mb-1 mt-3 footer">
+    <div className="row bg-info p-2 mt-3 fixed-bottom footer">
 
       <div className="col-12">
         Copyright &copy; {new Date().getFullYear()}

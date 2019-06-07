@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom';
 
 import ListGroup from '../components/Listing/ListGroup';
 
+// Importing APIs from utils
 import { getAllQuestions, updateQuestion, removeQuestion } from '../utils/questionAPIs';
-
+import { getUserProfile } from '../utils/userAPIs';
 
 
 class Questions extends Component {
 
     state = {
+        userLoggedIn: false,
         questionlist: [],
         searchQuestion: "", // searchQuestion: "What is REST?",
         searchResultList: [],
@@ -23,14 +25,42 @@ class Questions extends Component {
 
         //Reset states
         this.setState({
+            userLoggedIn: false,
             questionlist: [],
             searchQuestion: "",
             searchResultList: [],
             showSearchResult: false
         })
+
+        this.setStatesValuesWhenUserLogsIn();
+
         // Get all questions
         this.getQuestions();
-    }
+
+    } // End of componentDidMount()
+
+
+
+    // This function is called when in state 'userLoggedIn' is different from that received from HomePage
+    setStatesValuesWhenUserLogsIn = () => {
+        getUserProfile()
+        .then(({ data: userData }) => {
+
+            // Update state with if user data is validated
+            this.setState({
+                userLoggedIn: true
+            });
+
+        })
+        .catch(err => {
+            console.log(err);
+
+            this.setState({
+                userLoggedIn: false
+            });
+        });
+    } // End of setStatesValuesWhenUserLogsIn()
+    
 
 
     // Method to get all questions
@@ -154,6 +184,11 @@ class Questions extends Component {
 
         console.log("Inside Question.js");
 
+        // Call function to set states 
+        if(this.props.userLoggedIn === true && this.state.userLoggedIn === false){
+            this.setStatesValuesWhenUserLogsIn();
+        }
+
         // If user clicks on "Questions" link from Navbar then reset states
         if (this.props.originPage === "Navbar" && this.state.showSearchResult === true) {
             this.setState({
@@ -195,17 +230,28 @@ class Questions extends Component {
                     <div className="col-6">
                         <h3>Top Questions</h3>
                     </div>
-                    <div 
-                        className="col-6"
-                        style={{ visibility: this.props.userLoggedIn ? 'visible' : 'hidden' }}
-                    >
-                        <Link
-                            to={`/add`}
-                            className="btn btn-outline-info btn-dark float-right"
-                            // callHandleAskQuestion={true}
-                        >
-                            <strong>Ask Question</strong>
-                        </Link>
+
+                    <div className="col-6">
+                        {/* If user is logged in then show a link to "Ask Question" -> /add */}
+                        {/* Else show a lable */}
+                        {   
+                            (this.state.userLoggedIn) ? 
+                            (<Link
+                                to={{
+                                    pathname: "/add",
+                                    state: { showPostQuestion: true }
+                                }}
+                                className="btn btn-outline-info btn-dark float-right"
+                            >
+                                <strong>Ask Question</strong>
+                            </Link>) : 
+                            (<label 
+                                className="text-dark float-right p-2" 
+                                style={{ borderRadius: "5px", backgroundColor: "rgb(174, 174, 175)" }}
+                            >
+                                <strong>Ask Question</strong>
+                            </label>)
+                        }
                     </div>
                 </header>
 
@@ -222,6 +268,7 @@ class Questions extends Component {
                             (this.state.showSearchResult) ?
                                 this.state.searchResultList : this.state.questionlist
                         }
+                        userLoggedIn={this.state.userLoggedIn}
                         handleDeleteQuestion={this.handleDeleteQuestion}
                         handleUpdateViewCount={this.handleUpdateViewCount}
                     />

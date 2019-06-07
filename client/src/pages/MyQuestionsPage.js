@@ -36,6 +36,8 @@ function MyQuestionsPage(props) {
                 {/* List user data here here */}
                 <div className="col-10">
                     <h1>This is my Questions Page</h1>
+                    <h5>This page will contain all the questions posted by the user</h5>
+
 
 
                 </div>
