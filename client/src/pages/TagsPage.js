@@ -91,8 +91,16 @@ class TagsPage extends Component {
 
                 <AppHeader />
 
+                <div className="row container-fluid bg-info my-1 px-5 ml-0 mr-0">
+                    <div className="col-12">
+                        <h4 className="text-light mt-2">Tags</h4>
+                    </div>
+                    <div className="col-12" style={{fontSize: "15px", lineHeight: "1em"}}>
+                        <p>A tag is a keyword or label that categorizes your question with other, similar questions. Using the right tags makes it easier for others to find and answer your question.</p>
+                    </div>
+                </div>
 
-                <div className="row container-fluid mt-5 mb-5">
+                <div className="row container-fluid mt-3 mb-5">
 
                     {/* Left navigation Bar */}
                     <div className="col-2"
