@@ -14,9 +14,9 @@ const diceJobsModule = require('./dice-scrape');
 
 const scrapedJobs = async (req, res) => {
 
-    console.log("Inside scrapedJobs()");
+    console.log("Inside scraping-controller -> scrapedJobs()");
 
-    // console.log("req.params.location: " + req.params.location);
+    console.log("req.params.location: " + req.params.location);
 
     // Get location value from query parameters
     let location = req.params.location; // "New York, NY" => default value

@@ -8,8 +8,11 @@ import { NavLink } from 'react-router-dom';
 import AppHeader from '../components/AppHeader/AppHeader';
 import Registration from '../components/Registration/Registration';
 import Navbar from '../components/Navbar/Navbar';
-import Questions from './Questions';
 import Footer from "../components/Footer/Footer";
+
+// Importing custom Pages
+import Questions from './Questions';
+import Jobs from './Jobs';
 
 
 // Importing APIs from utils
@@ -275,6 +278,9 @@ class HomePage extends Component {
                         {/* Job Opportunities Window */}
                         <div className="col-3">
                             {/* Call Jobs list here */}
+                            <Jobs 
+                                userLoggedIn={this.state.userLoggedIn}
+                            />
                         </div>
 
                     </div>

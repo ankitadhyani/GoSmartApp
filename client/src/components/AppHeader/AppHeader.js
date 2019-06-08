@@ -193,7 +193,7 @@ class AppHeader extends Component {
                     type="text"
                     name="searchQuestion"
                     value={this.searchQuestion}
-                    placeholder="Search..."
+                    placeholder="Search question..."
                     onChange={this.handleInputChange}
                   />
 

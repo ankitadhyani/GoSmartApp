@@ -9,7 +9,7 @@ import MyProfilePage from './pages/MyProfilePage';
 import MyQuestionsPage from './pages/MyQuestionsPage';
 import TagsPage from './pages/TagsPage';
 import ViewTagBasedQuestions from './pages/ViewTagBasedQuestions'
-import JobsPage from './pages/JobsPage';
+import AllJobsPage from './pages/AllJobsPage';
 import LogoutPage from './pages/LogoutPage';
 
 
@@ -44,7 +44,7 @@ function App() {
           <Route exact path="/tags/questions" component={ViewTagBasedQuestions} />
 
           {/* Go To Jobs Page */}
-          <Route exact path="/jobs" component={JobsPage} />
+          <Route exact path="/jobs" component={AllJobsPage} />
 
           {/* Go To Logout Page */}
           <Route exact path="/logout" component={LogoutPage} />
