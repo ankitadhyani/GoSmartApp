@@ -16,7 +16,7 @@ import Jobs from './Jobs';
 
 
 // Importing APIs from utils
-import { registerUser, loginUser, getUserProfile, logOutUser } from '../utils/userAPIs';
+import { registerUser, loginUser, getUserProfile } from '../utils/userAPIs';
 import { showToastifyAlert } from '../utils/alertAPI';
 
 
@@ -116,7 +116,6 @@ class HomePage extends Component {
                             userLoggedIn: false
                         });
                     });
-
 
             })
             .catch(err => {

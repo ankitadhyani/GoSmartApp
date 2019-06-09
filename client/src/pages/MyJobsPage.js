@@ -161,10 +161,6 @@ class MyJobsPage extends Component {
     render() {
         console.log("Inside MyJobsPage.js render()");
 
-        // if (!this.state.accessToken) {
-        //     return showToastifyAlert("You need to be logged in see your saved jobs!", "error");
-        // }
-
 
 
         return (

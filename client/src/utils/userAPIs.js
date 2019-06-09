@@ -40,11 +40,15 @@ export const getUserById = (userId) => {
     return axios.get(`/api/users/${userId}`)
 }
 
-// updateUser
-// takes in object AND user's id
-// linked to user-router.js
-export const updateUser = (userId, userInfo) => {
-    return axios.put(`/api/users/update/${userId}`, userInfo)
+// updateUserProfile
+export const updateUserProfile = (userInfo) => {
+
+    const jwtToken = localStorage.getItem('accessToken');
+    return axios.put('/api/users/update', userInfo, {
+        headers: {
+            "Authorization": `Bearer ${jwtToken}`
+        }
+    });
 }
 
 // removeUser
@@ -67,7 +71,7 @@ export default {
     loginUser,
     getUserProfile,
     getUserById,
-    updateUser,
+    updateUserProfile,
     removeUser,
     logOutUser
 }
