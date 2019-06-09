@@ -22,7 +22,7 @@
     {
       "id": 4,
       "name": "MongoDB",
-      "note": "MongoDB is a scalable, high-performance, open source, document-oriented NoSQL database. It supports a large number of languages and application development platforms. Questions about server administration can be asked on https://dba.stackexchange.com."
+      "note": "MongoDB is a scalable, high-performance, open source, document-oriented NoSQL database. It supports a large number of languages and application development platforms."
     },
     {
       "id": 5,

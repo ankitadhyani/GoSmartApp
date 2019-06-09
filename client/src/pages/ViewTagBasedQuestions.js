@@ -90,8 +90,15 @@ class ViewTagBasedQuestions extends Component {
                     handleFormSwitch={this.handleFormSwitch}
                 />
 
+                <div className="row container-fluid bg-info my-1 px-3 ml-0 mr-0">
+                    <div className="col-12">
+                        <h4 className="text-light mt-2">Questions Tagged</h4>
+                        <h5 className="text-dark font-bold">{tagSelected} x {noOfQuestionsForThisTag}</h5>
+                    </div>
+                </div>
 
-                <div className="row container-fluid mt-5">
+
+                <div className="row container-fluid mt-2">
 
                     {/* Left navigation Bar */}
                     <div className="col-2"
@@ -105,13 +112,14 @@ class ViewTagBasedQuestions extends Component {
                     <div className="col-10">
 
                         {/* Header */}
-                        <header className="row pt-3 pb-2">
-
-                            <div className="col-8">
-                                <h3>Questions Tagged:  <span className="text-info">{tagSelected}</span> ({noOfQuestionsForThisTag})</h3>
+                        <header className="row pt-1 pb-2" style={{ borderBottom: "2px solid black" }}>
+                            
+                            {/* Tag Description */}
+                            <div className="col-10">
+                                <h6 className="text-justify text-info">{tagDescription}</h6>
                             </div>
 
-                            <div className="col-4">
+                            <div className="col-2">
                                 {/* If user is logged in then show a link to "Ask Question" -> /add */}
                                 {/* Else show a lable */}
                                 {   
@@ -136,19 +144,14 @@ class ViewTagBasedQuestions extends Component {
 
                         </header>
                     
-                        {/* Tag Description */}
-                        <div className="row"  style={{ borderBottom: "2px solid black" }}>
-                            <div className="col-12">
-                                <p className="text-justify font-italic">{tagDescription}</p>
-                            </div>
-                        </div>
+
 
                         
 
 
 
                         {/* List all questions here ------------------------------- */}
-                        <div className=""
+                        <div className="mt-3"
                             style={{
                                 height: "300px",
                                 overflowY: "scroll"

@@ -109,7 +109,6 @@ class AllJobsPage extends Component {
                 data={jobInfo}
             >
 
-                {/* <div className="row d-flex w-100 justify-content-between mx-0"> */}
                 <div className="row w-100">
                     <h6 className="col-11 py-0">{jobInfo.jobTitle}</h6>
                     <button 
@@ -180,7 +179,7 @@ class AllJobsPage extends Component {
                 
                 <AppHeader />
 
-                <div className="row container-fluid bg-info my-1 px-5 ml-0 mr-0">
+                <div className="row container-fluid bg-info my-1 px-3 ml-0 mr-0">
                     <div className="col-12">
                         <h4 className="text-light mt-2">Jobs</h4>
                     </div>
@@ -203,11 +202,15 @@ class AllJobsPage extends Component {
                     <div className="col-10 border-info" style={{ height: "440px", overflowY: "scroll"}}>
                         {
                             this.state.allScrapedJobs.length ?
-                                this.listGroupForAllJobs(this.state.allScrapedJobs) : 
                                 (
-                                    <div className="spinner-border text-info text-center" role="status">
-                                        <span className="sr-only">Loading...</span>
-                                    </div>
+                                    this.listGroupForAllJobs(this.state.allScrapedJobs)
+
+                                ) : (
+
+                                    <img
+                                        src='/images/loadingGif.gif'
+                                        alt="Loading jobs..."
+                                    />
                                 )
                         }
                     </div>

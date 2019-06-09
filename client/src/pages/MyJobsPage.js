@@ -35,8 +35,7 @@ class MyJobsPage extends Component {
 
         getSavedJobs()
             .then(({data: jobsData}) => {
-                console.log("1111111111");
-                console.log(jobsData);
+                // console.log(jobsData);
                 
                 this.setState({
                     mySavedJobs: jobsData
@@ -56,12 +55,12 @@ class MyJobsPage extends Component {
     handleDeleteSavedJob = (jobId) => {
 
         console.log("Inside AllJobsPage -> handleDeleteSavedJob()");
-        console.log("jobId to be deleted is = " + jobId);
+        // console.log("jobId to be deleted is = " + jobId);
 
         deleteSavedJob(jobId)
             .then(({data: jobsData}) => {
-                console.log("22222222");
-                console.log(jobsData);
+                // console.log("22222222");
+                // console.log(jobsData);
                 
                 this.handleGetSavedJobs();
 
@@ -96,13 +95,16 @@ class MyJobsPage extends Component {
             optionalDataString += " | " + jobInfo.posted;
 
         return (
-            <li className="list-group-item list-group-item-action flex-column align-items-start border border-info border-top-1" data={jobInfo}>
+            <li 
+                className="list-group-item list-group-item-action flex-column align-items-start border border-info border-top-1" 
+                data={jobInfo}
+            >
 
-                <div className="d-flex w-100 justify-content-between">
-                    <h4 className="mb-1">{jobInfo.jobTitle}</h4>
+                <div className="row w-100">
+                    <h6 className="col-11 py-0">{jobInfo.jobTitle}</h6>
                     <button
                         type="button"
-                        className="btn btn-lg"
+                        className="btn col-1 p-0"
                         data="jobInfo"
                         onClick={() => this.handleDeleteSavedJob(jobInfo._id)}
                     >
@@ -171,7 +173,7 @@ class MyJobsPage extends Component {
 
                 <AppHeader />
 
-                <div className="row container-fluid bg-info my-1 px-5 ml-0 mr-0">
+                <div className="row container-fluid bg-info my-1 px-3 ml-0 mr-0">
                     <div className="col-12">
                         <h4 className="text-light mt-2">Jobs</h4>
                     </div>
@@ -191,7 +193,8 @@ class MyJobsPage extends Component {
                     </div>
 
                     {/* List all jobs here */}
-                    <div className="col-10">
+                    {/* <div className="col-10"> */}
+                    <div className="col-10 border-info" style={{ height: "440px", overflowY: "scroll"}}>
                         {
                             this.listGroupForAllJobs()
                             

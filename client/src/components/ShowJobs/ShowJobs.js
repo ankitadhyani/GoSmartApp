@@ -6,27 +6,23 @@ import './ShowJobs.css';
 // Function called to display only 1st five jobs on HomePage
 function displayTopFiveJobs(props) {
 
-    console.log("Inside ShowJobs -> displayTopFiveJobs()");
+    // console.log("Inside ShowJobs -> displayTopFiveJobs()");
 
-    // if(this.state.topFiveScrapedJobs.length > 0) {
+    props.topFiveScrapedJobs.forEach(jobInfo => {
 
-        props.topFiveScrapedJobs.forEach(jobInfo => {
+        // console.log(jobInfo);
+        // console.log("jobInfo.jobTitle = " + jobInfo.jobTitle);
+        // console.log("jobInfo.company = " + jobInfo.company);
 
-            console.log(jobInfo);
-            console.log("jobInfo.jobTitle = " + jobInfo.jobTitle);
-            console.log("jobInfo.company = " + jobInfo.company);
+        return (
+            <li>
+                <h5 className="mb-1 text-dark">{jobInfo.jobTitle}</h5>
+                <small className="mb-1 text-info">{jobInfo.company}</small>
 
-            return (
-                <li>
+            </li>
+        )
 
-                    <h5 className="mb-1 text-info">{jobInfo.jobTitle}</h5>
-                    <small className="mb-1 text-info">{jobInfo.company}</small>
-
-                </li>
-            )
-
-                
-        })
+    })
         
 } // End of displayTopFiveJobs()
 

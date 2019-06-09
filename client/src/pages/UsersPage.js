@@ -24,11 +24,8 @@ class UsersPage extends Component {
         // Get data for all users
         getAllUsers()
             .then(({ data: userData }) => {
-                console.log("------------------------");
-                console.log(userData);
-                // userData.forEach( user => {
-                //     console.log("user.nickName = " + user.nickName);
-                // }) 
+                // console.log("------------------------");
+                // console.log(userData);
                 
                 this.setState({
                     allUsersObj: userData
@@ -57,7 +54,7 @@ class UsersPage extends Component {
                 
                 <AppHeader />
 
-                <div className="row container-fluid bg-info my-1 px-5 ml-0 mr-0">
+                <div className="row container-fluid bg-info my-1 px-3 ml-0 mr-0">
                     <div className="col-12">
                         <h4 className="text-light mt-2">Users</h4>
                     </div>
@@ -85,9 +82,19 @@ class UsersPage extends Component {
 
                                 return (
                                     
-                                    <div className="card">
-                                        <img className="card-img-top" src="" alt="Card image cap"/>
-                                        <div className="card-body">{user.nickName}</div>
+                                    <div 
+                                        className="card" 
+                                        style={{ height: "100px", width:"100px", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}
+                                    >
+                                            <img 
+                                                className="card-img-top img-thumbnail text-center" 
+                                                src="/images/confused-emoticon.jpg" 
+                                                alt={user.nickName}
+                                            >
+                                            </img>
+                                            <div className="card-body p-1">
+                                                <h6 className="text-center text-info font-bold">{user.nickName}</h6>
+                                            </div>
                                     </div>
 
 

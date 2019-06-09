@@ -50,6 +50,31 @@ function getQuestionsByTag(req, res) {
 }
 
 
+// GET all questions created by a particular user (userId)
+// /api/questions/user
+function getQuestionsByUserId(req, res) {
+
+  console.log("Inside question controllers -> getQuestionsByUserId()");
+  console.log("user Id = " + req._id); 
+
+
+  Question.find( 
+      { userId: req._id } 
+    )
+    .then(dbQuestionData => {
+      
+      console.log(dbQuestionData);
+
+      res.status(200).json(dbQuestionData)
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+
+}
+
+
 
 // GET a single question by it's _id
 // /api/questions/:id
@@ -136,6 +161,7 @@ function removeQuestion(req, res) {
 module.exports = {
   getAllQuestions,
   getQuestionsByTag,
+  getQuestionsByUserId,
   getQuestionById,
   createQuestion,
   updateQuestion,

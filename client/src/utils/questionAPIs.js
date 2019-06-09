@@ -12,6 +12,17 @@ export const getQuestionsByTag = (tag) => {
   return axios.get(`/api/questions/tag/${tag}`)
 }
 
+// getQuestionsByUserId
+export const getQuestionsByUserId = () => {
+
+  const jwtToken = localStorage.getItem('accessToken');
+  return axios.get('/api/questions/user/question', {
+    headers: {
+      "Authorization": `Bearer ${jwtToken}`
+    }
+  });
+}
+
 // getQuestionById
 export const getQuestionById = (questionId) => {
   return axios.get(`/api/questions/${questionId}`)
@@ -39,6 +50,7 @@ export const removeQuestion = (questionId) => {
 export default {
   getAllQuestions,
   getQuestionById,
+  getQuestionsByUserId,
   createQuestion,
   updateQuestion,
   removeQuestion

@@ -92,9 +92,10 @@ class Jobs extends Component {
                 {
                     (!this.state.retrievedScrapedJobs) ? 
                     (
-                        <div className="spinner-border text-info text-center" role="status">
-                            <span className="sr-only">Loading...</span>
-                        </div>
+                        <img 
+                            src='/images/loadingGif.gif'
+                            alt="Loading jobs..."
+                        />
                     ) : 
                     (
                         <div>

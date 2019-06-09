@@ -7,18 +7,21 @@
 // import express router and our controller
 const router = require('express').Router();
 
-
-const { 
-    getAllQuestions, 
-    getQuestionsByTag,
-    getQuestionById, 
-    createQuestion, 
-    updateQuestion, 
-    removeQuestion 
+const {
+  getAllQuestions,
+  getQuestionsByTag,
+  getQuestionById,
+  getQuestionsByUserId,
+  createQuestion,
+  updateQuestion,
+  removeQuestion
 } = require("../../controllers/questionController");
 
+// Import authentication method 
+const withAuth = require('../../middleware/authentication');
 
-// define routes
+
+// define routes ---------------------------------------------------------
 
 // GET and POST routes for /api/questions
 router
@@ -38,6 +41,9 @@ router
   .route('/tag/:tag')
   .get(getQuestionsByTag);
 
+router
+  .route('/user/question')
+  .get(withAuth, getQuestionsByUserId);
 
 
 // export routes

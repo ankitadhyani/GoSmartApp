@@ -37,9 +37,12 @@ function ViewAllQuestions(props) {
             />
 
 
-            <div className="row container-fluid bg-info my-1 py-2 px-5 ml-0 mr-0">
+            <div className="row container-fluid bg-info my-1 px-3 ml-0 mr-0">
                 <div className="col-12">
-                    <h4 className="text-light">All Questions</h4>
+                    <h4 className="text-light mt-2">All Questions</h4>
+                </div>
+                <div className="col-12" style={{ fontSize: "15px", lineHeight: "1em" }}>
+                    <p>Showing all questions asked by users (in order of max views)</p>
                 </div>
             </div>
 

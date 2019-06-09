@@ -91,7 +91,7 @@ class TagsPage extends Component {
 
                 <AppHeader />
 
-                <div className="row container-fluid bg-info my-1 px-5 ml-0 mr-0">
+                <div className="row container-fluid bg-info my-1 px-3 ml-0 mr-0">
                     <div className="col-12">
                         <h4 className="text-light mt-2">Tags</h4>
                     </div>
