@@ -10,6 +10,8 @@ import MyQuestionsPage from './pages/MyQuestionsPage';
 import TagsPage from './pages/TagsPage';
 import ViewTagBasedQuestions from './pages/ViewTagBasedQuestions'
 import AllJobsPage from './pages/AllJobsPage';
+import MyJobsPage from './pages/MyJobsPage';
+import UsersPage from './pages/UsersPage';
 import LogoutPage from './pages/LogoutPage';
 
 
@@ -46,11 +48,17 @@ function App() {
           {/* Go To Jobs Page */}
           <Route exact path="/jobs" component={AllJobsPage} />
 
+          {/* View Users saved Jobs */}
+          <Route exact path="/my-jobs" component={MyJobsPage} />
+
+          {/* Go To Users Page */}
+          <Route exact path="/allusers" component={UsersPage} />
+
           {/* Go To Logout Page */}
           <Route exact path="/logout" component={LogoutPage} />
 
-          
-          
+
+
           {/* Seting up default/404 route */}
           <Route render={() => <h1>404 Error : Page Not found!</h1>} />
         </Switch>

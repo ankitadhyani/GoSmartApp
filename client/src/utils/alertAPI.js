@@ -12,14 +12,10 @@ toast.configure({
 export const showToastifyAlert = (msg, msgType) => {
 
     if(msgType === "success") {
-
-        return toast.success(msg, {
-            // position: toast.POSITION.TOP_CENTER
-            // position: toast.POSITION.TOP_LEFT
-            position: toast.POSITION.BOTTOM_CENTER
-            // position: toast.POSITION.BOTTOM_RIGHT
-        });
-
+        return toast.success(msg, { position: toast.POSITION.BOTTOM_CENTER });
+    } 
+    else if(msgType === "info") {
+        return toast.info(msg, { position: toast.POSITION.BOTTOM_CENTER });
     } 
     else { // msgType === "error"
         return toast.error(msg, {  position: toast.POSITION.BOTTOM_CENTER });

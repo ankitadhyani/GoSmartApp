@@ -27,9 +27,13 @@ li {
 li:last-child {
     border-bottom: none;
 }
+.cDropDownMenu {
+    background-color: #5bb2f8;
+    color: whitesmoke;
+}
 li:hover {
     background-color: #e5e5e5;
-    color: white;
+    color: rgb(92, 237, 241);
 }
 .button{
     width:178px;

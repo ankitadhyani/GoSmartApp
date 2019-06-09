@@ -45,83 +45,12 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: 'Please enter valid password'
-  }
+  },
 
-  // fullName: String
-
-  // contact:  {
-  //   type: String,
-  //   default: ""
-  // },
-  // userLocation: {
-  //   type: String,
-  //   default: ""
-  // },
-  // preferredLocation: {
-  //   type: String,
-  //   default: ""
-  // },
-  // node: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // express: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // react: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // HTMLCSS: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // javascript: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // jQuery: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // AJAX: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // mySQL: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // sequelize: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // mongoDB: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // mongoose: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // java: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  // OOPs: {
-  //   type: Boolean,
-  //   default: false
-  // },
-  
-  // resumeLink: String,
-  // coverLetterLink: String,
-
-
-  // savedJobsArray: [{
-  //   ref: "job",
-  //   type: mongoose.Schema.Types.ObjectId,
-  // }]
+  savedJobsArray: [{
+    ref: "job",
+    type: mongoose.Schema.Types.ObjectId,
+  }]
 
 
 });

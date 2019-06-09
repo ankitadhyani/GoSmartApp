@@ -8,56 +8,70 @@ import Navbar from '../components/Navbar/Navbar';
 import Footer from "../components/Footer/Footer";
 
 import { showToastifyAlert } from '../utils/alertAPI';
-import { saveJobToDB } from '../utils/jobsAPIs';
+import { getSavedJobs, deleteSavedJob } from '../utils/jobsAPIs';
 
 
 
-class AllJobsPage extends Component {
+class MyJobsPage extends Component {
 
     state = {
         accessToken: localStorage.getItem('accessToken'), // get access token from localStorage
-        userLoggedIn: false
+        userLoggedIn: false,
+        mySavedJobs: []
     };
 
     // use component did mount to get all questions on load
     componentDidMount() {
-
         this.setState({
             userLoggedIn: (this.state.accessToken) ? true : false
         })
-        
+        this.handleGetSavedJobs();
     }
 
-    
-    
-    //Function that saves jobs in User Profile (Database)
-    //this is triggered when user clicks on 'save-job' pin button
-    handleSaveJobToProfile = (jobData) => {
+    // This function will get all the saved jobs fom user database
+    handleGetSavedJobs = () => {
 
-        console.log("Inside AllJobsPage -> handleSaveJobToProfile()");
-        // console.log("jobData -> "); console.log(jobData);
+        console.log("Inside MyJobsPage -> getSavedJobsFromDB()");
 
+        getSavedJobs()
+            .then(({data: jobsData}) => {
+                console.log("1111111111");
+                console.log(jobsData);
+                
+                this.setState({
+                    mySavedJobs: jobsData
+                })
 
-        console.log("this.state.userLoggedIn = " + this.state.userLoggedIn);
-        if (!this.state.userLoggedIn) {
-            return showToastifyAlert("You need to be logged in to save the job!", "error");
-        }
-
-        saveJobToDB(jobData)
-            .then(({ data: dbJobData }) => {
-                // console.log("99999999");
-                // console.log(dbJobData);
-
-                return showToastifyAlert("Job saved to your profile successfully!", "success");
             })
             .catch(err => {
                 console.log(err);
+                showToastifyAlert("You do not have any saved job!", "info");
             });
 
+    } // End of handleGetSavedJobs()
 
 
-    } // End of handleSaveJobToProfile()
 
+    // Function that triggers when user wants to delete a saved job
+    handleDeleteSavedJob = (jobId) => {
+
+        console.log("Inside AllJobsPage -> handleDeleteSavedJob()");
+        console.log("jobId to be deleted is = " + jobId);
+
+        deleteSavedJob(jobId)
+            .then(({data: jobsData}) => {
+                console.log("22222222");
+                console.log(jobsData);
+                
+                this.handleGetSavedJobs();
+
+            })
+            .catch(err => {
+                console.log(err);
+                showToastifyAlert("You do not have any saved job!", "info");
+            });
+
+    } //End of handleDeleteSavedJob()
 
 
 
@@ -86,14 +100,13 @@ class AllJobsPage extends Component {
 
                 <div className="d-flex w-100 justify-content-between">
                     <h4 className="mb-1">{jobInfo.jobTitle}</h4>
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         className="btn btn-lg"
                         data="jobInfo"
-                        // disabled={userLoggedIn ? false : true}
-                        onClick={() => this.handleSaveJobToProfile(jobInfo)}
+                        onClick={() => this.handleDeleteSavedJob(jobInfo._id)}
                     >
-                        📌
+                        <i className="fas fa-trash-alt text-danger"></i>
                     </button>
                 </div>
 
@@ -106,35 +119,36 @@ class AllJobsPage extends Component {
                 </div>
             </li>
         )
-            
+
     } // End of displayEachScrapedJob()
 
 
 
 
     // create a listgroup component that receives the list of scraped jobs
-    listGroupForAllJobs = (allScrapedJobs) => {
+    listGroupForAllJobs = () => {
 
         // console.log("Inside AllJobsPage -> listGroupForAllJobs()");
         // console.log("allScrapedJobs.length: " + allScrapedJobs.length);
 
         return (
             <div className="list-group">
-            {
-                (allScrapedJobs.length > 0) ? (
-                    allScrapedJobs.map(jobInfo => {
-                        return (
-                            this.displayEachScrapedJob(jobInfo)
+                {
+                    (this.state.mySavedJobs.length > 0) ? (
+                        this.state.mySavedJobs.map(jobInfo => {
+                            return (
+                                this.displayEachScrapedJob(jobInfo)
+                            )
+                        })
+                    ) : (
+                            <h2>No saved jobs to display 😒</h2>
                         )
-                    })
-                ) : (
-                    <h2>No jobs to display 😒</h2>
-                )
-            }
+                }
             </div>
         )
 
     } // End of listGroupForAllJobs()
+
 
 
 
@@ -143,25 +157,26 @@ class AllJobsPage extends Component {
      * *************************************************************************************/
 
     render() {
-        console.log("Inside AllJobsPage.js render()");
-        // console.log("this.props.location.state = " + this.props.location.state.allScrapedJobs);
+        console.log("Inside MyJobsPage.js render()");
 
-        let allScrapedJobs = this.props.location.state.allScrapedJobs;
-        console.log("AllJobsPage -> allScrapedJobs ======> ");
-        console.log(allScrapedJobs);
+        // if (!this.state.accessToken) {
+        //     return showToastifyAlert("You need to be logged in see your saved jobs!", "error");
+        // }
+
+
 
         return (
 
             <React.Fragment>
-                
+
                 <AppHeader />
 
                 <div className="row container-fluid bg-info my-1 px-5 ml-0 mr-0">
                     <div className="col-12">
                         <h4 className="text-light mt-2">Jobs</h4>
                     </div>
-                    <div className="col-12" style={{fontSize: "15px", lineHeight: "1em"}}>
-                        <p>Show all the Full Stack Web Development Jobs</p>
+                    <div className="col-12" style={{ fontSize: "15px", lineHeight: "1em" }}>
+                        <p>My Saved Jobs</p>
                     </div>
                 </div>
 
@@ -178,7 +193,8 @@ class AllJobsPage extends Component {
                     {/* List all jobs here */}
                     <div className="col-10">
                         {
-                            this.listGroupForAllJobs(allScrapedJobs)
+                            this.listGroupForAllJobs()
+                            
                         }
                     </div>
                 </div>
@@ -190,5 +206,5 @@ class AllJobsPage extends Component {
     }
 }
 
-export default AllJobsPage;
+export default MyJobsPage;
 

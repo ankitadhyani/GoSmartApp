@@ -10,7 +10,8 @@
 
 // Import dependencies
 
-const User = require('../models').user;
+// const User = require('../models').user;
+const { User } = require('../models');
 const Jobs = require('../models').job;
 const handle = require('../utils/promise-handler');
 
@@ -28,6 +29,7 @@ async function asyncForEach(array, callback) {
 const getSavedJobs = async (req, res) => {
 
   console.log("Inside GET '/api/jobs' -> getSavedJobs");
+  // console.log("req._id = " + req._id);
 
   const [userErr, userData] = await handle(User.findById(req._id));
 
@@ -65,6 +67,7 @@ const getSavedJobs = async (req, res) => {
 };
 
 
+// This function will save the job id in users table 
 async function pushToSavedJobsArray(userId, newJobId) {
 
   console.log("Inside pushToSavedJobsArray()");
@@ -106,37 +109,28 @@ async function pushToSavedJobsArray(userId, newJobId) {
 
 
 // CREATE/POST jobs for a user '/api/jobs'
-const createNewJob = async (req, res) => {
+const saveJobToDB = async (req, res) => {
 
-  console.log("Inside POST '/api/jobs' -> createNewJob");
-
+  console.log("Inside POST '/api/jobs' -> saveJobToDB");
+  console.log(req.body);
+  console.log("req._id = " + req._id);
 
   // Fields required (which ever is available):
   // jobTitle, jobtype, position, salary, location, company, link, description, posted
 
-  // Create a new user using req.body
+  // Create a new job using req.body
   Jobs.create(req.body)
-
     .then(function createNewUser(dbNewJobData) {
-
+      console.log("----------");
+      console.log(dbNewJobData);
       // If saved successfully, send the the new job document to the client
       pushToSavedJobsArray(req._id, dbNewJobData._id);
-
-      res.status(200).json({
-        success: true,
-        message: "Job successfully added!"
-      });
-
+      res.status(200).json(dbNewJobData);
+    
     })
-    .catch(function errFun(err) {
-      // If an error occurs, send the error to the client
+    .catch(err => {
       console.log(err);
-
-      res.status(500).json({
-        success: false,
-        message: "Error adding job details to DB, please try again."
-      });
-
+      res.status(500).json(err);
     });
 
 };
@@ -144,15 +138,16 @@ const createNewJob = async (req, res) => {
 
 
 
-// DELETE jobs for a user '/api/jobs'
+// DELETE jobs for a user 
+// /api/jobs/:id
 const deleteSavedJob = async (req, res) => {
 
-  console.log("Inside DELETE '/api/jobs' -> deleteSavedJob");
+  console.log("Inside DELETE '/api/jobs/:id' -> deleteSavedJob");
 
   const userID = req._id;
-  const jobIdToBeDeleted = req.body.jobId;
-  console.log("req.id: " + userID);
-  console.log("req.body.jobId: " + jobIdToBeDeleted);
+  const jobIdToBeDeleted = req.params.id;
+  // console.log("user id -> req.id: " + userID);
+  // console.log("job id -> req.body.jobId: " + jobIdToBeDeleted);
 
 
   // Delete the jobId from 'savedJobsArray' in User collection
@@ -210,7 +205,7 @@ const deleteSavedJob = async (req, res) => {
 
 
 module.exports = {
-  createNewJob,
+  saveJobToDB,
   getSavedJobs,
   deleteSavedJob
 };

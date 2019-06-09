@@ -106,7 +106,6 @@ class HomePage extends Component {
                             userLoggedIn: true,
                         });
                         showToastifyAlert("User logged in successfully", "success");
-                        // window.location.reload();
 
                     })
                     .catch(err => {
@@ -131,6 +130,8 @@ class HomePage extends Component {
 
     } // End of handleUserLogin()
 
+
+    
     // method for creating(POST) a new user
     handleCreateNewUser = newUserInfo => {
 

@@ -42,30 +42,27 @@ function ShowJobs(props) {
 
     return (
         <React.Fragment>
-            <div>
-            <h1>I can see this</h1>
-            {
-                (props.topFiveScrapedJobs.length > 0) ?
-                    
-                    props.topFiveScrapedJobs.forEach(jobInfo => {
+        {
+            (props.topFiveScrapedJobs.length > 0) ?
+                
+                props.topFiveScrapedJobs.map(jobInfo => {
 
-                        console.log(jobInfo);
-                        console.log("jobInfo.jobTitle = " + jobInfo.jobTitle);
-                        console.log("jobInfo.company = " + jobInfo.company);
-            
-                        return(<li>Why I cannot see this</li>)
-                        
-                        // return (
-                        //     <li>
-                        //         <h5 className="mb-1 text-info">{jobInfo.jobTitle}</h5>
-                        //         <small className="mb-1 text-info">{jobInfo.company}</small>
-                        //     </li>
-                        // )
-                    })
-                    :
-                    ("No Jobs found")
-            }
-            </div>
+                    // console.log(jobInfo);
+                    // console.log("jobInfo.jobTitle = " + jobInfo.jobTitle);
+                    // console.log("jobInfo.company = " + jobInfo.company);
+        
+                    return (
+                        <li className="list-group-item">
+                            <h6 style={{ fontSize:"15px" }}>
+                                {jobInfo.jobTitle}
+                            </h6>
+                            <small className="text-info">{jobInfo.company}</small>
+                        </li>
+                    )
+                })
+                :
+                ("No Jobs found")
+        }
         </React.Fragment>
     )
 }

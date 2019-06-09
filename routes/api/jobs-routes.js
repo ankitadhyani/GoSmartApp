@@ -9,13 +9,13 @@
 const router = require('express').Router();
 
 // Import methods we exported from jobs-controller
-const { createNewJob, getSavedJobs, deleteSavedJob } = require('../../controllers/jobs-controller');
+const { saveJobToDB, getSavedJobs, deleteSavedJob } = require('../../controllers/jobs-controller');
 
 // Import authentication method 
 const withAuth = require('../../middleware/authentication');
 
 
-// set up withAuth as router-level middleware this will ensure that authorization will be performed before both operations getSavedJobs() & createNewJob()
+// set up withAuth as router-level middleware this will ensure that authorization will be performed before both operations getSavedJobs() & saveJobToDB()
 router.use(withAuth);
 
 
@@ -23,8 +23,12 @@ router.use(withAuth);
 router
   .route('/')
   .get(getSavedJobs)
-  .post(createNewJob)
+  .post(saveJobToDB);
+
+router
+  .route('/:id')
   .delete(deleteSavedJob);
+
 
 
 // Export router

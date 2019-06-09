@@ -141,9 +141,7 @@ class Jobs extends Component {
                                         to={{
                                             pathname: "/jobs",
                                             state: {
-                                                userLoggedIn: this.state.userLoggedIn,
-                                                allScrapedJobs: this.state.allScrapedJobs,
-                                                retrievedScrapedJobs: this.state.retrievedScrapedJobs
+                                                allScrapedJobs: this.state.allScrapedJobs
                                             }
                                         }}
                                         className="text-center"
@@ -159,7 +157,11 @@ class Jobs extends Component {
 
                                     <div 
                                         className="list-group" 
-                                        style={{ width:"100%",height: "250px", border:"1px solid grey"}}
+                                        style={{ 
+                                            width:"100%", height: "350px", 
+                                            border:"1px solid grey", borderRadius: "5px",
+                                            overflowY: "scroll"
+                                        }}
                                     >
                                         
                                         <ShowJobs

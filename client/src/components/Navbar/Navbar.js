@@ -28,7 +28,7 @@ function Navbar(props) {
 
 
                 <NavLink to="/tags" className="nav-link text-dark">Tags</NavLink>
-                <NavLink to="/users" className="nav-link text-dark">Users</NavLink>
+                <NavLink to="/allusers" className="nav-link text-dark">Users</NavLink>
                 <NavLink to="/jobs" className="nav-link text-dark">Jobs</NavLink>
             </nav>
 

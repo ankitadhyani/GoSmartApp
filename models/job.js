@@ -9,55 +9,61 @@
 const mongoose = require('mongoose');
 
 const {
- Schema
+  Schema
 } = mongoose;
 
 
 // Create fields for the 'JobPortalSchema' collection
 const JobPortalSchema = new Schema({
 
- jobTitle: { // indeed dice
-   type: String,
-   required: true
- },
- jobtype: {
-   type: String,
-   default: 'Unavailable'
- },
- position: {
-   type: String,
-   default: 'Unavailable'
- },
- salary: { // indeed
-   type: String,
-   default: 'Unavailable'
- },
- location: { // indeed dice
-   type: String,
-   default: 'Unavailable'
- },
- company: { // indeed dice
-   type: String,
-   default: 'Unavailable'
- },
- link: {
-   type: String,
-   default: 'Unavailable'
- },
- description: { // indeed dice
-   type: String,
-   default: 'Unavailable'
- },
- posted: { // dice
-   type: String,
-   default: 'Unavailable'
- },
- dateAdded: {
-   type: Date,
-   default: Date.now
- }
+  jobTitle: { // indeed dice
+    type: String,
+    required: true
+  },
+  // jobtype: {
+  //   type: String,
+  //   default: 'Unavailable'
+  // },
+  // position: {
+  //   type: String,
+  //   default: 'Unavailable'
+  // },
+  salary: { // indeed
+    type: String,
+    default: 'Unavailable'
+  },
+  location: { // indeed dice
+    type: String,
+    default: 'Unavailable'
+  },
+  company: { // indeed dice
+    type: String,
+    default: 'Unavailable'
+  },
+  // link: {
+  //   type: String,
+  //   default: 'Unavailable'
+  // },
+  description: { // indeed dice
+    type: String,
+    default: 'Unavailable'
+  },
+  posted: { // dice
+    type: String,
+    default: 'Unavailable'
+  },
+  dateAdded: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 
 // Export "jobs" table
+// const Jobs = mongoose.model("jobs", JobPortalSchema);
+
+// module.exports = Jobs;
+
+// Export "jobs" table
 module.exports = mongoose.model("jobs", JobPortalSchema);
+

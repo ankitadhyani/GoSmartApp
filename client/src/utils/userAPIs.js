@@ -22,10 +22,11 @@ export const getUserProfile = () => {
     const jwtToken = localStorage.getItem('accessToken');
 
     return axios.get('/api/users', {
-            headers: {
-                "Authorization" : `Bearer ${jwtToken}`
-            }}
-            );
+        headers: {
+            "Authorization": `Bearer ${jwtToken}`
+        }
+    }
+    );
 }
 
 
@@ -53,8 +54,15 @@ export const removeUser = (userId) => {
 }
 
 
+// getAllUsers
+export const getAllUsers = () => {
+    return axios.get('/api/users/allusers');
+}
+
+
 // export all functions so if someone needs to import all they can
 export default {
+    getAllUsers,
     registerUser,
     loginUser,
     getUserProfile,

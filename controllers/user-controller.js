@@ -150,15 +150,15 @@ const logOutUser = async (req, res) => {
     req.body.token ||
     req.query.token ||
     req.headers['x-access-token'] ||
-    req.headers.authorization || 
+    req.headers.authorization ||
     req.cookies.token;
 
-    // console.log("token = " + token);
+  // console.log("token = " + token);
 
-    // Clear token value from 'Cookie' so that when the user logs in next there is no token value
-    res.clearCookie('token');
-    res.redirect('/');
-  
+  // Clear token value from 'Cookie' so that when the user logs in next there is no token value
+  res.clearCookie('token');
+  res.redirect('/');
+
 } // End of logOutUser()
 
 
@@ -234,6 +234,24 @@ const updateUserProfile = async (req, res) => {
 } // End of updateUserProfile()
 
 
+// GET all users
+// /api/allusers
+function getAllUsers(req, res) {
+
+  console.log("Inside user controller -> GET '/api/allusers' -> getAllUsers");
+
+  User.find({})
+    .sort({ nickName: 1 })
+    .then(dbUserData => {
+      console.log("dbUserData --> ");
+      console.log(dbUserData);
+      res.status(200).json(dbUserData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+}
 
 
 // export our methods
@@ -242,5 +260,6 @@ module.exports = {
   login,
   register,
   updateUserProfile,
-  logOutUser
+  logOutUser,
+  getAllUsers
 }
