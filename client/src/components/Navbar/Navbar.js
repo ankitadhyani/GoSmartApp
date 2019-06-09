@@ -29,7 +29,15 @@ function Navbar(props) {
 
                 <NavLink to="/tags" className="nav-link text-dark">Tags</NavLink>
                 <NavLink to="/allusers" className="nav-link text-dark">Users</NavLink>
-                <NavLink to="/jobs" className="nav-link text-dark">Jobs</NavLink>
+                <NavLink 
+                    to={{
+                        pathname: "/jobs", 
+                        state: { originPage: "Navbar" }
+                    }} 
+                    className="nav-link text-dark"
+                >
+                    Jobs
+                </NavLink>
             </nav>
 
         </React.Fragment>

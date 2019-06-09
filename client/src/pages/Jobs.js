@@ -13,10 +13,11 @@ import { getUserProfile } from '../utils/userAPIs';
 class Jobs extends Component {
 
     state = {
+        accessToken: localStorage.getItem('accessToken'), // get access token from localStorage
         userLoggedIn: false,
         location: "New York, NY",
         topFiveScrapedJobs: [],
-        allScrapedJobs: [],
+        // allScrapedJobs: [],
         retrievedScrapedJobs: false
     };
 
@@ -25,12 +26,11 @@ class Jobs extends Component {
     componentDidMount() {
         // console.log("Inside componentDidMount -> Jobs.js");
 
-        //Reset states
         this.setState({
-            userLoggedIn: false
+            userLoggedIn: (this.state.accessToken) ? true : false
         })
 
-        this.setStatesValuesWhenUserLogsIn();
+        // this.setStatesValuesWhenUserLogsIn();
 
         console.log("Scraping Jobs started---------");
         // Get all scraped jobs function is called by default with default location of "New York, NY"
@@ -61,35 +61,13 @@ class Jobs extends Component {
 
                 this.setState({
                     topFiveScrapedJobs: tempTopFiveScrapedJobs,
-                    allScrapedJobs: scrapedJobsData,
+                    // allScrapedJobs: scrapedJobsData,
                     retrievedScrapedJobs: true
                 })
             })
             .catch(err => console.log(err));
 
     } // End of getQuestions()
-
-
-    // This function is called when in state 'userLoggedIn' is different from that received from HomePage
-    setStatesValuesWhenUserLogsIn = () => {
-        getUserProfile()
-            .then(({ data: userData }) => {
-
-                // Update state with if user data is validated
-                this.setState({
-                    userLoggedIn: true
-                });
-
-            })
-            .catch(err => {
-                console.log(err);
-
-                this.setState({
-                    userLoggedIn: false
-                });
-            });
-    } // End of setStatesValuesWhenUserLogsIn()
-
 
 
     
@@ -105,11 +83,6 @@ class Jobs extends Component {
         console.log("Inside Jobs.js render()");
         console.log("this.state ==============");
         console.log(this.state);
-
-        // Call function to set states 
-        if (this.props.userLoggedIn === true && this.state.userLoggedIn === false) {
-            this.setStatesValuesWhenUserLogsIn();
-        }
 
 
         return (
@@ -141,7 +114,8 @@ class Jobs extends Component {
                                         to={{
                                             pathname: "/jobs",
                                             state: {
-                                                allScrapedJobs: this.state.allScrapedJobs
+                                                // allScrapedJobs: this.state.allScrapedJobs,
+                                                // originPage: "Jobs"
                                             }
                                         }}
                                         className="text-center"

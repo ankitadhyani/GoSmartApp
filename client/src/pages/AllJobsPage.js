@@ -9,6 +9,7 @@ import Footer from "../components/Footer/Footer";
 
 import { showToastifyAlert } from '../utils/alertAPI';
 import { saveJobToDB } from '../utils/jobsAPIs';
+import { getScrapedJobsByLoc } from '../utils/scrapedJobsAPI';
 
 
 
@@ -16,7 +17,10 @@ class AllJobsPage extends Component {
 
     state = {
         accessToken: localStorage.getItem('accessToken'), // get access token from localStorage
-        userLoggedIn: false
+        userLoggedIn: false,
+        location: "New York, NY",
+        allScrapedJobs: [],
+        retrievedScrapedJobs: false
     };
 
     // use component did mount to get all questions on load
@@ -25,36 +29,54 @@ class AllJobsPage extends Component {
         this.setState({
             userLoggedIn: (this.state.accessToken) ? true : false
         })
+
+        // console.log("Scraping Jobs started---------");
+
+        // Get all scraped jobs function is called by default with default location of "New York, NY"
+        this.handleGetScrapedJobsByLoc(this.state.location, () => {
+            // console.log("Scraping Jobs done---------");
+            this.setState({
+                retrievedScrapedJobs: true
+            })
+        });
         
     }
 
+
+    // Method to get all scraped jobs from Dice and Indeed
+    handleGetScrapedJobsByLoc = (location) => {
+
+        getScrapedJobsByLoc(location)
+            .then(({ data: scrapedJobsData }) => {
+
+                this.setState({
+                    allScrapedJobs: scrapedJobsData
+                })
+            })
+            .catch(err => console.log(err));
+
+    } // End of handleGetScrapedJobsByLoc()
     
+
     
     //Function that saves jobs in User Profile (Database)
     //this is triggered when user clicks on 'save-job' pin button
     handleSaveJobToProfile = (jobData) => {
 
         console.log("Inside AllJobsPage -> handleSaveJobToProfile()");
-        // console.log("jobData -> "); console.log(jobData);
 
-
-        console.log("this.state.userLoggedIn = " + this.state.userLoggedIn);
         if (!this.state.userLoggedIn) {
             return showToastifyAlert("You need to be logged in to save the job!", "error");
         }
 
         saveJobToDB(jobData)
             .then(({ data: dbJobData }) => {
-                // console.log("99999999");
-                // console.log(dbJobData);
 
                 return showToastifyAlert("Job saved to your profile successfully!", "success");
             })
             .catch(err => {
                 console.log(err);
             });
-
-
 
     } // End of handleSaveJobToProfile()
 
@@ -82,15 +104,18 @@ class AllJobsPage extends Component {
             optionalDataString += " | " + jobInfo.posted;
 
         return (
-            <li className="list-group-item list-group-item-action flex-column align-items-start border border-info border-top-1" data={jobInfo}>
+            <li 
+                className="list-group-item list-group-item-action flex-column align-items-start border border-info border-top-1" 
+                data={jobInfo}
+            >
 
-                <div className="d-flex w-100 justify-content-between">
-                    <h4 className="mb-1">{jobInfo.jobTitle}</h4>
+                {/* <div className="row d-flex w-100 justify-content-between mx-0"> */}
+                <div className="row w-100">
+                    <h6 className="col-11 py-0">{jobInfo.jobTitle}</h6>
                     <button 
                         type="button" 
-                        className="btn btn-lg"
+                        className="btn col-1 p-0"
                         data="jobInfo"
-                        // disabled={userLoggedIn ? false : true}
                         onClick={() => this.handleSaveJobToProfile(jobInfo)}
                     >
                         📌
@@ -137,6 +162,7 @@ class AllJobsPage extends Component {
     } // End of listGroupForAllJobs()
 
 
+    
 
     /* *************************************************************************************
      *  render function starts here
@@ -144,11 +170,9 @@ class AllJobsPage extends Component {
 
     render() {
         console.log("Inside AllJobsPage.js render()");
-        // console.log("this.props.location.state = " + this.props.location.state.allScrapedJobs);
+        console.log(this.state.allScrapedJobs);
 
-        let allScrapedJobs = this.props.location.state.allScrapedJobs;
-        console.log("AllJobsPage -> allScrapedJobs ======> ");
-        console.log(allScrapedJobs);
+
 
         return (
 
@@ -165,7 +189,7 @@ class AllJobsPage extends Component {
                     </div>
                 </div>
 
-                <div className="row container-fluid mt-3 mb-5">
+                <div className="row container-fluid mt-4 mb-5">
 
                     {/* Left navigation Bar */}
                     <div className="col-2"
@@ -176,9 +200,15 @@ class AllJobsPage extends Component {
                     </div>
 
                     {/* List all jobs here */}
-                    <div className="col-10">
+                    <div className="col-10 border-info" style={{ height: "440px", overflowY: "scroll"}}>
                         {
-                            this.listGroupForAllJobs(allScrapedJobs)
+                            this.state.allScrapedJobs.length ?
+                                this.listGroupForAllJobs(this.state.allScrapedJobs) : 
+                                (
+                                    <div className="spinner-border text-info text-center" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </div>
+                                )
                         }
                     </div>
                 </div>
