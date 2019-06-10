@@ -19,7 +19,6 @@ import { showToastifyAlert } from '../utils/alertAPI';
 import predefinedTags from "../predefinedTags.json";
 
 
-
 var moment = require('moment');
 
 
@@ -29,7 +28,7 @@ class AddUpdateQuestion extends Component {
         preDefinedTagList: predefinedTags,
 
         // States that handle question
-        id: "",
+        id: "", // stores questionId
         question: "",
         quesDescription: "",
         userTags: [],
@@ -46,13 +45,17 @@ class AddUpdateQuestion extends Component {
         replyAddedOn: "",
         replyUserId: "",
         replylist: [], // This contains all the replies from reply DB
+        editedReply: "", //This will contain content when user wants to edit a reply
 
         // questionSaved: false,
         currentTag: "",
-        setDisabled: true, 
+        setQuesInputDisabled: true, 
         setUpdateBtnVisibleTrue: false,
         refreshViewUpdatePage: false,
         showUserReplyCommentBox: true,
+        enableReplyCommentBox: false,
+        saveEditReplyBtnToggle: false,
+        userTagsUpdated: false,
 
         // Get below states from getUserProfile()
         currentUserNickName: "",
@@ -63,8 +66,6 @@ class AddUpdateQuestion extends Component {
 
     // use component did mount to get all questions on load
     componentDidMount() {
-        // for class components use THIS.PROPS to get props 
-        // console.log(this.props);
         // console.log("Inside AddUpdateQuestion -> componentDidMount()");
 
         // Get user info and extract user nickName from user table to feed it in Question & Reply table
@@ -84,7 +85,6 @@ class AddUpdateQuestion extends Component {
         })
         .catch(err => {
             console.log(err);
-            //showToastifyAlert("Could not get user information !", "error");
 
             // Update state with user data
             this.setState({
@@ -98,11 +98,30 @@ class AddUpdateQuestion extends Component {
             const questionId = this.props.match.params.id;
 
             this.handleGetQuestionById(questionId);
-
-            
         }
 
     } //End of componentDidMount()
+
+
+
+    // handleInputChange
+    handleInputChange = event => {
+        const { name, value } = event.target;
+        this.setState({
+            [name]: value
+        });
+    }
+
+    // handleInputChange
+    handleEditedReplyInputChange = (event, replyOrigValue )=> {
+        const { name, value } = event.target;
+
+        value = replyOrigValue + value;
+
+        this.setState({
+            [name]: value
+        });
+    }
 
 
 
@@ -123,7 +142,7 @@ class AddUpdateQuestion extends Component {
                     dateAdded: questionData.dateAdded,
                     quesNickName: questionData.quesNickName,
                     currentTag: "",
-                    setDisabled: true // Also reset setDisabled= true cs again the buttons should be disabled 
+                    setQuesInputDisabled: true // Also reset setQuesInputDisabled= true cs again the buttons should be disabled 
 
                 });
 
@@ -141,7 +160,7 @@ class AddUpdateQuestion extends Component {
 
 
     // This function will trigger when user clicks on "Ask question" from updateQuestion Page
-    // At this tage all the state values will be reset to default except for one state 'setDisabled' = false
+    // At this tage all the state values will be reset to default except for one state 'setQuesInputDisabled' = false
     handleAskQuestion = () => {
 
         console.log("Inside handleAskQuestion()");
@@ -159,7 +178,7 @@ class AddUpdateQuestion extends Component {
 
             // questionSaved: false,
             currentTag: "",
-            setDisabled: false, // this will change to false
+            setQuesInputDisabled: false, // this will change to false
             setUpdateBtnVisibleTrue: true,
             showUserReplyCommentBox: false, // this will change to false
             refreshViewUpdatePage: false,
@@ -172,7 +191,8 @@ class AddUpdateQuestion extends Component {
             replyAddedOn: "",
             replyUserId: "",
             replylist: [],
-            replyUserNickName: ""
+            replyUserNickName: "",
+            // editedReply: "" //This will contain content when user wants to edit a reply
 
         });
     }
@@ -184,9 +204,6 @@ class AddUpdateQuestion extends Component {
     generateDataList = () => {
 
         console.log("Inside generateDataList()");
-
-        // const preDefinedTagList = ["Express", "HTML/CSS", "Java", "Javascript", "MongoDB", "MySQL", "Node.js", "OOPs Concepts", "React",  "REST APIs"];
-
         return (this.state.preDefinedTagList.map((tag, key) => <option value={tag.name} />))
 
     } // End of generateDataList()
@@ -233,11 +250,31 @@ class AddUpdateQuestion extends Component {
     } // End of handleTagAddition()
 
     //Function that triggers when user clicks on delete tag (x)
-    handleDeleteTag = (tag) => {
-        console.log("Inside handleDeleteTag()");
-        console.log(tag);
+    handleTagDeletion = (tagToBeDeleted) => {
+        console.log("Inside handleTagDeletion()");
 
-    }
+
+        if( (this.state.id && this.state.setQuesInputDisabled)) {
+            // console.log("CANNOT delete tag");
+            return;
+        }
+        console.log("tagToBeDeleted = " + tagToBeDeleted);
+        console.log(this.state.userTags);
+
+        let updatedUserTags = [];
+        
+        this.state.userTags.map((tag, key) =>{
+            if(tag !== tagToBeDeleted) {
+                updatedUserTags.push(tag);
+            }
+        })
+        console.log("updatedUserTags = " + updatedUserTags);
+
+        this.setState({
+            userTags: updatedUserTags
+        })
+
+    } // End of handleTagDeletion()
 
 
 
@@ -252,23 +289,17 @@ class AddUpdateQuestion extends Component {
             (noOfUserTags > 0) ?
 
                 (this.state.userTags.map((tag, key) =>
+
                     <label className="m-1 p-2 btn btn-outline-info text-dark"
-                        onClick={this.handleDeleteTag(tag)}
+                        onClick={() => this.handleTagDeletion(tag)}
                         style={{ borderRadius: "3px" }}
+                        disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)}
                     >
-                        {tag} <i className="far fa-times-circle btn" ></i>
+                        {tag} <i className="far fa-times-circle btn"disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)} ></i>
                     </label>)
                 ) :
                 (<h4>Select a Tag...</h4>)
         )
-    }
-
-    // handleInputChange
-    handleInputChange = event => {
-        const { name, value } = event.target;
-        this.setState({
-            [name]: value
-        });
     }
 
 
@@ -296,10 +327,9 @@ class AddUpdateQuestion extends Component {
 
     // method for updating/PUTting a question
     handleUpdateQuestion = (questionId, questionInfo) => {
+        
         updateQuestion(questionId, questionInfo)
             .then(() => {
-
-                showToastifyAlert("Question updated successfully!", "success");
 
                 // Call getQuestionById function to update the states with current question data
                 this.handleGetQuestionById(questionId);
@@ -307,7 +337,7 @@ class AddUpdateQuestion extends Component {
             })
             .catch(err => {
                 console.log(err);
-                showToastifyAlert("Failed to create question!", "error");
+                showToastifyAlert("Failed to update question!", "error");
             });
 
     } // End of handleUpdateQuestion()
@@ -317,6 +347,11 @@ class AddUpdateQuestion extends Component {
     handleFormSubmit = event => {
         event.preventDefault();
 
+        // If user has not selected atleast one tag then do not submit the question
+        if(this.state.userTags.length < 1) {
+            showToastifyAlert("Tag field is mandatory!", "error");
+            return;
+        }
         // if this.state.id exists, run update method
         if (this.state.id) {
 
@@ -350,10 +385,10 @@ class AddUpdateQuestion extends Component {
 
 
     // Function that resets disabled functionality when user clicks on Edit button
-    handleReSetDisabled = () => {
+    handleResetQuesInputDisabled = () => {
 
         this.setState({
-            setDisabled: false
+            setQuesInputDisabled: false
         });
     }
 
@@ -365,11 +400,11 @@ class AddUpdateQuestion extends Component {
         createReply(replyInfo)
             .then((dbReplyData) => {
 
-                showToastifyAlert("Reply created successfully!", "success");
+                // showToastifyAlert("Reply created successfully!", "success");
 
                 // Now add the reply Id to Questions table
-                console.log("dbReplyData------ ");
-                console.log(dbReplyData.data + " :: " + dbReplyData.data._id);
+                // console.log("dbReplyData------ ");
+                // console.log(dbReplyData.data + " :: " + dbReplyData.data._id);
 
                 let updatedRepliesObject = [...this.state.repliesObject, dbReplyData.data._id];
                 // console.log("updatedRepliesObject: " + updatedRepliesObject);
@@ -403,12 +438,13 @@ class AddUpdateQuestion extends Component {
     handleGetAllReplies = () => {
         console.log("Inside handleGetAllReplies()");
 
-        // If repliesObject[] has atleast 1 reply id
-        if (this.state.repliesObject.length > 0) {
+        // If repliesObject[] has atleast 1 reply id (-1 because incase user deletes the one reply)
+        if (this.state.repliesObject.length > -1) {
 
             // First empty the replylist[] and then add contents to it
             let emptyReplylist = [];
             this.setState({
+                reply: "",
                 replylist: emptyReplylist,
             });
 
@@ -429,22 +465,17 @@ class AddUpdateQuestion extends Component {
                         showToastifyAlert("Reply not found in DB!", "error");
                     });
             });
-
-            // this.setState({
-            //     refreshViewUpdatePage: true
-            // });
         }
         else {
             return;
         }
-
 
     } // End of handleGetAllReplies()
 
 
 
     // This function handles Reply form submission
-    handleReplyFormSubmit = event => {
+    handleReplyFormSubmit = (event) => {
         event.preventDefault();
 
         console.log("Inside handleReplyFormSubmit()");
@@ -481,7 +512,7 @@ class AddUpdateQuestion extends Component {
             .then(() => {
 
                 // Now update Question table by deleting the replyId from repliesObject[]
-                // console.log("repliesObject: " + this.state.repliesObject);
+                console.log("repliesObject: " + this.state.repliesObject);
 
                 let updatedRepliesObject = [];
                 this.state.repliesObject.forEach(replyId => {
@@ -489,7 +520,7 @@ class AddUpdateQuestion extends Component {
                         updatedRepliesObject.push(replyId);
                     }
                 });
-                // console.log("updatedRepliesObject: " + updatedRepliesObject);
+                console.log("updatedRepliesObject: " + updatedRepliesObject);
 
                 this.setState({
                     repliesObject: updatedRepliesObject
@@ -508,6 +539,9 @@ class AddUpdateQuestion extends Component {
                         quesNickName: this.state.quesNickName
                     });
 
+                    // Call function to get all replies and post on the question page
+                    // this.handleGetAllReplies();
+
             })
             .catch(err => {
                 console.log(err);
@@ -517,6 +551,61 @@ class AddUpdateQuestion extends Component {
 
 
 
+    // Method that edits a particular reply in reply table
+    handleSaveEdittedReply = (postData) => {
+        console.log("Inside handleSaveEdittedReply()");
+
+
+        // Reset flags replated to editing reply
+        this.setState({
+            enableReplyCommentBox: false,
+            saveEditReplyBtnToggle: false,
+            editedReply: ""
+        })
+
+        let updatedReplyObj = {
+            reply: postData.reply, //Only value that is updating
+            replyThumbsUpCount: this.state.replyThumbsUpCount,
+            replyThumbsDownCount: this.state.replyThumbsDownCount,
+            replyUserId: this.state.replyUserId,
+            replyAddedOn: this.state.replyAddedOn,
+            replyUserNickName: this.state.replyUserNickName
+        };
+
+        // Update the reply in the database
+        updateReply(postData.id, updatedReplyObj)
+            .then(({ data: replyData }) => {
+
+                showToastifyAlert("Reply Updated successfully!", "success");
+                // Call function to get all replies and post on the question page
+                this.handleGetAllReplies();
+
+            })
+            .catch(err => {
+                console.log(err);
+                showToastifyAlert("Failed updating the reply/comment!", "error");
+            });
+
+
+    } // End of handleSaveEdittedReply()
+
+
+
+    // This function is triggered when user wants to edit a particular reply
+    handleEditReplyBtnCkicked = (replyIdToBeEdited, oldReply) => {
+        console.log("Inside handleEditReplyBtnCkicked()");
+
+        this.setState({
+            enableReplyCommentBox: true,
+            saveEditReplyBtnToggle: true,
+            editedReply: oldReply
+        })
+
+    } // End of handleEditReplyBtnCkicked()
+
+
+    
+    
     // Method that updates the reply thumbsup count field of the reply schema whenever 
     // a user clicks on the thumbsup button on reply
     handleThumbsUpCount = (replyId, updatedThumbsUpCountObj) => {
@@ -556,6 +645,60 @@ class AddUpdateQuestion extends Component {
     } // End of handleThumbsDownCount()
 
 
+    // Calculate when btn should be visible 
+    showEditQuestionButton = () => {
+
+        return( 
+            this.state.id   //if question id exists
+            && (this.state.currentUserId === this.state.userId) //if current user = user who created the ques
+            && this.state.setQuesInputDisabled   //ques i/p box disabled status
+        ) 
+        ? true : false
+    }
+
+    showCommentReplyBox = () => {
+        return ( 
+            this.state.id   //if question id exists
+            && this.state.setQuesInputDisabled   //ques i/p box disabled status
+        ) 
+        ? true : false
+    }
+
+    showUpdateQuestionBtn = () => {
+
+        let showPostQuestion = false;
+
+        if(this.props.location.state) {
+            showPostQuestion = this.props.location.state.showPostQuestion;
+        }
+
+        return ( 
+            this.state.id   //if question id exists
+            && (this.state.currentUserId === this.state.userId) //if current user = user who created the ques
+            && !this.state.setQuesInputDisabled   //ques i/p box disabled status
+            && !showPostQuestion //If Post Question is not visible the show Update Question
+        ) 
+        ? true : false
+    }
+
+    showPostQuestionBtn = () => {
+        
+        let showPostQuestion = false;
+
+        if(this.props.location.state) {
+            // console.log(this.props.location.state.showPostQuestion);
+            showPostQuestion = this.props.location.state.showPostQuestion;
+        }
+
+        return ( 
+            !this.state.id   //if question id exists
+            && showPostQuestion //If Post Question is not visible the show Update Question
+        ) 
+        ? true : false
+    }
+
+
+
 
     /* *************************************************************************************
      *  render function starts here
@@ -568,11 +711,11 @@ class AddUpdateQuestion extends Component {
         console.log(this.state);
 
 
-        let showPostQuestion = false;
-        if(this.props.location.state) {
-            // console.log(this.props.location.state.showPostQuestion);
-            showPostQuestion = this.props.location.state.showPostQuestion;
-        }
+        // let showPostQuestion = false;
+        // if(this.props.location.state) {
+        //     // console.log(this.props.location.state.showPostQuestion);
+        //     showPostQuestion = this.props.location.state.showPostQuestion;
+        // }
 
 
 
@@ -605,13 +748,9 @@ class AddUpdateQuestion extends Component {
                                     <button
                                         type="button"
                                         className="btn btn-outline-info btn-dark float-right mb-2"
-                                        onClick={this.handleReSetDisabled} // Reset setDisabled=false
-                                        // It will be enabled iff the current user Id === user who created the question
-                                        disabled={
-                                            (this.state.id && 
-                                            (this.state.currentUserId === this.state.userId) && 
-                                            this.state.setDisabled) ? (false) : (true)}
-                                        style={{ visibility: !showPostQuestion ? 'visible' : 'hidden' }}
+                                        onClick={this.handleResetQuesInputDisabled} // Reset setQuesInputDisabled=false
+                                        style={{ visibility: this.showEditQuestionButton() ? 'visible' : 'hidden' }}
+                                        data-toggle="tooltip" data-placement="top" title="Edit Question"
                                     >
                                         <i className="fa fa-user-edit"></i>
                                     </button>
@@ -627,7 +766,7 @@ class AddUpdateQuestion extends Component {
                                             name="question"
                                             placeholder="What is..."
                                             className="form-control"
-                                            disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
+                                            disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)}
                                         />
                                     </div>
 
@@ -641,10 +780,24 @@ class AddUpdateQuestion extends Component {
                                             placeholder="Describe your question with code (if required) here ..."
                                             className="form-control"
                                             style={{ height: '200px' }}
-                                            disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
+                                            disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)}
                                         >
                                         </textarea>
                                     </div>
+
+                                    <label 
+                                        htmlFor="userName" 
+                                        className="mt-1 ml-2 mb-2 row"
+                                        style={{
+                                            visibility: (this.state.id && this.state.setQuesInputDisabled) ? 
+                                                'visible' : 'hidden'
+                                        }}
+                                    >
+                                        <small className="text-info">
+                                            posted by <span className="font-weight-bold">{this.state.quesNickName}</span> on <span className="font-weight-bold">{this.state.dateAdded}</span>
+                                        </small>
+                                    </label>
+
 
                                     {/* All user replies will be populated here */}
                                     {/* replylist => contains all replies from DB for this ques */}
@@ -655,10 +808,22 @@ class AddUpdateQuestion extends Component {
                                                     <ShowAllReplies
                                                         id={replyData._id}
                                                         replyObject={replyData}
+                                                        
+                                                        value={this.state.editedReply   ? 
+                                                                this.state.editedReply : replyData.reply
+                                                        }
+                                                        name="editedReply"
+
                                                         handleGetAllReplies={this.handleGetAllReplies}
                                                         handleThumbsUpCount={this.handleThumbsUpCount}
                                                         handleThumbsDownCount={this.handleThumbsDownCount}
                                                         handleDeleteReply={this.handleDeleteReply}
+                                                        handleEditReplyBtnCkicked={this.handleEditReplyBtnCkicked}
+                                                        handleSaveEdittedReply={this.handleSaveEdittedReply}
+                                                        enableReplyCommentBox={this.state.enableReplyCommentBox}
+                                                        saveEditReplyBtnToggle={this.state.saveEditReplyBtnToggle}
+                                                        currentUserId={this.state.currentUserId}
+                                                        handleInputChange={this.handleInputChange}
                                                     />
                                                 )
                                             })
@@ -669,7 +834,8 @@ class AddUpdateQuestion extends Component {
                                     {/* Reply Comment box */}
                                     {
 
-                                        (this.state.id && this.state.setDisabled) ? (
+                                        // (this.state.id && this.state.setQuesInputDisabled) ? (
+                                        this.showCommentReplyBox() ? (
                                             <UserReply
                                                 handleInputChange={this.handleInputChange}
                                                 value={this.state.reply}
@@ -716,7 +882,7 @@ class AddUpdateQuestion extends Component {
                                                     list="categories"
                                                     name="currentTag"
                                                     onChange={this.handleTagSelection}
-                                                    disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
+                                                    disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)}
                                                 />
 
                                                 <datalist id="categories">
@@ -730,7 +896,7 @@ class AddUpdateQuestion extends Component {
                                                     type="button"
                                                     className="btn btn-sm btn-info ml-3"
                                                     onClick={this.handleTagAddition}
-                                                    disabled={(this.state.id && this.state.setDisabled) ? (true) : (false)}
+                                                    disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)}
                                                 >
                                                     Save Tag
                                                 </button>
@@ -738,8 +904,12 @@ class AddUpdateQuestion extends Component {
                                             </div>
 
                                             {/* Div that shows the already selected userTags */}
-                                            <div className="my-3 p-3" style={{ border: "2px dotted lightblue" }}>
-                                                {this.showUserTags()}
+                                            <div 
+                                                className="my-3 p-3" 
+                                                style={{ border: "2px dotted lightblue" }}
+                                                // disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)}
+                                            >
+                                                {   this.showUserTags()     }
                                             </div>
                                         </div>
                                     </div>
@@ -756,14 +926,7 @@ class AddUpdateQuestion extends Component {
                                     <button
                                         type="submit"
                                         className="btn btn-outline-info btn-dark"
-                                        style={{ 
-                                            visibility:
-                                                (!showPostQuestion 
-                                                // && (this.state.id && (this.state.currentUserId === this.state.userId) && 
-                                                // this.state.setDisabled)
-                                                ) ? 
-                                                'visible' : 'hidden' 
-                                        }}
+                                        style={{visibility: this.showUpdateQuestionBtn() ? 'visible' : 'hidden'}}
                                     >
                                         Update Question
                                     </button>
@@ -774,7 +937,7 @@ class AddUpdateQuestion extends Component {
                                     <button
                                         type="submit"
                                         className="btn btn-outline-info btn-dark float-left"
-                                        style={{ visibility: showPostQuestion ? 'visible' : 'hidden' }}
+                                        style={{ visibility: this.showPostQuestionBtn() ? 'visible' : 'hidden' }}
                                     >
                                         Post Question
                                     </button>

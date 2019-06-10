@@ -15,6 +15,7 @@ function ListGroup(props) {
                 id={ques._id}
                 questionObject={ques}
                 userLoggedIn={props.userLoggedIn}
+                currentUserId={props.currentUserId}
                 
                 handleDeleteQuestion={props.handleDeleteQuestion}
                 handleUpdateViewCount={props.handleUpdateViewCount}

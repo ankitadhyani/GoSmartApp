@@ -107,6 +107,7 @@ class MyJobsPage extends Component {
                         className="btn col-1 p-0"
                         data="jobInfo"
                         onClick={() => this.handleDeleteSavedJob(jobInfo._id)}
+                        data-toggle="tooltip" data-placement="top" title="Delete Jobs Information"
                     >
                         <i className="fas fa-trash-alt text-danger"></i>
                     </button>

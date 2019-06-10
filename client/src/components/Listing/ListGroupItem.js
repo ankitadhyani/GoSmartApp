@@ -19,8 +19,16 @@ function incrementViewCount(questionObject) {
   };
 }
 
+
+function deleteQuestionButtonVisible(props) {
+  
+  return (props.questionObject.userId === props.currentUserId) ? true: false
+}
+
+
 // create list group item (<li>) from props
 function ListGroupItem(props) {
+
 
   return (
 
@@ -31,7 +39,13 @@ function ListGroupItem(props) {
 
         <div className="col-1 text-secondary pt-3 text-center">
           <div className="row">
-            <div className="col-12"><i className="fa fa-eye"></i></div>
+            <div className="col-12">
+              <i 
+                className="fa fa-eye" 
+                data-toggle="tooltip" data-placement="top" title="Number of views"
+              >
+              </i>
+            </div>
           </div>
           <div className="row">
             <div className="col-12"><span><strong>{props.questionObject.viewCount}</strong></span></div>
@@ -61,7 +75,8 @@ function ListGroupItem(props) {
             <button
               className="btn text-danger btn-sm m-1"
               onClick={() => props.handleDeleteQuestion(props.id)}
-              disabled={!props.userLoggedIn ? true : false}
+              disabled={!deleteQuestionButtonVisible(props) ? true : false}
+              data-toggle="tooltip" data-placement="top" title="Delete Question"
             >
               <i className="fa fa-trash-alt"></i>
             </button>

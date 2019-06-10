@@ -88,20 +88,16 @@ class AppHeader extends Component {
     console.log("this.state.searchQuestion = " + this.state.searchQuestion);
 
     const searchStr = this.state.searchQuestion.trim();
-    console.log("searchStr trim= " + searchStr);
+    // console.log("searchStr trim= " + searchStr);
 
     if (searchStr) {
-      console.log("searchStr in if()= " + searchStr); //ok
+      // console.log("searchStr in if()= " + searchStr); //ok
       this.setState({
         questionAsked: true
       })
     }
     else {
-      alert("Search string is empty!");
-      this.setState({
-        alertMessage: "Search string is empty!"
-      })
-
+      showToastifyAlert("Search string is empty!", "error");
     }
 
   } //End of handleQuestionSearch()

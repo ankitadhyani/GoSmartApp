@@ -39,8 +39,16 @@ class AllJobsPage extends Component {
                 retrievedScrapedJobs: true
             })
         });
-        
+
     }
+
+    // handleInputChange
+    handleInputChange = event => {
+        const { name, value } = event.target;
+        this.setState({
+            [name]: value
+        });
+    };
 
 
     // Method to get all scraped jobs from Dice and Indeed
@@ -56,9 +64,9 @@ class AllJobsPage extends Component {
             .catch(err => console.log(err));
 
     } // End of handleGetScrapedJobsByLoc()
-    
 
-    
+
+
     //Function that saves jobs in User Profile (Database)
     //this is triggered when user clicks on 'save-job' pin button
     handleSaveJobToProfile = (jobData) => {
@@ -104,18 +112,19 @@ class AllJobsPage extends Component {
             optionalDataString += " | " + jobInfo.posted;
 
         return (
-            <li 
-                className="list-group-item list-group-item-action flex-column align-items-start border border-info border-top-1" 
+            <li
+                className="list-group-item list-group-item-action flex-column align-items-start border border-info border-top-1"
                 data={jobInfo}
             >
 
                 <div className="row w-100">
                     <h6 className="col-11 py-0">{jobInfo.jobTitle}</h6>
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         className="btn col-1 p-0"
                         data="jobInfo"
                         onClick={() => this.handleSaveJobToProfile(jobInfo)}
+                        data-toggle="tooltip" data-placement="top" title="Bookmark Job Details"
                     >
                         📌
                     </button>
@@ -130,7 +139,7 @@ class AllJobsPage extends Component {
                 </div>
             </li>
         )
-            
+
     } // End of displayEachScrapedJob()
 
 
@@ -144,24 +153,46 @@ class AllJobsPage extends Component {
 
         return (
             <div className="list-group">
-            {
-                (allScrapedJobs.length > 0) ? (
-                    allScrapedJobs.map(jobInfo => {
-                        return (
-                            this.displayEachScrapedJob(jobInfo)
+                {
+                    (allScrapedJobs.length > 0) ? (
+                        allScrapedJobs.map(jobInfo => {
+                            return (
+                                this.displayEachScrapedJob(jobInfo)
+                            )
+                        })
+                    ) : (
+                            <h2>No jobs to display 😒</h2>
                         )
-                    })
-                ) : (
-                    <h2>No jobs to display 😒</h2>
-                )
-            }
+                }
             </div>
         )
 
     } // End of listGroupForAllJobs()
 
 
-    
+
+    // This function will take the job location preference from user to search for jobs
+    handleJobLocationSearch = (event) => {
+        event.preventDefault();
+
+        console.log("Inside AllJobsPage -> handleJobLocationSearch()");
+        console.log("this.state.location = " + this.state.location);
+
+        this.setState({
+            retrievedScrapedJobs: false
+        })
+
+        // Get all scraped jobs function is called now with the new location
+        this.handleGetScrapedJobsByLoc(this.state.location, () => {
+            this.setState({
+                retrievedScrapedJobs: true
+            })
+        });
+
+    } // End of handleJobLocationSearch()
+
+
+
 
     /* *************************************************************************************
      *  render function starts here
@@ -176,16 +207,55 @@ class AllJobsPage extends Component {
         return (
 
             <React.Fragment>
-                
+
                 <AppHeader />
 
                 <div className="row container-fluid bg-info my-1 px-3 ml-0 mr-0">
-                    <div className="col-12">
+                    <div className="col-8">
                         <h4 className="text-light mt-2">Jobs</h4>
-                    </div>
-                    <div className="col-12" style={{fontSize: "15px", lineHeight: "1em"}}>
+                    {/* </div> */}
+                    {/* <div className="col-12" style={{ fontSize: "15px", lineHeight: "1em" }}> */}
                         <p>Show all the Full Stack Web Development Jobs</p>
                     </div>
+
+                    <div className="col-4 mt-3">
+                        <form className="form-group" onSubmit={this.handleJobLocationSearch}>
+                            <div className="input-group">
+                                <input
+                                    className="form-control p-4"
+                                    type="text"
+                                    name="location"
+                                    value={this.state.location}
+                                    placeholder="Search Location..."
+                                    onChange={this.handleInputChange}
+                                />
+                            </div>
+                        </form>
+                    </div>
+
+
+
+                    {/* <div className="col-12">
+                        <h4 className="text-light mt-2">Jobs</h4>
+                    </div>
+                    <div className="col-12" style={{ fontSize: "15px", lineHeight: "1em" }}>
+                        <p>Show all the Full Stack Web Development Jobs</p>
+                    </div> */}
+
+                    {/* Add form to take in location from user */}
+                    {/* <form className="form-group" onSubmit={this.handleJobLocationSearch}>
+                        <div className="input-group">
+                            <input
+                                className="form-control p-4"
+                                type="text"
+                                name="location"
+                                value={this.state.location}
+                                placeholder="Search Location..."
+                                onChange={this.handleInputChange}
+                            />
+                        </div>
+                    </form> */}
+
                 </div>
 
                 <div className="row container-fluid mt-4 mb-5">
@@ -199,7 +269,7 @@ class AllJobsPage extends Component {
                     </div>
 
                     {/* List all jobs here */}
-                    <div className="col-10 border-info" style={{ height: "440px", overflowY: "scroll"}}>
+                    <div className="col-10 border-info" style={{ height: "440px", overflowY: "scroll" }}>
                         {
                             this.state.allScrapedJobs.length ?
                                 (

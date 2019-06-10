@@ -17,6 +17,7 @@ class Questions extends Component {
         searchQuestion: "", // searchQuestion: "What is REST?",
         searchResultList: [],
         showSearchResult: false, //=true iff user searches for a question, else =false
+        currentUserId: "" // stores the value of the userId of the current loggedin user
     };
 
 
@@ -34,6 +35,7 @@ class Questions extends Component {
         })
 
         // this.setStatesValuesWhenUserLogsIn();
+        this.handleGetUserProfile();
 
         // Get all questions
         this.getQuestions();
@@ -43,13 +45,16 @@ class Questions extends Component {
 
 
     // This function is called when in state 'userLoggedIn' is different from that received from HomePage
-    setStatesValuesWhenUserLogsIn = () => {
+    handleGetUserProfile = () => {
         getUserProfile()
             .then(({ data: userData }) => {
 
+                // console.log("Current user id is ------------" + userData._id);
+
                 // Update state with if user data is validated
                 this.setState({
-                    userLoggedIn: true
+                    currentUserId: userData._id
+                    // userLoggedIn: true
                 });
 
             })
@@ -186,9 +191,9 @@ class Questions extends Component {
         console.log("Inside Question.js");
 
         // Call function to set 'userLoggedIn' states 
-        if (this.props.userLoggedIn === true && this.state.userLoggedIn === false) {
-            this.setStatesValuesWhenUserLogsIn();
-        }
+        // if (this.props.userLoggedIn === true && this.state.userLoggedIn === false) {
+        //     this.handleGetUserProfile();
+        // }
 
         // If user clicks on "Questions" link from Navbar then reset states
         if (this.props.originPage === "Navbar" && this.state.showSearchResult === true) {
@@ -267,7 +272,7 @@ class Questions extends Component {
                 {/* List all questions here */}
                 <div className=""
                     style={{
-                        height: "350px",
+                        height: "370px",
                         overflowY: "scroll"
                     }}>
                     <ListGroup
@@ -276,6 +281,7 @@ class Questions extends Component {
                                 this.state.searchResultList : questionlist
                         }      
                         userLoggedIn={this.state.userLoggedIn}
+                        currentUserId={this.state.currentUserId}
                         handleDeleteQuestion={this.handleDeleteQuestion}
                         handleUpdateViewCount={this.handleUpdateViewCount}
                     />
