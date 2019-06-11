@@ -268,7 +268,7 @@ class Questions extends Component {
                         {/* <h3>Top Questions</h3> */}
                         {
                             (this.state.showSearchResult === true) ? (
-                                <h3>Search Resuts</h3>
+                                <h3>Search Results</h3>
                             ) : (
                                 <h3>Top Questions</h3>
                             )
