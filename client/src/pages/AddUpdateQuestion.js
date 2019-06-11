@@ -797,7 +797,10 @@ class AddUpdateQuestion extends Component {
                                             name="quesDescription"
                                             placeholder="Describe your question with code (if required) here ..."
                                             className="form-control"
-                                            style={{ height: '200px' }}
+                                            style={{ 
+                                                height: !(this.state.id && this.state.setQuesInputDisabled) ? 
+                                                '200px' : '' 
+                                            }}
                                             disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)}
                                         >
                                         </textarea>
