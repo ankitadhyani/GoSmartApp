@@ -1,30 +1,8 @@
+
+
 import React, { Component } from 'react';
+
 import './ShowJobs.css';
-
-
-
-// Function called to display only 1st five jobs on HomePage
-function displayTopFiveJobs(props) {
-
-    // console.log("Inside ShowJobs -> displayTopFiveJobs()");
-
-    props.topFiveScrapedJobs.forEach(jobInfo => {
-
-        // console.log(jobInfo);
-        // console.log("jobInfo.jobTitle = " + jobInfo.jobTitle);
-        // console.log("jobInfo.company = " + jobInfo.company);
-
-        return (
-            <li>
-                <h5 className="mb-1 text-dark">{jobInfo.jobTitle}</h5>
-                <small className="mb-1 text-info">{jobInfo.company}</small>
-
-            </li>
-        )
-
-    })
-        
-} // End of displayTopFiveJobs()
 
 
 
@@ -48,12 +26,24 @@ function ShowJobs(props) {
                     // console.log("jobInfo.company = " + jobInfo.company);
         
                     return (
-                        <li className="list-group-item">
-                            <h6 style={{ fontSize:"15px" }}>
+                        <div 
+                            className="list-group-item cJobsListItem"
+                            // style={{ backgroundColor: "rgb(255, 222, 103)" }}
+                        >
+                            <h6 
+                                className="text-info"
+                                style={{ fontSize:"15px" }}
+                            >
                                 {jobInfo.jobTitle}
                             </h6>
-                            <small className="text-info">{jobInfo.company}</small>
-                        </li>
+
+                            <small 
+                                className="text-dark font-weight-bold"
+                            >
+                                    {jobInfo.company}
+                            </small>
+
+                        </div>
                     )
                 })
                 :

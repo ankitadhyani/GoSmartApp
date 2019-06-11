@@ -1,0 +1,8 @@
+
+
+/* ---------------- CSS for Questions list views ---------------- */
+
+.cQuestionListItem:hover {
+    background: linear-gradient(white, rgb(166, 231, 243));
+    transition: all 0.2s ease;
+}

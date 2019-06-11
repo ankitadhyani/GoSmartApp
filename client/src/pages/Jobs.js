@@ -88,7 +88,7 @@ class Jobs extends Component {
         return (
             <React.Fragment>
 
-                <div>
+                <div className="">
                 {
                     (!this.state.retrievedScrapedJobs) ? 
                     (
@@ -107,7 +107,9 @@ class Jobs extends Component {
                                 </div>
 
                                 <div className="col-12">
-                                    <h6 className="text-center">New York, NY</h6>
+                                    <h6 className="text-center">
+                                        <i className="fas fa-map-marker-alt text-success"></i> New York, NY
+                                    </h6>
                                 </div>
 
                                 <div className="col-12">

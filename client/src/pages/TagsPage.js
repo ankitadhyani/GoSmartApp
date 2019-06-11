@@ -117,12 +117,9 @@ class TagsPage extends Component {
                             
                             this.state.preDefinedTagList.map(tag => {
 
-                                // let questionsCount = this.state.noOfQuestionsForATag[index];
-                                // console.log("questionsCount = " + questionsCount);
-
                                 return (
                                     
-                                    <div className="card mb-3" style={{ width: '200px' }}>
+                                    <div className="card mb-3 cTagsBorder" style={{ width: '200px' }}>
                                         <div className="card-body text-center">
                                             
                                             <Link

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import './Listing.css';
+
 
 function incrementViewCount(questionObject) {
 
@@ -21,8 +23,8 @@ function incrementViewCount(questionObject) {
 
 
 function deleteQuestionButtonVisible(props) {
-  
-  return (props.questionObject.userId === props.currentUserId) ? true: false
+
+  return (props.questionObject.userId === props.currentUserId) ? true : false
 }
 
 
@@ -32,16 +34,16 @@ function ListGroupItem(props) {
 
   return (
 
-    <div>
-      
-      <li className="row list-group-item-action" style={{ borderStyle: "none" }}>
+    <div className="">
+
+      <li className="row list-group-item-action cQuestionListItem" style={{ borderStyle: "none" }}>
 
 
         <div className="col-1 text-secondary pt-3 text-center">
           <div className="row">
             <div className="col-12">
-              <i 
-                className="fa fa-eye" 
+              <i
+                className="fa fa-eye"
                 data-toggle="tooltip" data-placement="top" title="Number of views"
               >
               </i>
@@ -50,7 +52,7 @@ function ListGroupItem(props) {
           <div className="row">
             <div className="col-12"><span><strong>{props.questionObject.viewCount}</strong></span></div>
           </div>
-          
+
         </div>
 
         <div className="col-11">

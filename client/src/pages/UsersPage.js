@@ -8,8 +8,11 @@ import Navbar from '../components/Navbar/Navbar';
 import Wrapper from '../components/Wrapper/Wrapper';
 import Footer from "../components/Footer/Footer";
 
-
 import { getAllUsers } from '../utils/userAPIs';
+
+import './pages.css';
+
+
 
 class UsersPage extends Component {
 
@@ -87,7 +90,7 @@ class UsersPage extends Component {
                                         style={{ height: "100px", width:"100px", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}
                                     >
                                             <img 
-                                                className="card-img-top img-thumbnail text-center" 
+                                                className="card-img-top img-thumbnail text-center cZoomUserImage" 
                                                 src="/images/confused-emoticon.jpg" 
                                                 alt={user.nickName}
                                             >

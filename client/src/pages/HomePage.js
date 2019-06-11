@@ -103,7 +103,7 @@ class HomePage extends Component {
                             nickName: userData.nickName,
                             email: userData.email,
                             password: userData.password,
-                            userLoggedIn: true,
+                            userLoggedIn: true
                         });
                         showToastifyAlert("User logged in successfully", "success");
 
@@ -256,7 +256,7 @@ class HomePage extends Component {
                             style={{
                                 borderRight: "5px solid red"
                             }}>
-                            <Navbar />
+                            <Navbar/>
                         </div>
 
 

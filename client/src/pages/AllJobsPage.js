@@ -11,6 +11,8 @@ import { showToastifyAlert } from '../utils/alertAPI';
 import { saveJobToDB } from '../utils/jobsAPIs';
 import { getScrapedJobsByLoc } from '../utils/scrapedJobsAPI';
 
+import './pages.css';
+
 
 
 class AllJobsPage extends Component {
@@ -112,13 +114,14 @@ class AllJobsPage extends Component {
             optionalDataString += " | " + jobInfo.posted;
 
         return (
-            <li
-                className="list-group-item list-group-item-action flex-column align-items-start border border-info border-top-1"
+            <div
+                className="list-group-item list-group-item-action align-items-start" 
+                className="border border-info border-top-1 pl-3 pt-3 cJobsListItem"
                 data={jobInfo}
             >
 
                 <div className="row w-100">
-                    <h6 className="col-11 py-0">{jobInfo.jobTitle}</h6>
+                    <h5 className="col-11 py-0">{jobInfo.jobTitle}</h5>
                     <button
                         type="button"
                         className="btn col-1 p-0"
@@ -134,10 +137,10 @@ class AllJobsPage extends Component {
                     <small>{optionalDataString}</small>
                 </div>
 
-                <div className="d-flex w-100 justify-content-between">
-                    <p>{jobInfo.description}</p>
+                <div className="d-flex w-100 justify-content-between text-secondary pb-0">
+                    <p className="p-0">{jobInfo.description}</p>
                 </div>
-            </li>
+            </div>
         )
 
     } // End of displayEachScrapedJob()
@@ -234,28 +237,6 @@ class AllJobsPage extends Component {
                     </div>
 
 
-
-                    {/* <div className="col-12">
-                        <h4 className="text-light mt-2">Jobs</h4>
-                    </div>
-                    <div className="col-12" style={{ fontSize: "15px", lineHeight: "1em" }}>
-                        <p>Show all the Full Stack Web Development Jobs</p>
-                    </div> */}
-
-                    {/* Add form to take in location from user */}
-                    {/* <form className="form-group" onSubmit={this.handleJobLocationSearch}>
-                        <div className="input-group">
-                            <input
-                                className="form-control p-4"
-                                type="text"
-                                name="location"
-                                value={this.state.location}
-                                placeholder="Search Location..."
-                                onChange={this.handleInputChange}
-                            />
-                        </div>
-                    </form> */}
-
                 </div>
 
                 <div className="row container-fluid mt-4 mb-5">
@@ -269,7 +250,10 @@ class AllJobsPage extends Component {
                     </div>
 
                     {/* List all jobs here */}
-                    <div className="col-10 border-info" style={{ height: "440px", overflowY: "scroll" }}>
+                    <div 
+                        className="col-10 border-info" 
+                        style={{ height: "440px", overflowY: "scroll" }}
+                    >
                         {
                             this.state.allScrapedJobs.length ?
                                 (

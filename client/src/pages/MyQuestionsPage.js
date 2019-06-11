@@ -84,9 +84,9 @@ class MyQuestionsPage extends Component {
                         {
                             (this.state.myQuestionlist.length > 0) ? (
                                 <Questions
-                                    originPage={"MyQuestionsPage"}
+                                    originPage="MyQuestionsPage"
                                     myQuestionlist={this.state.myQuestionlist}
-                                    searchQuestion={""} // send blank
+                                    // searchQuestion={""} // send blank
                                     userLoggedIn={this.state.userLoggedIn}
                                 />
                             ) : (

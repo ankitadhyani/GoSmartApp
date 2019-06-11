@@ -216,7 +216,7 @@ class AddUpdateQuestion extends Component {
         console.log("Inside handleTagSelection()");
 
         const { name, value } = event.target;
-        console.log(name + " :: " + value);
+        // console.log(name + " :: " + value);
 
         this.setState({
             [name]: value
@@ -280,8 +280,8 @@ class AddUpdateQuestion extends Component {
 
     // Function that shows user selected tags on the UI
     showUserTags = () => {
-        console.log("Inside showUserTags()");
-        console.log("this.state.userTags = " + this.state.userTags);
+        // console.log("Inside showUserTags()");
+        // console.log("this.state.userTags = " + this.state.userTags);
 
         const noOfUserTags = (this.state.userTags) ? this.state.userTags.length : 0;
 
@@ -298,7 +298,7 @@ class AddUpdateQuestion extends Component {
                         {tag} <i className="far fa-times-circle btn"disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)} ></i>
                     </label>)
                 ) :
-                (<h4>Select a Tag...</h4>)
+                (<h4 className="text-center">No Tag Selected</h4>)
         )
     }
 
@@ -343,15 +343,33 @@ class AddUpdateQuestion extends Component {
     } // End of handleUpdateQuestion()
 
 
+    resetQuestionStates = () => {
+        this.setState({
+            question: this.state.question,
+            quesDescription: this.state.quesDescription,
+            userTags: this.state.userTags,
+            repliesObject: this.state.repliesObject,
+            viewCount: this.state.viewCount,
+            userId: this.state.userId,
+            dateAdded: this.state.dateAdded,
+            quesNickName: this.state.quesNickName,
+        });
+    }
 
     handleFormSubmit = event => {
         event.preventDefault();
 
+        console.log("this.state.question => " + this.state.question);
+        let ques = this.state.question;
+        if(ques.trim() === "") {
+            return showToastifyAlert("Question Field is mandatory!", "error");
+        }
+
         // If user has not selected atleast one tag then do not submit the question
         if(this.state.userTags.length < 1) {
-            showToastifyAlert("Tag field is mandatory!", "error");
-            return;
+            return showToastifyAlert("Tag field is mandatory!", "error");
         }
+
         // if this.state.id exists, run update method
         if (this.state.id) {
 
@@ -833,7 +851,6 @@ class AddUpdateQuestion extends Component {
 
                                     {/* Reply Comment box */}
                                     {
-
                                         // (this.state.id && this.state.setQuesInputDisabled) ? (
                                         this.showCommentReplyBox() ? (
                                             <UserReply
@@ -847,8 +864,6 @@ class AddUpdateQuestion extends Component {
                                                 ""
                                             )
                                     }
-
-
                                 </div>
 
 
@@ -882,6 +897,7 @@ class AddUpdateQuestion extends Component {
                                                     list="categories"
                                                     name="currentTag"
                                                     onChange={this.handleTagSelection}
+                                                    placeholder="Select a tag..."
                                                     disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)}
                                                 />
 
@@ -907,7 +923,6 @@ class AddUpdateQuestion extends Component {
                                             <div 
                                                 className="my-3 p-3" 
                                                 style={{ border: "2px dotted lightblue" }}
-                                                // disabled={(this.state.id && this.state.setQuesInputDisabled) ? (true) : (false)}
                                             >
                                                 {   this.showUserTags()     }
                                             </div>

@@ -38,7 +38,7 @@ class Dropdown extends React.Component {
             <div className="dropdown">
 
                 <button className="btn btn-outline-info" onClick={this.showDropdownMenu}>
-                    {this.props.fullName}
+                    {this.props.fullName} <i className="fas fa-caret-down text-info"></i>
                 </button>
 
                 {this.state.displayMenu ? (
@@ -79,7 +79,7 @@ class Dropdown extends React.Component {
                             My Saved Jobs
                         </Link>
 
-                        <Link className="dropdown-item text-info"
+                        <Link className="dropdown-item text-info border-bottom border-left border-right border-info"
                             to={{
                                 pathname: "/logout",
                                 state: {

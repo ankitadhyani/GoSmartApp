@@ -25,14 +25,15 @@ li {
     border-bottom: 1px solid #e5e5e5;
 }
 li:last-child {
-    border-bottom: none;
+    /* border-bottom: none; */
 }
 .cDropDownMenu {
     background-color: #5bb2f8;
     color: whitesmoke;
 }
 li:hover {
-    background-color: #e5e5e5;
+    /* background-color: #e5e5e5; */
+    background-color: #65cde7;
     color: rgb(92, 237, 241);
 }
 .button{

@@ -53,8 +53,8 @@ class Questions extends Component {
 
                 // Update state with if user data is validated
                 this.setState({
-                    currentUserId: userData._id
-                    // userLoggedIn: true
+                    currentUserId: userData._id,
+                    userLoggedIn: true
                 });
 
             })
@@ -191,9 +191,9 @@ class Questions extends Component {
         console.log("Inside Question.js");
 
         // Call function to set 'userLoggedIn' states 
-        // if (this.props.userLoggedIn === true && this.state.userLoggedIn === false) {
-        //     this.handleGetUserProfile();
-        // }
+        if (this.props.userLoggedIn === true && this.state.userLoggedIn === false) {
+            this.handleGetUserProfile();
+        }
 
         // If user clicks on "Questions" link from Navbar then reset states
         if (this.props.originPage === "Navbar" && this.state.showSearchResult === true) {

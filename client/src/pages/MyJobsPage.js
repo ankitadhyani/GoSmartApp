@@ -95,8 +95,9 @@ class MyJobsPage extends Component {
             optionalDataString += " | " + jobInfo.posted;
 
         return (
-            <li 
-                className="list-group-item list-group-item-action flex-column align-items-start border border-info border-top-1" 
+            <div 
+                className="list-group-item list-group-item-action align-items-start"
+                className="border border-info border-top-1 pl-3 pt-3 cJobsListItem" 
                 data={jobInfo}
             >
 
@@ -104,7 +105,7 @@ class MyJobsPage extends Component {
                     <h6 className="col-11 py-0">{jobInfo.jobTitle}</h6>
                     <button
                         type="button"
-                        className="btn col-1 p-0"
+                        className="btn btn-lg col-1 p-0"
                         data="jobInfo"
                         onClick={() => this.handleDeleteSavedJob(jobInfo._id)}
                         data-toggle="tooltip" data-placement="top" title="Delete Jobs Information"
@@ -120,7 +121,7 @@ class MyJobsPage extends Component {
                 <div className="d-flex w-100 justify-content-between">
                     <p>{jobInfo.description}</p>
                 </div>
-            </li>
+            </div>
         )
 
     } // End of displayEachScrapedJob()

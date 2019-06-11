@@ -1,0 +1,19 @@
+/* This css file contains css from all the pages */
+
+/* ---------------- CSS for Job Views ---------------- */
+.cJobsListItem {
+    border-radius: 5px
+}
+
+.cJobsListItem:hover {
+    background: linear-gradient(white, rgba(255, 221, 96, 0.47));
+    transition: all 0.2s ease;
+}
+
+
+
+
+/* ---------------- CSS for Tags Views ---------------- */
+.cTagsBorder:hover {
+    border: 5px solid #2b9eaf80
+}

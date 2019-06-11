@@ -1,0 +1,10 @@
+
+
+.cJobsListItem {
+    border-radius: 5px
+}
+
+.cJobsListItem:hover {
+    background: linear-gradient(white, rgba(255, 221, 96, 0.47));
+    transition: all 0.2s ease;
+}
