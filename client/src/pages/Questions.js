@@ -29,10 +29,10 @@ class Questions extends Component {
         //Reset states
         this.setState({
             userLoggedIn: (this.state.accessToken) ? true : false,
-            questionlist: [],
-            searchQuestion: "",
-            searchResultList: [],
-            showSearchResult: false
+            // questionlist: [],
+            // searchQuestion: "",
+            // searchResultList: [],
+            // showSearchResult: false
         })
 
         // this.setStatesValuesWhenUserLogsIn();
@@ -43,7 +43,21 @@ class Questions extends Component {
 
     } // End of componentDidMount()
 
+    componentDidUpdate () {
+        console.log("Inside Questions.js -> componentDidUpdate()");
+        console.log("this.props.searchQuestion = " + this.props.searchQuestion);
+        console.log("this.state.searchQuestion = " + this.state.searchQuestion);
+        console.log("this.state.showSearchResult = " + this.state.showSearchResult);
 
+        // if(this.props.searchQuestion !== this.state.searchQuestion && this.state.searchResultList.length > 0) {
+        // if(this.props.searchQuestion !== this.state.searchQuestion && this.state.showSearchResult === true) {
+        //     console.log("Reseting showSearchResult state now");
+        //     this.setState({
+        //         searchQuestion: this.props.searchQuestion,
+        //         showSearchResult: false
+        //     });
+        // }
+    }
 
     // This function is called when in state 'userLoggedIn' is different from that received from HomePage
     handleGetUserProfile = () => {
@@ -251,7 +265,14 @@ class Questions extends Component {
                 {/* Header */}
                 <header className="row p-3" style={{ borderBottom: "2px solid black" }}>
                     <div className="col-6">
-                        <h3>Top Questions</h3>
+                        {/* <h3>Top Questions</h3> */}
+                        {
+                            (this.state.showSearchResult === true) ? (
+                                <h3>Search Resuts</h3>
+                            ) : (
+                                <h3>Top Questions</h3>
+                            )
+                        }
                     </div>
 
                     <div className="col-6">
@@ -289,16 +310,33 @@ class Questions extends Component {
                         height: "370px",
                         overflowY: "scroll"
                     }}>
-                    <ListGroup
-                        questionlist={
-                            (this.state.showSearchResult) ?
-                                this.state.searchResultList : questionlist
-                        }      
-                        userLoggedIn={this.state.userLoggedIn}
-                        currentUserId={this.state.currentUserId}
-                        handleDeleteQuestion={this.handleDeleteQuestion}
-                        handleUpdateViewCount={this.handleUpdateViewCount}
-                    />
+                    {
+                        (this.state.showSearchResult === true) ? (
+                           
+                            (this.state.searchResultList.length > 0) ? (
+                                // If search results are found
+                                <ListGroup
+                                    questionlist={this.state.searchResultList}
+                                    userLoggedIn={this.state.userLoggedIn}
+                                    currentUserId={this.state.currentUserId}
+                                    handleDeleteQuestion={this.handleDeleteQuestion}
+                                    handleUpdateViewCount={this.handleUpdateViewCount}
+                                    // searchResultText=`Search Resuts for {this.state.searchQuestion}`
+                                />
+                            ) : (
+                                // If no search results found 
+                                <h4>No Search results found for "{this.state.searchQuestion}"</h4>
+                            )
+                        ) : (
+                                <ListGroup
+                                    questionlist={this.state.questionlist}
+                                    userLoggedIn={this.state.userLoggedIn}
+                                    currentUserId={this.state.currentUserId}
+                                    handleDeleteQuestion={this.handleDeleteQuestion}
+                                    handleUpdateViewCount={this.handleUpdateViewCount}
+                                />
+                        )
+                    }
                 </div>
 
                 {/* Show View all questions button iff we have atleast 1 question */}
