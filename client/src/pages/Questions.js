@@ -17,7 +17,8 @@ class Questions extends Component {
         searchQuestion: "", // searchQuestion: "What is REST?",
         searchResultList: [],
         showSearchResult: false, //=true iff user searches for a question, else =false
-        currentUserId: "" // stores the value of the userId of the current loggedin user
+        currentUserId: "", // stores the value of the userId of the current loggedin user
+        quesDelFromMyQuestionlist: false
     };
 
 
@@ -82,10 +83,34 @@ class Questions extends Component {
 
     // Method to remove a question when user clicks on button to remove it
     handleDeleteQuestion = (questionId) => {
+        console.log("handleDeleteQuestion is clicked------------------questionid = " + questionId );
 
         removeQuestion(questionId)
             .then(this.getQuestions)
             .catch(err => console.log(err));
+
+        // You need to refresh the page
+        // ReSet question list before display
+        
+        if (this.props.originPage === "MyQuestionsPage") {
+            console.log("MyQuestionsPage ----");
+            console.log(this.props.myQuestionlist);
+
+            window.location.reload(); // Hard refresh the page
+
+            // let updatedQuestionlist = [];
+            // this.props.myQuestionlist.map(ques => {
+            //     if(ques._id !== questionId) {
+            //         updatedQuestionlist.push(ques);
+            //     }
+            // })
+            // console.log(updatedQuestionlist);
+
+            // this.setState({ 
+            //     // questionlist: updatedQuestionlist,
+            //     quesDelFromMyQuestionlist: true
+            // })
+        }
 
     } // End of handleDeleteQuestion()
 
@@ -228,11 +253,11 @@ class Questions extends Component {
         // Set question list before display
         let questionlist = [];
         if (this.props.originPage === "MyQuestionsPage") {
+        // if (this.props.originPage === "MyQuestionsPage" && this.state.quesDelFromMyQuestionlist === false) {
             questionlist = this.props.myQuestionlist ;
         } else {
             questionlist = this.state.questionlist ;
         }
-
 
         return (
             <React.Fragment>

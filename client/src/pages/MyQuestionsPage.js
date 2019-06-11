@@ -86,7 +86,8 @@ class MyQuestionsPage extends Component {
                                 <Questions
                                     originPage="MyQuestionsPage"
                                     myQuestionlist={this.state.myQuestionlist}
-                                    // searchQuestion={""} // send blank
+                                    searchQuestion={this.props.location.state ? 
+                                        this.props.location.state.searchQuestion : ""}
                                     userLoggedIn={this.state.userLoggedIn}
                                 />
                             ) : (
