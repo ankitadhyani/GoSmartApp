@@ -36,7 +36,9 @@ Main features of this project are:
 ## Directory structure
 
 ### Screenshots
-![alt text](https://github.com/ankitadhyani/GoSmartApp/blob/master/client/public/images/GoSmartApp_HomePage.png "Go Smart Home Page")
+![alt text](https://github.com/ankitadhyani/GoSmartApp/blob/master/client/public/images/GoSmartApp_HomePage1.png "Go Smart Home Page")
+
+![alt text](https://github.com/ankitadhyani/GoSmartApp/blob/master/client/public/images/GoSmartApp_HomePage2.png "Go Smart Home Page")
 
 ## Technologies/Modules we used :
  
