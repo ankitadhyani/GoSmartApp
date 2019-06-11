@@ -6,6 +6,7 @@ import ListGroup from '../components/Listing/ListGroup';
 // Importing APIs from utils
 import { getAllQuestions, updateQuestion, removeQuestion } from '../utils/questionAPIs';
 import { getUserProfile } from '../utils/userAPIs';
+import { showToastifyAlert } from '../utils/alertAPI';
 
 
 class Questions extends Component {
@@ -267,12 +268,15 @@ class Questions extends Component {
                                 >
                                     <strong>Ask Question</strong>
                                 </Link>) :
-                                (<label
-                                    className="text-dark float-right p-2"
-                                    style={{ borderRadius: "5px", backgroundColor: "rgb(174, 174, 175)" }}
+                                (<button
+                                    className="btn btn-outline-info btn-dark float-right"
+                                    style={{ borderRadius: "5px" }}
+                                    onClick={() => 
+                                        showToastifyAlert("You need to be logged In to Ask Question!", "error")
+                                    }
                                 >
                                     <strong>Ask Question</strong>
-                                </label>)
+                                </button>)
                         }
                     </div>
                 </header>
