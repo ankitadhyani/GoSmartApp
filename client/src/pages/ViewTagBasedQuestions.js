@@ -13,6 +13,7 @@ import ListGroup from '../components/Listing/ListGroup';
 class ViewTagBasedQuestions extends Component {
 
     state = {
+        accessToken: localStorage.getItem('accessToken'), // get access token from localStorage
         userLoggedIn: false,
         questionlist: [],
         searchQuestion: "", // searchQuestion: "What is REST?",
@@ -23,8 +24,9 @@ class ViewTagBasedQuestions extends Component {
 
     // use component did mount to get all questions on load
     componentDidMount() {
-
-
+        this.setState({
+            userLoggedIn: (this.state.accessToken) ? true : false
+        })
     }
 
         

@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 
 import HomePage from './pages/HomePage';
-import AllQuestions from './pages/ViewAllQuestions';
+import ViewAllQuestions from './pages/ViewAllQuestions';
+import ViewSearchQuestionResultPage from './pages/ViewSearchQuestionResultPage';
 import AddUpdateQuestion from './pages/AddUpdateQuestion';
 import MyProfilePage from './pages/MyProfilePage';
 import MyQuestionsPage from './pages/MyQuestionsPage';
@@ -25,7 +26,11 @@ function App() {
           <Route exact path="/" component={HomePage} />
 
           {/* View All Questions */}
-          <Route exact path="/questions" component={AllQuestions} />
+          <Route exact path="/questions" component={ViewAllQuestions} />
+
+          {/* View Search question page */}
+          <Route exact path="/search-question-result" component={ViewSearchQuestionResultPage} />
+
 
           {/* Post a question */}
           <Route exact path="/add" component={AddUpdateQuestion} />

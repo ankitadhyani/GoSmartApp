@@ -44,27 +44,27 @@ class AppHeader extends Component {
     // Get user info and extract user nickName from user table to feed it in Question & Reply table
     // In case of error (meaning no user is logged in) the set 'userLoggedIn' state to false
     getUserProfile()
-    .then(({ data: userData }) => {
+      .then(({ data: userData }) => {
         console.log("AppHeader -> getUserProfile -> userData -> ");
         console.log(userData);
 
         // Update state with user data
         this.setState({
-            fullName: `${userData.firstName} ${userData.lastName}`,
-            email: userData.email,
-            nickName: userData.nickName,
-            userLoggedIn: true
+          fullName: `${userData.firstName} ${userData.lastName}`,
+          email: userData.email,
+          nickName: userData.nickName,
+          userLoggedIn: true
         });
 
-    })
-    .catch(err => {
+      })
+      .catch(err => {
         console.log(err);
 
         // Update state with user data
         this.setState({
-            userLoggedIn: false
+          userLoggedIn: false
         });
-    });
+      });
 
   } //End of componentDidMount()
 
@@ -85,19 +85,21 @@ class AppHeader extends Component {
     event.preventDefault();
 
     console.log("Inside AppHeader -> handleQuestionSearch()");
-    console.log("this.state.searchQuestion = " + this.state.searchQuestion);
+    
 
     const searchStr = this.state.searchQuestion.trim();
     // console.log("searchStr trim= " + searchStr);
 
-    if (searchStr) {
-      // console.log("searchStr in if()= " + searchStr); //ok
+    if (searchStr !== "") {
+      
+      console.log("this.state.searchQuestion = " + this.state.searchQuestion);
+
       this.setState({
         questionAsked: true
       })
     }
     else {
-      showToastifyAlert("Search string is empty!", "error");
+      return showToastifyAlert("Search string is empty!", "error");
     }
 
   } //End of handleQuestionSearch()
@@ -106,27 +108,27 @@ class AppHeader extends Component {
   setStatesValuesWhenUserLogsIn = () => {
 
     getUserProfile()
-    .then(({ data: userData }) => {
+      .then(({ data: userData }) => {
         console.log("AppHeader -> setStatesValuesWhenUserLogsIn()");
         // console.log(userData);
 
         // Update state with user data
         this.setState({
-            fullName: `${userData.firstName} ${userData.lastName}`,
-            email: userData.email,
-            nickName: userData.nickName,
-            userLoggedIn: true
+          fullName: `${userData.firstName} ${userData.lastName}`,
+          email: userData.email,
+          nickName: userData.nickName,
+          userLoggedIn: true
         });
 
-    })
-    .catch(err => {
+      })
+      .catch(err => {
         console.log(err);
 
         // Update state with user data
         this.setState({
-            userLoggedIn: false
+          userLoggedIn: false
         });
-    });
+      });
 
   }
 
@@ -141,20 +143,26 @@ class AppHeader extends Component {
     console.log("Appheader -> this.props.userLoggedIn: " + this.props.userLoggedIn);
 
     // Call function to set states 
-    if(this.props.userLoggedIn === true && this.state.userLoggedIn === false){
+    if (this.props.userLoggedIn === true && this.state.userLoggedIn === false) {
       this.setStatesValuesWhenUserLogsIn();
     }
 
 
     if (this.state.questionAsked === true && this.state.searchQuestion) {
 
+      let cpySearchQuestion = this.state.searchQuestion;
+
       this.setState({
-        questionAsked: false
+        questionAsked: false,
+        // searchQuestion: ""
       })
 
       return <Redirect to={{
         pathname: "/questions",
-        state: { searchQuestion: this.state.searchQuestion }
+        // pathname: "/search-question-result",
+        state: {
+          searchQuestion: cpySearchQuestion
+        }
       }} />
     }
 
@@ -169,7 +177,7 @@ class AppHeader extends Component {
 
             {/* -------- Go Smart App Icon ---------- */}
             <div className="col-2 mt-0 pt-0">
-              <img 
+              <img
                 className="btn cGoSmartIcon"
                 src='/images/GoSmart_Icon.png'
                 alt="GoSmart_Icon"
@@ -207,13 +215,13 @@ class AppHeader extends Component {
             </div>
 
 
-            
-            <div 
+
+            <div
               // className={this.state.userLoggedIn ? "dropdown open btn btn-info" : ""}
               className="col-4 mt-2 d-flex justify-content-end"
-              // className="col-4 mt-2"
+            // className="col-4 mt-2"
             >
-              <div 
+              <div
                 className="row float-right"
                 style={{ visibility: !this.state.userLoggedIn ? 'visible' : 'hidden' }}
               >
@@ -228,15 +236,15 @@ class AppHeader extends Component {
                       <strong>Log In</strong>
                     </button>
                   ) : (
-                    <Link className="btn btn-outline-info m-3" to={{
-                      pathname: "/",
-                      state: {
-                        showLogin: true
-                      }
-                    }}>
-                      <strong>Log In</strong>
-                    </Link>
-                  )
+                      <Link className="btn btn-outline-info m-3" to={{
+                        pathname: "/",
+                        state: {
+                          showLogin: true
+                        }
+                      }}>
+                        <strong>Log In</strong>
+                      </Link>
+                    )
                 }
 
 
@@ -251,31 +259,31 @@ class AppHeader extends Component {
                       <strong>Sign Up</strong>
                     </button>
                   ) : (
-                    <Link className="btn btn-outline-info m-3" to={{
+                      <Link className="btn btn-outline-info m-3" to={{
                         pathname: "/",
                         state: {
                           showLogin: false
                         }
                       }}>
-                      <strong>Sign Up</strong>
-                    </Link>
-                  )
+                        <strong>Sign Up</strong>
+                      </Link>
+                    )
                 }
 
               </div>
 
-              <div 
+              <div
                 className="row mt-2 mr-3 float-right"
                 style={{ visibility: this.state.userLoggedIn ? 'visible' : 'hidden' }}
               >
-                 {/* After user login show a button with label of user name and dropdown menu */}
-                 <Dropdown 
-                    fullName={this.state.fullName}
-                    email={this.state.email}
-                    nickName={this.state.nickName}
+                {/* After user login show a button with label of user name and dropdown menu */}
+                <Dropdown
+                  fullName={this.state.fullName}
+                  email={this.state.email}
+                  nickName={this.state.nickName}
                 />
               </div>
-                
+
 
             </div>
             {/* -------- End of Sign Up Button ---------- */}

@@ -105,7 +105,7 @@ class HomePage extends Component {
                             password: userData.password,
                             userLoggedIn: true
                         });
-                        showToastifyAlert("User logged in successfully", "success");
+                        // showToastifyAlert("User logged in successfully", "success");
 
                     })
                     .catch(err => {

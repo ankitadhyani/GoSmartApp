@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+// Importing custom Components
+import AppHeader from '../components/AppHeader/AppHeader';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from "../components/Footer/Footer";
+// import Questions from './Questions';
 import ListGroup from '../components/Listing/ListGroup';
 
 // Importing APIs from utils
@@ -8,7 +13,9 @@ import { getAllQuestions, updateQuestion, removeQuestion } from '../utils/questi
 import { getUserProfile } from '../utils/userAPIs';
 
 
-class Questions extends Component {
+
+
+class ViewSearchQuestionResultPage extends Component {
 
     state = {
         accessToken: localStorage.getItem('accessToken'), // get access token from localStorage
@@ -18,20 +25,20 @@ class Questions extends Component {
         searchResultList: [],
         showSearchResult: false, //=true iff user searches for a question, else =false
         currentUserId: "" // stores the value of the userId of the current loggedin user
-    };
+    }
 
 
     // use component did mount to get all questions on load
     componentDidMount() {
-        // console.log("Inside componentDidMount -> Question.js");
+        // console.log("Inside componentDidMount -> ViewSearchQuestionResultPage.js");
 
         //Reset states
         this.setState({
             userLoggedIn: (this.state.accessToken) ? true : false,
-            questionlist: [],
-            searchQuestion: "",
-            searchResultList: [],
-            showSearchResult: false
+            // questionlist: [],
+            // searchQuestion: "",
+            // searchResultList: [],
+            // showSearchResult: false
         })
 
         // this.setStatesValuesWhenUserLogsIn();
@@ -41,7 +48,7 @@ class Questions extends Component {
         this.getQuestions();
 
     } // End of componentDidMount()
-
+    
 
 
     // This function is called when in state 'userLoggedIn' is different from that received from HomePage
@@ -66,6 +73,7 @@ class Questions extends Component {
                 });
             });
     } // End of setStatesValuesWhenUserLogsIn()
+
 
 
 
@@ -116,6 +124,7 @@ class Questions extends Component {
             .catch(err => console.log(err));
 
     } // End of handleUpdateViewCount()
+
 
 
 
@@ -175,11 +184,11 @@ class Questions extends Component {
 
 
             // console.log("responseToSeachQuestion: " + responseToSeachQuestion),
-            (responseToSeachQuestion.length > 0) ?
+            (responseToSeachQuestion.length > 0 && this.state.searchQuestion !== "") ?
                 (
                     this.setState({
                         searchResultList: responseToSeachQuestion,
-                        searchQuestion: "",
+                        // searchQuestion: "",
                         showSearchResult: true
                     })
                 ) : (
@@ -197,131 +206,139 @@ class Questions extends Component {
      * *************************************************************************************/
 
 
+
     render() {
 
-        console.log("Inside Question.js");
+        console.log("Inside ViewSearchQuestionResultPage(props) render");
+        console.log("props.originPage: "+ this.props.location.state.originPage);
+        console.log(this.props.location.state);
 
         // Call function to set 'userLoggedIn' states 
-        if (this.props.userLoggedIn === true && this.state.userLoggedIn === false) {
+        if (this.props.location.state.userLoggedIn === true && this.state.userLoggedIn === false) {
             this.handleGetUserProfile();
         }
+        
+        let searchQuestion = this.props.location.state.searchQuestion;
+        console.log("searchQuestion: " + searchQuestion);
 
-        // If user clicks on "Questions" link from Navbar then reset states
-        if (this.props.originPage === "Navbar" && this.state.showSearchResult === true) {
-            this.setState({
-                showSearchResult: false
-            })
-        }
 
         // Set the 'searchQuestion' state to the value fed from ViewAllQuestions.js
-        if (this.props.searchQuestion && this.state.showSearchResult === false) {
+        // if (this.props.searchQuestion && this.state.showSearchResult === false) {
+        // if (this.props.location.state.searchQuestion && this.state.showSearchResult === false) {
+        if (this.props.location.state.searchQuestion && this.state.searchQuestion === "") {
             this.setState({
-                searchQuestion: this.props.searchQuestion,
+                searchQuestion: searchQuestion,
                 showSearchResult: true
             })
-        }
+        
+        
 
-        if (this.state.searchQuestion) {
-            // console.log("this.state.searchQuestion: " + this.state.searchQuestion);
 
             let cpySearchQuestion = this.state.searchQuestion; // "What is REST?";
             cpySearchQuestion = cpySearchQuestion.trim();
 
             // If user has entered a question to be searched, 
             // then update 'questionlist[]' with related questions only
-            // if (this.state.searchQuestion) {
-            if (cpySearchQuestion) {
+            if (cpySearchQuestion !== "") {
                 // console.log("Calling handleSearchQuestionString() now...");
                 this.handleSearchQuestionString(cpySearchQuestion.toLowerCase());
             }
         }
 
-        // Set question list before display
-        let questionlist = [];
-        if (this.props.originPage === "MyQuestionsPage") {
-            questionlist = this.props.myQuestionlist ;
-        } else {
-            questionlist = this.state.questionlist ;
-        }
-
         return (
             <React.Fragment>
 
-                {/* Header */}
-                <header className="row p-3" style={{ borderBottom: "2px solid black" }}>
-                    <div className="col-6">
-                        <h3>Top Questions</h3>
+                <AppHeader
+                    // originPage={this.props.location.state.originPage}
+                    // handleFormSwitch={handleFormSwitch}
+                />
+
+
+                <div className="row container-fluid bg-info my-1 px-3 ml-0 mr-0">
+                    <div className="col-12">
+                        <h4 className="text-light mt-2">Similar Questions</h4>
                     </div>
-
-                    <div className="col-6">
-                        {/* If user is logged in then show a link to "Ask Question" -> /add */}
-                        {/* Else show a lable */}
-                        {
-                            (this.state.userLoggedIn) ?
-                                (<Link
-                                    to={{
-                                        pathname: "/add",
-                                        state: { showPostQuestion: true }
-                                    }}
-                                    className="btn btn-outline-info btn-dark float-right"
-                                >
-                                    <strong>Ask Question</strong>
-                                </Link>) :
-                                (<label
-                                    className="text-dark float-right p-2"
-                                    style={{ borderRadius: "5px", backgroundColor: "rgb(174, 174, 175)" }}
-                                >
-                                    <strong>Ask Question</strong>
-                                </label>)
-                        }
+                    <div className="col-12" style={{ fontSize: "15px", lineHeight: "1em" }}>
+                        <p>Showing search results for: "<span className="font-weight-bold">{this.props.location.state.searchQuestion}</span>"</p>
                     </div>
-                </header>
-
-
-
-                {/* List all questions here */}
-                <div className=""
-                    style={{
-                        height: "370px",
-                        overflowY: "scroll"
-                    }}>
-                    <ListGroup
-                        questionlist={
-                            (this.state.showSearchResult) ?
-                                this.state.searchResultList : questionlist
-                        }      
-                        userLoggedIn={this.state.userLoggedIn}
-                        currentUserId={this.state.currentUserId}
-                        handleDeleteQuestion={this.handleDeleteQuestion}
-                        handleUpdateViewCount={this.handleUpdateViewCount}
-                    />
                 </div>
 
-                {/* Show View all questions button iff we have atleast 1 question */}
-                {
-                    (this.state.questionlist.length > 0 && this.props.originPage === "HomePage") ?
-                        (
-                            <Link
-                                to={{
-                                    pathname: "/questions",
-                                    state: { originPage: "Navbar" }
-                                }}
-                                className="btn btn-block btn-outline-info btn-dark align-items-end text-center"
-                                questionlist={this.state.questionlist}
+
+                <div className="row container-fluid mt-3">
+
+                    {/* Left navigation Bar */}
+                    <div className="col-2"
+                        style={{
+                            borderRight: "5px solid red"
+                        }}>
+                        <Navbar />
+                    </div>
+
+                    {/* List all questions here */}
+                    <div className="col-10">
+                        {/* <Questions
+                            searchQuestion={props.location.state ? props.location.state.searchQuestion : ""}
+                            originPage="ViewSearchQuestionResultPage"
+                        /> */}
+
+                        {/* Header */}
+                        <header className="row p-3" style={{ borderBottom: "2px solid black" }}>
+                            <div className="col-6">
+                                <h3>Top Questions</h3>
+                            </div>
+
+                            <div className="col-6">
+                                {/* If user is logged in then show a link to "Ask Question" -> /add */}
+                                {/* Else show a lable */}
+                                {
+                                    (this.state.userLoggedIn) ?
+                                        (<Link
+                                            to={{
+                                                pathname: "/add",
+                                                state: { showPostQuestion: true }
+                                            }}
+                                            className="btn btn-outline-info btn-dark float-right"
+                                        >
+                                            <strong>Ask Question</strong>
+                                        </Link>) :
+                                        (<label
+                                            className="text-dark float-right p-2"
+                                            style={{ borderRadius: "5px", backgroundColor: "rgb(174, 174, 175)" }}
+                                        >
+                                            <strong>Ask Question</strong>
+                                        </label>)
+                                }
+                            </div>
+                        </header>
+
+                        {/* List all questions here */}
+                        <div className=""
+                            style={{
+                                height: "370px",
+                                overflowY: "scroll"
+                            }}>
+                            <ListGroup
+                                // questionlist={
+                                //     (this.state.searchResultList.length > 0) ?
+                                //         this.state.searchResultList : ""
+                                // } 
+                                questionlist={this.state.searchResultList}
+                                userLoggedIn={this.state.userLoggedIn}
+                                currentUserId={this.state.currentUserId}
                                 handleDeleteQuestion={this.handleDeleteQuestion}
-                            >
-                                <strong>View All Questions</strong>
-                            </Link>
+                                handleUpdateViewCount={this.handleUpdateViewCount}
+                            />
+                        </div>
 
-                        ) :
-                        ("")
-                }
 
+                    </div>
+                </div>
+
+                <Footer />
 
             </React.Fragment>
         )
     }
 }
 
-export default Questions;
-
+export default ViewSearchQuestionResultPage;
